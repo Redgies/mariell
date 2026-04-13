@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"ls ~/.claude/plugins/cache/claude-plugins-official/frontend-design/61c0597779bd/unknown/ 2>/dev/null && echo \\\"---\\\" && find ~/.claude/plugins/cache/claude-plugins-official/frontend-design...",
+  "error": "Exit code 2\n[rerun: b26]",
+  "timestamp": "2026-04-13T09:22:36.900Z",
+  "retry_count": 1
+}
