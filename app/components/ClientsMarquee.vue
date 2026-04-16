@@ -79,9 +79,6 @@ onBeforeUnmount(() => {
     <div class="mx-auto max-w-7xl px-5 md:px-10 lg:px-16">
       <div class="mb-6 flex items-center justify-between">
         <SectionLabel number="—" label="Ils nous font confiance" />
-        <span class="hidden font-mono-num text-xs uppercase tracking-[0.22em] text-white/40 md:inline">
-          depuis 2021
-        </span>
       </div>
     </div>
 
