@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
             <img
               :src="tile.logo"
               :alt="tile.name"
-              class="h-24 w-44 object-contain opacity-60 transition-opacity hover:opacity-90"
+              class="h-20 w-36 object-contain opacity-60 transition-opacity hover:opacity-90"
             />
           </template>
         </div>
