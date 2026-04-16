@@ -24,7 +24,7 @@ const year = new Date().getFullYear()
           </p>
           <ul class="mt-5 space-y-3 text-sm" style="font-family: var(--font-grotesk); font-weight: 300;">
             <li><a href="#accueil" class="text-white/75 transition-colors hover:text-white">Accueil</a></li>
-            <li><a href="#who" class="text-white/75 transition-colors hover:text-white">Who is Mariell</a></li>
+            <li><a href="#who" class="text-white/75 transition-colors hover:text-white">Who is Mariell ?</a></li>
             <li><a href="#process" class="text-white/75 transition-colors hover:text-white">Process</a></li>
             <li><a href="#pricing" class="text-white/75 transition-colors hover:text-white">Pricing</a></li>
           </ul>
@@ -35,8 +35,8 @@ const year = new Date().getFullYear()
             Légal
           </p>
           <ul class="mt-5 space-y-3 text-sm" style="font-family: var(--font-grotesk); font-weight: 300;">
-            <li><a href="#" class="text-white/75 transition-colors hover:text-white">Mentions légales</a></li>
-            <li><a href="#" class="text-white/75 transition-colors hover:text-white">Politique de protection des données</a></li>
+            <li><NuxtLink to="/mentions-legales" class="text-white/75 transition-colors hover:text-white">Mentions légales</NuxtLink></li>
+            <li><NuxtLink to="/politique-confidentialite" class="text-white/75 transition-colors hover:text-white">Politique de protection des données</NuxtLink></li>
           </ul>
         </div>
       </div>

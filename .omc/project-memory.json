@@ -137,8 +137,8 @@
     },
     {
       "path": "app\\app.vue",
-      "accessCount": 14,
-      "lastAccessed": 1776347901225,
+      "accessCount": 16,
+      "lastAccessed": 1776352557785,
       "type": "file"
     },
     {
@@ -196,15 +196,15 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\GradientBlobs.vue",
-      "accessCount": 4,
-      "lastAccessed": 1776086238527,
+      "path": "app\\components\\AppFooter.vue",
+      "accessCount": 5,
+      "lastAccessed": 1776352644285,
       "type": "file"
     },
     {
-      "path": "app\\components\\AppFooter.vue",
+      "path": "app\\components\\GradientBlobs.vue",
       "accessCount": 4,
-      "lastAccessed": 1776350926469,
+      "lastAccessed": 1776086238527,
       "type": "file"
     },
     {
@@ -218,6 +218,18 @@
       "accessCount": 3,
       "lastAccessed": 1776346672132,
       "type": "directory"
+    },
+    {
+      "path": "app\\pages\\mentions-legales.vue",
+      "accessCount": 3,
+      "lastAccessed": 1776352728223,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\politique-confidentialite.vue",
+      "accessCount": 3,
+      "lastAccessed": 1776352731699,
+      "type": "file"
     },
     {
       "path": "shared/config/site.ts",
@@ -254,6 +266,18 @@
       "accessCount": 1,
       "lastAccessed": 1776103591605,
       "type": "directory"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1776352526377,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\index.vue",
+      "accessCount": 1,
+      "lastAccessed": 1776352569275,
+      "type": "file"
     }
   ],
   "userDirectives": []
