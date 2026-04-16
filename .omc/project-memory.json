@@ -130,15 +130,15 @@
       "type": "file"
     },
     {
-      "path": "app\\app.vue",
-      "accessCount": 14,
-      "lastAccessed": 1776347901225,
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 18,
+      "lastAccessed": 1776351302253,
       "type": "file"
     },
     {
-      "path": "app\\components\\ClientsMarquee.vue",
+      "path": "app\\app.vue",
       "accessCount": 14,
-      "lastAccessed": 1776350900009,
+      "lastAccessed": 1776347901225,
       "type": "file"
     },
     {
@@ -166,6 +166,12 @@
       "type": "file"
     },
     {
+      "path": "app\\components\\AppNavbar.vue",
+      "accessCount": 9,
+      "lastAccessed": 1776351274512,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\VideoSection.vue",
       "accessCount": 8,
       "lastAccessed": 1776346737890,
@@ -181,12 +187,6 @@
       "path": "app\\components\\FinalCta.vue",
       "accessCount": 8,
       "lastAccessed": 1776347910335,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\AppNavbar.vue",
-      "accessCount": 8,
-      "lastAccessed": 1776350749422,
       "type": "file"
     },
     {

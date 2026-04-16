@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
           v-for="(tile, idx) in tiles"
           :key="`logo-${idx}`"
           :class="[
-            'flex h-20 w-40 shrink-0 items-center justify-center border-r text-xs uppercase tracking-[0.2em] transition-colors md:h-24 md:w-48',
+            'flex h-28 w-52 shrink-0 items-center justify-center border-r text-xs uppercase tracking-[0.2em] transition-colors md:h-32 md:w-60',
             tile.placeholder
               ? 'border-white/25 border-r-dashed text-white/75 hover:text-white'
               : 'client-tile border-white/8 text-white/50 hover:text-white/80',
@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
             <img
               :src="tile.logo"
               :alt="tile.name"
-              class="h-20 w-36 object-contain opacity-60 transition-opacity hover:opacity-90"
+              class="h-24 w-44 object-contain opacity-60 transition-opacity hover:opacity-90"
             />
           </template>
         </div>
