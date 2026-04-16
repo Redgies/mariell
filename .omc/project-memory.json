@@ -124,15 +124,15 @@
   },
   "hotPaths": [
     {
-      "path": "app\\components\\TestimonialsCarousel.vue",
-      "accessCount": 19,
-      "lastAccessed": 1776350623151,
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 22,
+      "lastAccessed": 1776351707055,
       "type": "file"
     },
     {
-      "path": "app\\components\\ClientsMarquee.vue",
+      "path": "app\\components\\TestimonialsCarousel.vue",
       "accessCount": 19,
-      "lastAccessed": 1776351425959,
+      "lastAccessed": 1776350623151,
       "type": "file"
     },
     {
