@@ -75,7 +75,7 @@ onMounted(() => {
 
       <!-- Right column — giant headline -->
       <div class="col-span-12 stagger md:col-span-8">
-        <h1 class="headline-xl text-white scroll-parallax" data-parallax="-0.9" data-split>
+        <h1 class="mt-6 headline-xl text-white scroll-parallax" data-parallax="-0.9" data-split>
           Bienvenue<br />
           chez Mariell.
         </h1>
@@ -129,7 +129,7 @@ onMounted(() => {
       <!-- Bottom stats strip with count-up animation -->
       <div
         ref="statsRef"
-        class="reveal col-span-12 mt-8 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-10 md:grid-cols-4"
+        class="reveal col-span-12 mt-8 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-4"
       >
         <div>
           <div class="font-serif-jp text-4xl text-white md:text-5xl">

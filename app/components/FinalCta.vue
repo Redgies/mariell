@@ -3,7 +3,7 @@ import { siteConfig } from '~~/shared/config/site'
 </script>
 
 <template>
-  <section class="relative overflow-hidden px-5 py-36 md:px-10 md:py-52 lg:px-16">
+  <section class="relative overflow-hidden px-5 py-16 md:px-10 md:py-24 lg:px-16">
     <!-- Atmospheric central glow -->
     <div
       class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -32,7 +32,7 @@ import { siteConfig } from '~~/shared/config/site'
         data-parallax="-0.9"
         data-split
       >
-        Encore bienvenue<br />chez <span class="gradient-text italic">Mariell.</span>
+        Encore bienvenue<br />chez Mariell.
       </h2>
 
       <p

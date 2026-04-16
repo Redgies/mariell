@@ -9,7 +9,7 @@
     <div class="mx-auto grid max-w-7xl grid-cols-12 gap-x-6 gap-y-10">
       <div class="col-span-12 md:col-span-4">
         <SectionLabel number="— 01" label="Qui est Mariell" />
-        <h2 class="mt-6 headline-lg text-white scroll-parallax" data-parallax="-0.8" data-split>
+        <h2 class="mt-6 headline-lg text-white" data-split>
           Who is<br /><span class="gradient-text italic pr-2">Mariell</span>&thinsp;?
         </h2>
         <p

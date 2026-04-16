@@ -3,12 +3,12 @@ import { benefits } from '~~/shared/config/site'
 </script>
 
 <template>
-  <section id="process" class="relative px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <section id="process" class="relative px-5 py-14 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="mb-20 grid grid-cols-12 gap-x-6 gap-y-8">
+      <div class="mb-12 grid grid-cols-12 gap-x-6 gap-y-8">
         <div class="col-span-12 md:col-span-5">
           <SectionLabel number="— 02" label="Pourquoi Mariell" />
-          <h2 class="mt-6 headline-lg text-white scroll-parallax" data-parallax="-0.8" data-split>
+          <h2 class="mt-6 headline-lg text-white" data-split>
             Quatre raisons,<br />
             <span class="gradient-text italic">zéro hasard.</span>
           </h2>
@@ -21,11 +21,11 @@ import { benefits } from '~~/shared/config/site'
         </p>
       </div>
 
-      <div class="stagger grid grid-cols-1 gap-px bg-white/10 md:grid-cols-2">
+      <div class="stagger grid grid-cols-1 gap-4 md:grid-cols-2">
         <article
           v-for="(benefit, idx) in benefits"
           :key="`benefit-${idx}`"
-          class="reveal card-tilt group relative overflow-hidden border border-transparent bg-black p-8 md:p-12"
+          class="reveal card-tilt group relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 md:p-8"
         >
           <div class="mb-6 flex items-baseline justify-between">
             <span class="font-mono-num text-xs uppercase tracking-[0.25em] text-white/40">

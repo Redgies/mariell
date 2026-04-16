@@ -8,22 +8,17 @@ import { pricingBadges, siteConfig } from '~~/shared/config/site'
       <div class="grid grid-cols-12 gap-x-6 gap-y-12">
         <div class="col-span-12 md:col-span-5">
           <SectionLabel number="— 04" label="Pricing" />
-          <h2 class="mt-6 headline-lg text-white scroll-parallax" data-parallax="-0.8" data-split>
+          <h2 class="mt-6 headline-lg text-white" data-split>
             Simple.<br />
             <span class="gradient-text italic">Transparent.</span>
           </h2>
 
-          <div
-            class="reveal mt-8 space-y-4 text-base leading-relaxed text-white/65 md:text-lg"
+          <p
+            class="reveal mt-8 text-base leading-relaxed text-white/65 md:text-lg"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            <p>
-              Chez Mariell, on ne se cache pas. Pas de prix à la tête, pas de bullshit.
-            </p>
-            <p>
-              Devis sur-mesure pour les recrutements multiples, et les profils freelance.
-            </p>
-          </div>
+            Chez Mariell on ne se cache pas.<br />Pas de prix à la tête, pas de bullshit.
+          </p>
         </div>
 
         <div class="col-span-12 md:col-span-7">
@@ -34,7 +29,7 @@ import { pricingBadges, siteConfig } from '~~/shared/config/site'
 
             <div class="relative p-8 md:p-12">
               <p class="font-mono-num text-xs uppercase tracking-[0.25em] text-white/45">
-                Fees · 1 recrutement
+                Fees · Pour 1 recrutement
               </p>
               <div class="mt-4 flex items-baseline gap-2">
                 <span class="font-serif-jp text-6xl text-white md:text-8xl">20</span>
@@ -62,6 +57,13 @@ import { pricingBadges, siteConfig } from '~~/shared/config/site'
                   <span>RDV à <span class="text-white">8 mois</span>, même exercice. Pas de « place and forget ».</span>
                 </li>
               </ul>
+
+              <p
+                class="mt-6 text-xs text-white/40"
+                style="font-family: var(--font-grotesk); font-weight: 300;"
+              >
+                Devis sur-mesure pour les recrutements multiples, et les profils freelance.
+              </p>
             </div>
           </div>
 
@@ -88,11 +90,11 @@ import { pricingBadges, siteConfig } from '~~/shared/config/site'
         </div>
 
         <!-- Badges strip -->
-        <div class="stagger col-span-12 grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-3">
+        <div class="stagger col-span-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div
             v-for="(badge, idx) in pricingBadges"
             :key="badge"
-            class="reveal flex items-center gap-5 bg-black px-6 py-6"
+            class="reveal flex items-center gap-5 rounded-2xl border border-white/10 bg-black/40 px-6 py-5 backdrop-blur-sm"
           >
             <span class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
               0{{ idx + 1 }}

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776071834969,
+  "lastScanned": 1776290263246,
   "projectRoot": "C:\\Users\\Mathias\\Documents\\Work\\Mariell",
   "techStack": {
     "languages": [
@@ -62,7 +62,10 @@
       "app",
       "public"
     ],
-    "gitBranches": null
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
   },
   "customNotes": [],
   "directoryMap": {
@@ -70,7 +73,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 1,
-      "lastAccessed": 1776071834948,
+      "lastAccessed": 1776290263221,
       "keyFiles": [
         "app.vue"
       ]
@@ -79,7 +82,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 1,
-      "lastAccessed": 1776071834948,
+      "lastAccessed": 1776290263222,
       "keyFiles": [
         "favicon.svg"
       ]
@@ -88,21 +91,21 @@
       "path": "shared",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1776071834959,
+      "lastAccessed": 1776290263235,
       "keyFiles": []
     },
     "app\\assets": {
       "path": "app\\assets",
       "purpose": "Static assets",
       "fileCount": 0,
-      "lastAccessed": 1776071834959,
+      "lastAccessed": 1776290263235,
       "keyFiles": []
     },
     "app\\components": {
       "path": "app\\components",
       "purpose": "UI components",
-      "fileCount": 11,
-      "lastAccessed": 1776071834960,
+      "fileCount": 13,
+      "lastAccessed": 1776290263235,
       "keyFiles": [
         "AppFooter.vue",
         "AppNavbar.vue",
@@ -113,7 +116,7 @@
       "path": "shared\\config",
       "purpose": "Configuration files",
       "fileCount": 1,
-      "lastAccessed": 1776071834960,
+      "lastAccessed": 1776290263236,
       "keyFiles": [
         "site.ts"
       ]
@@ -121,21 +124,63 @@
   },
   "hotPaths": [
     {
-      "path": "app\\assets\\css\\main.css",
-      "accessCount": 12,
-      "lastAccessed": 1776105408546,
+      "path": "app\\components\\TestimonialsCarousel.vue",
+      "accessCount": 14,
+      "lastAccessed": 1776347656838,
       "type": "file"
     },
     {
       "path": "app\\app.vue",
-      "accessCount": 10,
-      "lastAccessed": 1776105440457,
+      "accessCount": 14,
+      "lastAccessed": 1776347901225,
+      "type": "file"
+    },
+    {
+      "path": "app\\assets\\css\\main.css",
+      "accessCount": 13,
+      "lastAccessed": 1776346668915,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\PricingSection.vue",
+      "accessCount": 12,
+      "lastAccessed": 1776347821843,
       "type": "file"
     },
     {
       "path": "app\\components\\HeroSection.vue",
+      "accessCount": 11,
+      "lastAccessed": 1776346938837,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\BenefitsGrid.vue",
+      "accessCount": 10,
+      "lastAccessed": 1776347430290,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\VideoSection.vue",
       "accessCount": 8,
-      "lastAccessed": 1776104867420,
+      "lastAccessed": 1776346737890,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 8,
+      "lastAccessed": 1776347319877,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ProcessSteps.vue",
+      "accessCount": 8,
+      "lastAccessed": 1776347468919,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\FinalCta.vue",
+      "accessCount": 8,
+      "lastAccessed": 1776347910335,
       "type": "file"
     },
     {
@@ -151,63 +196,27 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\VideoSection.vue",
-      "accessCount": 6,
-      "lastAccessed": 1776104874920,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\BenefitsGrid.vue",
-      "accessCount": 5,
-      "lastAccessed": 1776104879690,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ProcessSteps.vue",
-      "accessCount": 5,
-      "lastAccessed": 1776104884137,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\PricingSection.vue",
-      "accessCount": 5,
-      "lastAccessed": 1776104888357,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\TestimonialsCarousel.vue",
-      "accessCount": 5,
-      "lastAccessed": 1776104892744,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\FinalCta.vue",
-      "accessCount": 5,
-      "lastAccessed": 1776104899306,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\GradientBlobs.vue",
       "accessCount": 4,
       "lastAccessed": 1776086238527,
       "type": "file"
     },
     {
-      "path": "app\\components\\ClientsMarquee.vue",
+      "path": "app\\composables\\useScrollReveal.ts",
       "accessCount": 3,
-      "lastAccessed": 1776085931732,
+      "lastAccessed": 1776346668346,
       "type": "file"
+    },
+    {
+      "path": "app",
+      "accessCount": 3,
+      "lastAccessed": 1776346672132,
+      "type": "directory"
     },
     {
       "path": "app\\components\\AppFooter.vue",
       "accessCount": 2,
       "lastAccessed": 1776072739750,
-      "type": "file"
-    },
-    {
-      "path": "app\\composables\\useScrollReveal.ts",
-      "accessCount": 2,
-      "lastAccessed": 1776103522154,
       "type": "file"
     },
     {
@@ -235,9 +244,9 @@
       "type": "directory"
     },
     {
-      "path": "app",
+      "path": "shared/config/site.ts",
       "accessCount": 1,
-      "lastAccessed": 1776109607759,
+      "lastAccessed": 1776347795327,
       "type": "directory"
     }
   ],

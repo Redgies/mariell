@@ -3,12 +3,12 @@ import { processSteps } from '~~/shared/config/site'
 </script>
 
 <template>
-  <section class="relative px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <section class="relative px-5 py-14 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <div class="mb-20 grid grid-cols-12 gap-x-6 gap-y-8">
         <div class="col-span-12 md:col-span-5">
           <SectionLabel number="— 03" label="Méthodologie" />
-          <h2 class="mt-6 headline-lg text-white scroll-parallax" data-parallax="-0.8" data-split>
+          <h2 class="mt-6 headline-lg text-white" data-split>
             Sur-mesure,<br />
             <span class="gradient-text italic">jamais standard.</span>
           </h2>

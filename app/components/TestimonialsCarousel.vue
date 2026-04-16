@@ -12,12 +12,12 @@ const scrollByAmount = (direction: 1 | -1) => {
 </script>
 
 <template>
-  <section class="relative px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <section class="relative px-5 py-14 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="mb-16 grid grid-cols-12 gap-x-6 gap-y-8">
+      <div class="mb-10 grid grid-cols-12 gap-x-6 gap-y-8">
         <div class="col-span-12 md:col-span-7">
           <SectionLabel number="— 05" label="Témoignages" />
-          <h2 class="mt-6 headline-lg text-white scroll-parallax" data-parallax="-0.8" data-split>
+          <h2 class="mt-6 headline-lg text-white" data-split>
             Ils nous ont<br />fait <span class="gradient-text italic">confiance.</span>
           </h2>
         </div>
@@ -58,7 +58,7 @@ const scrollByAmount = (direction: 1 | -1) => {
           v-for="(testimonial, idx) in testimonials"
           :key="testimonial.name"
           data-testimonial-card
-          class="group relative flex w-[85%] shrink-0 snap-center flex-col justify-between gap-8 border border-white/10 bg-black/40 p-8 backdrop-blur-sm transition-colors hover:border-white/25 sm:w-[60%] md:w-[440px] md:p-10"
+          class="group relative flex w-[85%] shrink-0 snap-center flex-col justify-between gap-6 rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 sm:w-[55%] md:w-[380px] md:p-8"
         >
           <div class="flex items-start justify-between">
             <span class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
@@ -70,7 +70,7 @@ const scrollByAmount = (direction: 1 | -1) => {
           </div>
 
           <p
-            class="font-serif-jp text-lg leading-relaxed text-white/90 md:text-xl"
+            class="font-serif-jp text-base leading-relaxed text-white/90 md:text-lg"
           >
             {{ testimonial.quote }}
           </p>
@@ -100,6 +100,8 @@ const scrollByAmount = (direction: 1 | -1) => {
             </div>
           </div>
         </article>
+        <!-- Trailing spacer so the last card isn't clipped -->
+        <div class="w-5 shrink-0 md:w-px" aria-hidden="true" />
       </div>
     </div>
   </section>
