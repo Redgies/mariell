@@ -75,7 +75,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="relative px-0 py-14 md:py-20">
+  <section class="relative px-0 py-14">
     <div class="mx-auto max-w-7xl px-5 md:px-10 lg:px-16">
       <div class="mb-6 flex items-center justify-between">
         <SectionLabel number="—" label="Ils nous font confiance" />
@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
           v-for="(tile, idx) in doubled"
           :key="`logo-${idx}`"
           :class="[
-            'flex h-28 w-52 shrink-0 items-center justify-center border-r transition-colors md:h-32 md:w-60',
+            'flex h-20 w-52 shrink-0 items-center justify-center border-r transition-colors md:h-24 md:w-60',
             tile.placeholder
               ? 'border-white/25 border-r-dashed text-xs uppercase tracking-[0.2em] text-white/75 hover:text-white'
               : 'client-tile border-white/8',

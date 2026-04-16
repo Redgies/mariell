@@ -125,8 +125,8 @@
   "hotPaths": [
     {
       "path": "app\\components\\ClientsMarquee.vue",
-      "accessCount": 22,
-      "lastAccessed": 1776351707055,
+      "accessCount": 24,
+      "lastAccessed": 1776352118749,
       "type": "file"
     },
     {
