@@ -143,14 +143,26 @@
     },
     {
       "path": "app\\assets\\css\\main.css",
+      "accessCount": 14,
+      "lastAccessed": 1776353084974,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\AppNavbar.vue",
       "accessCount": 13,
-      "lastAccessed": 1776346668915,
+      "lastAccessed": 1776353008892,
       "type": "file"
     },
     {
       "path": "app\\components\\PricingSection.vue",
       "accessCount": 12,
       "lastAccessed": 1776347821843,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\FinalCta.vue",
+      "accessCount": 12,
+      "lastAccessed": 1776353051264,
       "type": "file"
     },
     {
@@ -166,12 +178,6 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\AppNavbar.vue",
-      "accessCount": 9,
-      "lastAccessed": 1776351274512,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\VideoSection.vue",
       "accessCount": 8,
       "lastAccessed": 1776346737890,
@@ -181,12 +187,6 @@
       "path": "app\\components\\ProcessSteps.vue",
       "accessCount": 8,
       "lastAccessed": 1776347468919,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\FinalCta.vue",
-      "accessCount": 8,
-      "lastAccessed": 1776347910335,
       "type": "file"
     },
     {
@@ -244,6 +244,12 @@
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1776353081579,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\SectionLabel.vue",
       "accessCount": 1,
       "lastAccessed": 1776072566041,
@@ -266,12 +272,6 @@
       "accessCount": 1,
       "lastAccessed": 1776103591605,
       "type": "directory"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 1,
-      "lastAccessed": 1776352526377,
-      "type": "file"
     },
     {
       "path": "app\\pages\\index.vue",

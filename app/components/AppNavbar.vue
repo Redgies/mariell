@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { navLinks, resourcesDropdown, siteConfig } from '~~/shared/config/site'
 
+const route = useRoute()
+const isHome = computed(() => route.path === '/')
+const resolveHref = (href: string) =>
+  href.startsWith('#') && !isHome.value ? `/${href}` : href
+
 const isMobileMenuOpen = ref(false)
 const isResourcesOpen = ref(false)
 const navRef = ref<HTMLElement | null>(null)
@@ -58,9 +63,9 @@ watch(isMobileMenuOpen, (open) => {
     >
       <!-- Logo -->
       <a
-        href="#accueil"
+        :href="resolveHref('#accueil')"
         class="font-serif-jp text-2xl tracking-tight text-white transition-colors hover:text-white/90 md:text-[1.75rem]"
-        @click="onLinkClick('#accueil')"
+        @click="onLinkClick(resolveHref('#accueil'))"
       >
         <img src="/logo_site.png" alt="Mariell" class="h-11 w-auto" />
       </a>
@@ -76,10 +81,10 @@ watch(isMobileMenuOpen, (open) => {
         >
           <a
             v-if="!link.hasDropdown"
-            :href="link.href"
+            :href="resolveHref(link.href)"
             class="text-sm text-white/90 transition-colors hover:text-white"
             style="font-family: var(--font-grotesk); font-weight: 600;"
-            @click="onLinkClick(link.href)"
+            @click="onLinkClick(resolveHref(link.href))"
           >
             {{ link.label }}
           </a>
@@ -182,10 +187,10 @@ watch(isMobileMenuOpen, (open) => {
           <li v-for="link in navLinks" :key="link.label">
             <a
               v-if="!link.hasDropdown"
-              :href="link.href"
+              :href="resolveHref(link.href)"
               class="block rounded-lg px-4 py-4 text-lg text-white transition-colors hover:bg-white/5"
               style="font-family: var(--font-grotesk); font-weight: 600;"
-              @click="onLinkClick(link.href)"
+              @click="onLinkClick(resolveHref(link.href))"
             >
               {{ link.label }}
             </a>

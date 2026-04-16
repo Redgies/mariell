@@ -4,34 +4,12 @@ import { siteConfig } from '~~/shared/config/site'
 
 <template>
   <section class="relative overflow-hidden px-5 py-16 md:px-10 md:py-24 lg:px-16">
-    <!-- Atmospheric central glow -->
-    <div
-      class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      aria-hidden="true"
-    >
-      <div
-        class="blob"
-        style="
-          position: relative;
-          width: 900px;
-          height: 900px;
-          background: radial-gradient(circle, #ff00ff 0%, #00ffff 55%, transparent 75%);
-          opacity: 0.28;
-          filter: blur(140px);
-        "
-      />
-    </div>
-
     <div class="relative mx-auto max-w-5xl text-center">
       <div class="flex justify-center">
         <SectionLabel number="—" label="Parlons-en" />
       </div>
 
-      <h2
-        class="mt-10 headline-xl text-white scroll-parallax"
-        data-parallax="-0.9"
-        data-split
-      >
+      <h2 class="reveal mt-10 headline-xl text-white">
         Encore bienvenue<br />chez Mariell.
       </h2>
 
