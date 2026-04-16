@@ -7,11 +7,8 @@ const year = new Date().getFullYear()
     <div class="mx-auto max-w-7xl">
       <div class="grid grid-cols-12 gap-x-6 gap-y-12 pb-16">
         <div class="col-span-12 md:col-span-6">
-          <a
-            href="#accueil"
-            class="font-serif-jp text-5xl tracking-tight text-white md:text-7xl"
-          >
-            MARIELL<span class="gradient-text">.</span>
+          <a href="#accueil">
+            <img src="/logo_site.png" alt="Mariell" class="h-12 w-auto md:h-16" />
           </a>
           <p
             class="mt-6 max-w-md text-sm leading-relaxed text-white/55 md:text-base"

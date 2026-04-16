@@ -62,7 +62,7 @@ watch(isMobileMenuOpen, (open) => {
         class="font-serif-jp text-2xl tracking-tight text-white transition-colors hover:text-white/90 md:text-[1.75rem]"
         @click="onLinkClick('#accueil')"
       >
-        MARIELL<span class="gradient-text">.</span>
+        <img src="/logo_site.png" alt="Mariell" class="h-8 w-auto" />
       </a>
 
       <!-- Desktop nav -->

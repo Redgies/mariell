@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { clients } from '~~/shared/config/site'
 
-type Tile = { name: string; placeholder?: boolean }
+type Tile = { name: string; logo?: string; placeholder?: boolean }
 
 const tiles: Tile[] = [
-  ...clients.slice(0, 4).map((c) => ({ name: c.name })),
+  ...clients.slice(0, 5).map((c) => ({ name: c.name, logo: c.logo })),
   { name: 'Votre logo ?', placeholder: true },
-  ...clients.slice(4).map((c) => ({ name: c.name })),
+  ...clients.slice(5).map((c) => ({ name: c.name, logo: c.logo })),
 ]
 
 const scroller = ref<HTMLElement | null>(null)
@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
           v-for="(tile, idx) in tiles"
           :key="`logo-${idx}`"
           :class="[
-            'flex h-14 w-36 shrink-0 items-center justify-center border-r text-xs uppercase tracking-[0.2em] transition-colors md:h-16 md:w-44',
+            'flex h-20 w-40 shrink-0 items-center justify-center border-r text-xs uppercase tracking-[0.2em] transition-colors md:h-24 md:w-48',
             tile.placeholder
               ? 'border-white/25 border-r-dashed text-white/75 hover:text-white'
               : 'client-tile border-white/8 text-white/50 hover:text-white/80',
@@ -112,7 +112,11 @@ onBeforeUnmount(() => {
             <span class="gradient-text italic">{{ tile.name }}</span>
           </template>
           <template v-else>
-            {{ tile.name }}
+            <img
+              :src="tile.logo"
+              :alt="tile.name"
+              class="h-20 w-36 object-contain opacity-60 transition-opacity hover:opacity-90"
+            />
           </template>
         </div>
       </div>

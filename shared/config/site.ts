@@ -25,8 +25,9 @@ export const resourcesDropdown = [
   { label: 'Bientôt disponible', href: '#', disabled: true },
 ] as const
 
-export const clients = Array.from({ length: 8 }, (_, i) => ({
-  name: `Logo Client ${i + 1}`,
+export const clients = Array.from({ length: 10 }, (_, i) => ({
+  name: `Client ${i + 1}`,
+  logo: `/logo_${i + 1}.png`,
 }))
 
 export interface Testimonial {

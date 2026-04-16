@@ -125,14 +125,20 @@
   "hotPaths": [
     {
       "path": "app\\components\\TestimonialsCarousel.vue",
-      "accessCount": 14,
-      "lastAccessed": 1776347656838,
+      "accessCount": 19,
+      "lastAccessed": 1776350623151,
       "type": "file"
     },
     {
       "path": "app\\app.vue",
       "accessCount": 14,
       "lastAccessed": 1776347901225,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 14,
+      "lastAccessed": 1776350900009,
       "type": "file"
     },
     {
@@ -166,12 +172,6 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\ClientsMarquee.vue",
-      "accessCount": 8,
-      "lastAccessed": 1776347319877,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\ProcessSteps.vue",
       "accessCount": 8,
       "lastAccessed": 1776347468919,
@@ -184,21 +184,27 @@
       "type": "file"
     },
     {
+      "path": "app\\components\\AppNavbar.vue",
+      "accessCount": 8,
+      "lastAccessed": 1776350749422,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\ScrollFx.vue",
       "accessCount": 7,
       "lastAccessed": 1776104915005,
       "type": "file"
     },
     {
-      "path": "app\\components\\AppNavbar.vue",
-      "accessCount": 6,
-      "lastAccessed": 1776072746633,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\GradientBlobs.vue",
       "accessCount": 4,
       "lastAccessed": 1776086238527,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\AppFooter.vue",
+      "accessCount": 4,
+      "lastAccessed": 1776350926469,
       "type": "file"
     },
     {
@@ -214,9 +220,15 @@
       "type": "directory"
     },
     {
-      "path": "app\\components\\AppFooter.vue",
+      "path": "shared/config/site.ts",
       "accessCount": 2,
-      "lastAccessed": 1776072739750,
+      "lastAccessed": 1776350722113,
+      "type": "directory"
+    },
+    {
+      "path": "shared\\config\\site.ts",
+      "accessCount": 2,
+      "lastAccessed": 1776350736434,
       "type": "file"
     },
     {
@@ -241,12 +253,6 @@
       "path": "app\\components",
       "accessCount": 1,
       "lastAccessed": 1776103591605,
-      "type": "directory"
-    },
-    {
-      "path": "shared/config/site.ts",
-      "accessCount": 1,
-      "lastAccessed": 1776347795327,
       "type": "directory"
     }
   ],

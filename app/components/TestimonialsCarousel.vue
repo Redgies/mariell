@@ -6,7 +6,7 @@ const scroller = ref<HTMLElement | null>(null)
 const scrollByAmount = (direction: 1 | -1) => {
   if (!scroller.value) return
   const card = scroller.value.querySelector<HTMLElement>('[data-testimonial-card]')
-  const step = (card?.offsetWidth ?? 360) + 24
+  const step = (card?.offsetWidth ?? 320) + 16
   scroller.value.scrollBy({ left: step * direction, behavior: 'smooth' })
 }
 </script>
@@ -46,9 +46,13 @@ const scrollByAmount = (direction: 1 | -1) => {
         </div>
       </div>
 
+      <!--
+        Mobile  : 1 card à la fois  (w = 100vw - padding)
+        Desktop : 2 cards à la fois (w = calc(50% - 8px) → 2×card + gap = 100% pile, zéro coupure)
+      -->
       <div
         ref="scroller"
-        class="reveal carousel-scroll -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-4 md:mx-0 md:px-0"
+        class="reveal carousel-scroll -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-4 md:mx-0 md:scroll-pl-0 md:px-0 md:pb-0"
         role="region"
         aria-roledescription="carousel"
         aria-label="Témoignages clients"
@@ -58,7 +62,7 @@ const scrollByAmount = (direction: 1 | -1) => {
           v-for="(testimonial, idx) in testimonials"
           :key="testimonial.name"
           data-testimonial-card
-          class="group relative flex w-[85%] shrink-0 snap-center flex-col justify-between gap-6 rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 sm:w-[55%] md:w-[380px] md:p-8"
+          class="group relative flex w-[calc(100vw-3rem)] shrink-0 snap-start flex-col justify-between gap-6 rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 md:w-[calc(50%-8px)] md:p-8"
         >
           <div class="flex items-start justify-between">
             <span class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
@@ -69,9 +73,7 @@ const scrollByAmount = (direction: 1 | -1) => {
             </svg>
           </div>
 
-          <p
-            class="font-serif-jp text-base leading-relaxed text-white/90 md:text-lg"
-          >
+          <p class="font-serif-jp text-base leading-relaxed text-white/90 md:text-lg">
             {{ testimonial.quote }}
           </p>
 
@@ -85,23 +87,18 @@ const scrollByAmount = (direction: 1 | -1) => {
               </span>
             </div>
             <div>
-              <p
-                class="text-sm text-white"
-                style="font-family: var(--font-grotesk); font-weight: 500;"
-              >
+              <p class="text-sm text-white" style="font-family: var(--font-grotesk); font-weight: 500;">
                 {{ testimonial.name }}
               </p>
-              <p
-                class="mt-0.5 text-xs text-white/55"
-                style="font-family: var(--font-grotesk); font-weight: 300;"
-              >
+              <p class="mt-0.5 text-xs text-white/55" style="font-family: var(--font-grotesk); font-weight: 300;">
                 {{ testimonial.role }}
               </p>
             </div>
           </div>
         </article>
-        <!-- Trailing spacer so the last card isn't clipped -->
-        <div class="w-5 shrink-0 md:w-px" aria-hidden="true" />
+
+        <!-- Trailing spacer mobile uniquement -->
+        <div class="w-5 shrink-0 md:hidden" aria-hidden="true" />
       </div>
     </div>
   </section>
