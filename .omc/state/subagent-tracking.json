@@ -1,17 +1,7 @@
 {
-  "agents": [
-    {
-      "agent_id": "abde3b9a513298203",
-      "agent_type": "oh-my-claudecode:verifier",
-      "started_at": "2026-04-13T00:46:09.398Z",
-      "parent_mode": "none",
-      "status": "completed",
-      "completed_at": "2026-04-13T00:47:10.639Z",
-      "duration_ms": 61241
-    }
-  ],
-  "total_spawned": 1,
-  "total_completed": 1,
+  "agents": [],
+  "total_spawned": 0,
+  "total_completed": 0,
   "total_failed": 0,
-  "last_updated": "2026-04-16T15:12:36.818Z"
+  "last_updated": "2026-04-17T10:59:46.327Z"
 }

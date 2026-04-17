@@ -36,6 +36,10 @@ import { benefits } from '~~/shared/config/site'
             </span>
           </div>
 
+          <h3 class="mb-3 text-lg font-semibold text-white md:text-xl">
+            {{ benefit.title }}
+          </h3>
+
           <div
             class="whitespace-pre-line text-[0.95rem] leading-relaxed text-white/80 md:text-base"
             style="font-family: var(--font-grotesk); font-weight: 300;"

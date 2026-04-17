@@ -1,6 +1,0 @@
-{"t":0,"agent":"abde3b9","agent_type":"verifier","event":"agent_start","parent_mode":"none"}
-{"t":0,"agent":"abde3b9","agent_type":"verifier","event":"agent_stop","success":true,"duration_ms":61241}
-{"t":0,"agent":"system","event":"skill_invoked","skill_name":"oh-my-claudecode:ai-slop-cleaner"}
-{"t":0,"agent":"system","event":"skill_invoked","skill_name":"oh-my-claudecode:cancel"}
-{"t":0,"agent":"ae3b6a7","agent_type":"unknown","event":"agent_stop","success":true}
-{"t":0,"agent":"a35d33e","agent_type":"unknown","event":"agent_stop","success":true}

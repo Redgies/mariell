@@ -72,19 +72,23 @@ export const testimonials: Testimonial[] = [
 export const benefits = [
   {
     icon: '📈',
+    title: 'Résultats',
     text: "60+ Tops profils recrutés, qui drive la croissance de nos partenaires.\n\nDu SDR (Sales Development Representative) au Head of Sales.\nDes performances mesurables, un impact vérifié.\n\nUn Track record, un investissement devenu anecdotique. 94% de succès",
   },
   {
     icon: '🤝',
+    title: 'Proximité',
     text: "Une compréhension du market, de ses règles et de ses failles.\n\nVotre besoin devient le nôtre. Une proximité sans conditions avec vos enjeux.\n\nOn acquiesce quand il le faut, on challenge tout autant.\n\nVotre satisfaction est un impératif, notre exigence envers nous-mêmes également.",
   },
   {
     icon: '⏱',
+    title: 'Réactivité',
     text: "Un poste vacant en Sales ? Du CA de perdu.\nUne recherche qui dure ? Du CA de perdu.\n\nUn mauvais recrutement ? Du CA de perdu, beaucoup.\n\nLe temps c'est de l'argent, personne ne veut en perdre. Cash is king.",
   },
   {
     icon: '🔍',
-    text: "Tous les Sales ne se valent pas. Les recruteurs non plus.\nNotre expérience personnelle du métier Sales nous permet une évaluation critique.\n\nUn bon Sales c'est un CV attrayant et un discours captivant.\nLes meilleurs Sales c'est : un Track record impactant et exploitable sur des cycles de ventes pertinents, une intelligence cognitive et émotionnelle (surtout, cf. étude Harvard) remarquable à tous les niveaux.",
+    title: 'Performance',
+    text: "Tous les Sales ne se valent pas. Les recruteurs non plus.\nNotre expérience personnelle du métier Sales nous permet une évaluation critique. Chez Mariell, on parle performance.\n\nUn bon Sales c'est un CV attrayant et un discours captivant.\nLes meilleurs Sales c'est : un Track record impactant et exploitable sur des cycles de ventes pertinents, une intelligence cognitive et émotionnelle (surtout, cf. étude Harvard) remarquable à tous les niveaux.",
   },
 ]
 
