@@ -111,6 +111,7 @@ onMounted(async () => {
 <template>
   <main class="relative">
     <HeroSection />
+    <PeopleHunt />
     <div class="reveal hairline mx-auto max-w-7xl" />
     <VideoSection />
     <div class="reveal hairline mx-auto max-w-7xl" />

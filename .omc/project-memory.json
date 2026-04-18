@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776290263246,
+  "lastScanned": 1776539520331,
   "projectRoot": "C:\\Users\\Mathias\\Documents\\Work\\Mariell",
   "techStack": {
     "languages": [
@@ -73,7 +73,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 1,
-      "lastAccessed": 1776290263221,
+      "lastAccessed": 1776539520289,
       "keyFiles": [
         "app.vue"
       ]
@@ -81,42 +81,57 @@
     "public": {
       "path": "public",
       "purpose": "Public files",
-      "fileCount": 1,
-      "lastAccessed": 1776290263222,
+      "fileCount": 13,
+      "lastAccessed": 1776539520289,
       "keyFiles": [
-        "favicon.svg"
+        "favicon.svg",
+        "logo_1.png",
+        "logo_10.png",
+        "logo_2.png",
+        "logo_3.png"
       ]
     },
     "shared": {
       "path": "shared",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1776290263235,
+      "lastAccessed": 1776539520301,
       "keyFiles": []
     },
     "app\\assets": {
       "path": "app\\assets",
       "purpose": "Static assets",
       "fileCount": 0,
-      "lastAccessed": 1776290263235,
+      "lastAccessed": 1776539520302,
       "keyFiles": []
     },
     "app\\components": {
       "path": "app\\components",
       "purpose": "UI components",
       "fileCount": 13,
-      "lastAccessed": 1776290263235,
+      "lastAccessed": 1776539520302,
       "keyFiles": [
         "AppFooter.vue",
         "AppNavbar.vue",
         "BenefitsGrid.vue"
       ]
     },
+    "app\\pages": {
+      "path": "app\\pages",
+      "purpose": "Page components",
+      "fileCount": 3,
+      "lastAccessed": 1776539520303,
+      "keyFiles": [
+        "index.vue",
+        "mentions-legales.vue",
+        "politique-confidentialite.vue"
+      ]
+    },
     "shared\\config": {
       "path": "shared\\config",
       "purpose": "Configuration files",
       "fileCount": 1,
-      "lastAccessed": 1776290263236,
+      "lastAccessed": 1776539520303,
       "keyFiles": [
         "site.ts"
       ]
@@ -137,14 +152,20 @@
     },
     {
       "path": "app\\app.vue",
-      "accessCount": 16,
-      "lastAccessed": 1776352557785,
+      "accessCount": 17,
+      "lastAccessed": 1776540104458,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\PeopleHunt.vue",
+      "accessCount": 17,
+      "lastAccessed": 1776540907106,
       "type": "file"
     },
     {
       "path": "app\\assets\\css\\main.css",
-      "accessCount": 14,
-      "lastAccessed": 1776353084974,
+      "accessCount": 15,
+      "lastAccessed": 1776540107978,
       "type": "file"
     },
     {
@@ -173,8 +194,8 @@
     },
     {
       "path": "app\\components\\HeroSection.vue",
-      "accessCount": 11,
-      "lastAccessed": 1776346938837,
+      "accessCount": 12,
+      "lastAccessed": 1776539556473,
       "type": "file"
     },
     {
@@ -238,6 +259,12 @@
       "type": "file"
     },
     {
+      "path": "app\\pages\\index.vue",
+      "accessCount": 3,
+      "lastAccessed": 1776540375357,
+      "type": "file"
+    },
+    {
       "path": "shared/config/site.ts",
       "accessCount": 2,
       "lastAccessed": 1776350722113,
@@ -274,9 +301,27 @@
       "type": "directory"
     },
     {
-      "path": "app\\pages\\index.vue",
+      "path": "people-hunt\\README.md",
       "accessCount": 1,
-      "lastAccessed": 1776352569275,
+      "lastAccessed": 1776539889991,
+      "type": "file"
+    },
+    {
+      "path": "people-hunt\\project\\preview-on-dark.html",
+      "accessCount": 1,
+      "lastAccessed": 1776539890373,
+      "type": "file"
+    },
+    {
+      "path": "people-hunt\\project\\mariell-tokens.css",
+      "accessCount": 1,
+      "lastAccessed": 1776539890510,
+      "type": "file"
+    },
+    {
+      "path": "people-hunt\\project\\People Hunt.html",
+      "accessCount": 1,
+      "lastAccessed": 1776539893418,
       "type": "file"
     }
   ],
