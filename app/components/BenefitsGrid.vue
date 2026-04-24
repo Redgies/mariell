@@ -1,53 +1,81 @@
 <script setup lang="ts">
-import { benefits } from '~~/shared/config/site'
+const benefitsAsym = [
+  {
+    title: '60+ tops profils qui drivent la croissance.',
+    paragraphs: [
+      'Du SDR au Head of Sales. Des performances mesurables, un impact vérifié.',
+      '<strong>Un track record, un investissement devenu anecdotique. 94% de succès.</strong>',
+    ],
+    iconPath: '<polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/>',
+  },
+  {
+    title: 'Une compréhension du market.',
+    paragraphs: [
+      'Votre besoin devient le nôtre. Une proximité sans conditions avec vos enjeux.',
+      'On acquiesce quand il le faut, <strong>on challenge tout autant.</strong>',
+    ],
+    iconPath: '<path d="M8 11l3 3 5-5"/><path d="M7 15v3a2 2 0 002 2h6a2 2 0 002-2v-3"/><path d="M17 9V6a2 2 0 00-2-2H9a2 2 0 00-2 2v3"/>',
+  },
+  {
+    title: "Le temps, c'est de l'argent.",
+    paragraphs: [
+      "Poste vacant en Sales ? Du CA de perdu. Recherche qui dure ? Du CA de perdu.",
+      "<strong>Mauvais recrutement ? Du CA de perdu, beaucoup.</strong> Cash is king.",
+    ],
+    iconPath: '<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>',
+  },
+  {
+    title: 'Tous les Sales ne se valent pas.',
+    paragraphs: [
+      'Notre expérience personnelle du métier Sales nous permet une évaluation critique.',
+      "Track record impactant, intelligence cognitive et émotionnelle — <strong>c'est ce qu'on cherche.</strong>",
+    ],
+    iconPath: '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/><circle cx="11" cy="11" r="3"/>',
+  },
+]
 </script>
 
 <template>
-  <section id="process" class="relative px-5 py-14 md:px-10 md:py-20 lg:px-16">
+  <section id="process" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="mb-12 grid grid-cols-12 gap-x-6 gap-y-8">
-        <div class="col-span-12 md:col-span-5">
-          <SectionLabel number="— 02" label="Pourquoi Mariell" />
-          <h2 class="mt-6 headline-lg text-white" data-split>
-            Quatre raisons,<br />
-            <span class="gradient-text italic">zéro hasard.</span>
-          </h2>
-        </div>
-        <p
-          class="reveal col-span-12 max-w-xl self-end text-base leading-relaxed text-white/60 md:col-span-5 md:col-start-7 md:text-lg"
-          style="font-family: var(--font-grotesk); font-weight: 300;"
-        >
-          Recruter un Sales n'est pas un pari. C'est un investissement mesurable, et nous en tenons les comptes à votre place.
-        </p>
+      <div class="reveal mb-16 max-w-3xl">
+        <span class="eyebrow-cyan mb-5">Pourquoi Mariell</span>
+        <h2 class="mt-5 headline-section text-white" data-split>
+          Recruter un top Sales,<br />
+          ce n'est pas un <span class="gradient-text italic">coup de chance.</span>
+        </h2>
       </div>
 
-      <div class="stagger grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="benefits-asym">
         <article
-          v-for="(benefit, idx) in benefits"
-          :key="`benefit-${idx}`"
-          class="reveal card-tilt group relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 md:p-8"
+          v-for="(benefit, idx) in benefitsAsym"
+          :key="idx"
+          class="benefit-card reveal"
         >
-          <div class="mb-6 flex items-baseline justify-between">
-            <span class="font-mono-num text-xs uppercase tracking-[0.25em] text-white/40">
-              0{{ idx + 1 }}
-            </span>
-            <span class="text-3xl transition-transform duration-500 group-hover:-translate-y-1 md:text-4xl" role="img" aria-hidden="true">
-              {{ benefit.icon }}
-            </span>
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" v-html="benefit.iconPath" />
           </div>
-
-          <h3 class="mb-3 text-lg font-semibold text-white md:text-xl">
-            {{ benefit.title }}
-          </h3>
-
           <div
-            class="whitespace-pre-line text-[0.95rem] leading-relaxed text-white/80 md:text-base"
+            class="mb-4 text-[24px] leading-tight tracking-[-0.01em] text-white"
+            style="font-family: var(--font-serif-jp); font-weight: 500;"
+          >
+            {{ benefit.title }}
+          </div>
+          <div
+            class="space-y-2.5 text-[15px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            {{ benefit.text }}
+            <p v-for="(p, pi) in benefit.paragraphs" :key="pi" v-html="p" />
           </div>
         </article>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.benefit-card :deep(strong) {
+  color: #fff;
+  font-weight: 500;
+}
+</style>

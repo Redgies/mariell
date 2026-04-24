@@ -1,7 +1,7 @@
 {
   "tool_name": "WebFetch",
-  "tool_input_preview": "{\"url\":\"https://api.anthropic.com/v1/design/h/w0QpJkS5rSrENJR6k0NcPg\",\"prompt\":\"Extract all design details including README, HTML structure, CSS, components, colors, animations, and implementation not...",
+  "tool_input_preview": "{\"url\":\"https://api.anthropic.com/v1/design/h/ONsp7i2l-s_PUXtMIdKxeQ\",\"prompt\":\"Show file listing and contents.\"}",
   "error": "Request failed with status code 404",
-  "timestamp": "2026-04-18T19:12:24.576Z",
+  "timestamp": "2026-04-24T22:26:55.811Z",
   "retry_count": 2
 }

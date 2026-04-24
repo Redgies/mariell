@@ -2,7 +2,23 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:api.anthropic.com)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(mkdir -p /tmp/design)",
+      "Read(//tmp/**)",
+      "Bash(tar -xzf \"C:/Users/Mathias/.claude/projects/C--Users-Mathias-Documents-Work-Mariell/3a624096-d46b-417d-b315-727765746eef/tool-results/webfetch-1777068359282-hezc3a.bin\")",
+      "Bash(cp \"/c/Users/Mathias/.claude/projects/C--Users-Mathias-Documents-Work-Mariell/3a624096-d46b-417d-b315-727765746eef/tool-results/webfetch-1777068359282-hezc3a.bin\" /tmp/design.tar.gz)",
+      "Bash(tar -xzf /tmp/design.tar.gz)",
+      "Bash(mkdir -p /tmp/d)",
+      "Bash(cp \"/tmp/design/mariell/README.md\" /tmp/d/README.md)",
+      "Bash(cp \"/tmp/design/mariell/project/Model 2 - Asymmetric.html\" /tmp/d/model2.html)",
+      "Bash(cp \"/tmp/design/mariell/project/Model 1 - Editorial.html\" /tmp/d/model1.html)",
+      "Bash(cp \"/tmp/design/mariell/chats/chat1.md\" /tmp/d/chat1.md)",
+      "Bash(cygpath *)",
+      "Bash(curl -s -o /tmp/page.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /tmp/page2.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /tmp/page3.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /tmp/page4.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl *)"
     ]
   }
 }

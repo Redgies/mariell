@@ -6,99 +6,101 @@ const scroller = ref<HTMLElement | null>(null)
 const scrollByAmount = (direction: 1 | -1) => {
   if (!scroller.value) return
   const card = scroller.value.querySelector<HTMLElement>('[data-testimonial-card]')
-  const step = (card?.offsetWidth ?? 320) + 16
+  const step = (card?.offsetWidth ?? 460) + 20
   scroller.value.scrollBy({ left: step * direction, behavior: 'smooth' })
 }
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
 </script>
 
 <template>
-  <section class="relative px-5 py-14 md:px-10 md:py-20 lg:px-16">
+  <section class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="mb-10 grid grid-cols-12 gap-x-6 gap-y-8">
-        <div class="col-span-12 md:col-span-7">
-          <SectionLabel number="— 05" label="Témoignages" />
-          <h2 class="mt-6 headline-lg text-white" data-split>
-            Ils nous ont<br />fait <span class="gradient-text italic">confiance.</span>
+      <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <span class="eyebrow-cyan">Témoignages</span>
+          <h2 class="mt-5 headline-section text-white" data-split>
+            Ceux qui ont fait<br />
+            le choix <span class="gradient-text italic">Mariell.</span>
           </h2>
         </div>
+      </div>
 
-        <div class="col-span-12 flex items-end justify-start gap-3 md:col-span-5 md:justify-end">
+      <div class="relative">
+        <!-- Controls -->
+        <div class="absolute -top-16 right-0 flex gap-2.5">
           <button
             type="button"
-            class="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white transition-all hover:border-cyan-400/50 hover:bg-white/5"
+            class="flex h-[46px] w-[46px] items-center justify-center rounded-full border border-white/18 bg-transparent text-white transition-all hover:border-white/30 hover:bg-white/5"
             aria-label="Témoignage précédent"
             @click="scrollByAmount(-1)"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
           <button
             type="button"
-            class="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white transition-all hover:border-fuchsia-400/50 hover:bg-white/5"
+            class="flex h-[46px] w-[46px] items-center justify-center rounded-full border border-white/18 bg-transparent text-white transition-all hover:border-white/30 hover:bg-white/5"
             aria-label="Témoignage suivant"
             @click="scrollByAmount(1)"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
         </div>
-      </div>
 
-      <!--
-        Mobile  : 1 card à la fois  (w = 100vw - padding)
-        Desktop : 2 cards à la fois (w = calc(50% - 8px) → 2×card + gap = 100% pile, zéro coupure)
-      -->
-      <div
-        ref="scroller"
-        class="reveal carousel-scroll -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-4 md:mx-0 md:scroll-pl-0 md:px-0 md:pb-0"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Témoignages clients"
-        tabindex="0"
-      >
-        <article
-          v-for="(testimonial, idx) in testimonials"
-          :key="testimonial.name"
-          data-testimonial-card
-          class="group relative flex w-[calc(100vw-3rem)] shrink-0 snap-start flex-col justify-between gap-6 rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm transition-colors hover:border-white/25 md:w-[calc(50%-8px)] md:p-8"
+        <div
+          ref="scroller"
+          class="reveal carousel-scroll flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6 pt-2"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Témoignages clients"
+          tabindex="0"
         >
-          <div class="flex items-start justify-between">
-            <span class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
-              0{{ idx + 1 }} / 0{{ testimonials.length }}
-            </span>
-            <svg class="text-white/15" width="40" height="40" viewBox="0 0 40 40" fill="currentColor" aria-hidden="true">
-              <path d="M0 22c0-9.6 5.6-18 14-22l2 4c-5.6 3.2-9 8-9 13h7v13H0V22zm22 0c0-9.6 5.6-18 14-22l2 4c-5.6 3.2-9 8-9 13h7v13H22V22z" />
-            </svg>
-          </div>
+          <article
+            v-for="testimonial in testimonials"
+            :key="testimonial.name"
+            data-testimonial-card
+            class="testi-card"
+          >
+            <div class="testi-mark">"</div>
 
-          <p class="font-serif-jp text-base leading-relaxed text-white/90 md:text-lg">
-            {{ testimonial.quote }}
-          </p>
-
-          <div class="flex items-center gap-4 border-t border-white/10 pt-6">
-            <div
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-white/5 to-white/0"
-              aria-hidden="true"
+            <p
+              class="flex-1 text-[17px] leading-[1.7] text-white/90"
+              style="font-family: var(--font-grotesk); font-weight: 300;"
             >
-              <span class="font-serif-jp text-base text-white/70">
-                {{ testimonial.name.split(' ').map(n => n[0]).join('') }}
-              </span>
-            </div>
-            <div>
-              <p class="text-sm text-white" style="font-family: var(--font-grotesk); font-weight: 500;">
-                {{ testimonial.name }}
-              </p>
-              <p class="mt-0.5 text-xs text-white/55" style="font-family: var(--font-grotesk); font-weight: 300;">
-                {{ testimonial.role }}
-              </p>
-            </div>
-          </div>
-        </article>
+              {{ testimonial.quote }}
+            </p>
 
-        <!-- Trailing spacer mobile uniquement -->
-        <div class="w-5 shrink-0 md:hidden" aria-hidden="true" />
+            <div class="flex items-center gap-3.5">
+              <div class="testi-avatar" aria-hidden="true">
+                {{ initials(testimonial.name) }}
+              </div>
+              <div>
+                <div
+                  class="text-[15px] text-white"
+                  style="font-family: var(--font-grotesk); font-weight: 600;"
+                >
+                  {{ testimonial.name }}
+                </div>
+                <div
+                  class="text-[13px] text-white/45"
+                  style="font-family: var(--font-grotesk); font-weight: 300;"
+                >
+                  {{ testimonial.role }}
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
     </div>
   </section>

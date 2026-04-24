@@ -3,51 +3,54 @@ const year = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="relative border-t border-white/10 bg-black px-5 pt-20 pb-10 md:px-10 lg:px-16">
+  <footer class="relative border-t border-white/8 bg-black px-5 pt-20 pb-10 md:px-10 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-12 gap-x-6 gap-y-12 pb-16">
-        <div class="col-span-12 md:col-span-6">
+      <div class="grid grid-cols-1 gap-10 pb-16 md:grid-cols-[2fr_1fr_1fr] md:gap-16">
+        <div>
           <a href="#accueil">
-            <img src="/logo_site.png" alt="Mariell" class="h-12 w-auto md:h-16" />
+            <img src="/logo_site.png" alt="Mariell" class="block h-12 w-auto" />
           </a>
           <p
-            class="mt-6 max-w-md text-sm leading-relaxed text-white/55 md:text-base"
+            class="mt-6 max-w-md text-[0.92rem] leading-[1.65] text-white/55"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
             Cabinet de recrutement Sales premium. Paris — mais on chasse partout où vos meilleurs profils se cachent.
           </p>
         </div>
 
-        <div class="col-span-6 md:col-span-3">
-          <p class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
+        <div>
+          <p class="font-mono-num mb-5 text-[0.7rem] uppercase tracking-[0.24em] text-white/40">
             Navigation
           </p>
-          <ul class="mt-5 space-y-3 text-sm" style="font-family: var(--font-grotesk); font-weight: 300;">
+          <ul class="flex flex-col gap-3 text-[0.9rem]" style="font-family: var(--font-grotesk); font-weight: 300;">
             <li><a href="#accueil" class="text-white/75 transition-colors hover:text-white">Accueil</a></li>
             <li><a href="#who" class="text-white/75 transition-colors hover:text-white">Who is Mariell ?</a></li>
-            <li><a href="#process" class="text-white/75 transition-colors hover:text-white">Process</a></li>
+            <li><a href="#process-section" class="text-white/75 transition-colors hover:text-white">Process</a></li>
             <li><a href="#pricing" class="text-white/75 transition-colors hover:text-white">Pricing</a></li>
           </ul>
         </div>
 
-        <div class="col-span-6 md:col-span-3">
-          <p class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
+        <div>
+          <p class="font-mono-num mb-5 text-[0.7rem] uppercase tracking-[0.24em] text-white/40">
             Légal
           </p>
-          <ul class="mt-5 space-y-3 text-sm" style="font-family: var(--font-grotesk); font-weight: 300;">
+          <ul class="flex flex-col gap-3 text-[0.9rem]" style="font-family: var(--font-grotesk); font-weight: 300;">
             <li><NuxtLink to="/mentions-legales" class="text-white/75 transition-colors hover:text-white">Mentions légales</NuxtLink></li>
             <li><NuxtLink to="/politique-confidentialite" class="text-white/75 transition-colors hover:text-white">Politique de protection des données</NuxtLink></li>
           </ul>
         </div>
       </div>
 
-      <div class="flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-8 md:flex-row md:items-center">
-        <p
-          class="font-mono-num text-xs text-white/40"
-        >
+      <div
+        class="flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-8"
+      >
+        <p class="font-mono-num text-[0.72rem] tracking-[0.2em] text-white/40">
           © {{ year }} MARIELL · TOUS DROITS RÉSERVÉS
         </p>
-        <p class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
+        <p
+          class="text-[0.95rem] italic text-white/55"
+          style="font-family: var(--font-serif-jp); font-weight: 500;"
+        >
           Recruter n'est pas un pari.
         </p>
       </div>

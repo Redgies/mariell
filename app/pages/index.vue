@@ -111,18 +111,12 @@ onMounted(async () => {
 <template>
   <main class="relative">
     <HeroSection />
-    <PeopleHunt />
-    <div class="reveal hairline mx-auto max-w-7xl" />
+    <ApproachSection />
     <VideoSection />
-    <div class="reveal hairline mx-auto max-w-7xl" />
     <ClientsMarquee />
-    <div class="reveal hairline mx-auto max-w-7xl" />
     <BenefitsGrid />
-    <div class="reveal hairline mx-auto max-w-7xl" />
     <ProcessSteps />
-    <div class="reveal hairline mx-auto max-w-7xl" />
     <PricingSection />
-    <div class="reveal hairline mx-auto max-w-7xl" />
     <TestimonialsCarousel />
     <FinalCta />
   </main>

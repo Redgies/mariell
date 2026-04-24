@@ -1,81 +1,67 @@
 <script setup lang="ts">
-import { pricingBadges, siteConfig } from '~~/shared/config/site'
+import { siteConfig } from '~~/shared/config/site'
+
+const sideBadges = [
+  { value: '94%', label: 'Success rate' },
+  { value: '✓', label: "Garantie période d'essai" },
+  { value: '100%', label: 'Chasse sur-mesure' },
+]
 </script>
 
 <template>
-  <section id="pricing" class="relative px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <section id="pricing" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-12 gap-x-6 gap-y-12">
-        <div class="col-span-12 md:col-span-5">
-          <SectionLabel number="— 04" label="Pricing" />
-          <h2 class="mt-6 headline-lg text-white" data-split>
-            Simple.<br />
-            <span class="gradient-text italic">Transparent.</span>
-          </h2>
+      <div class="reveal mb-14 max-w-2xl">
+        <span class="eyebrow-cyan">Pricing</span>
+        <h2 class="mt-5 headline-section text-white" data-split>
+          <span class="gradient-text italic">Simple.</span><br />
+          Transparent.
+        </h2>
+      </div>
 
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_1fr]">
+        <!-- Left: pricing box -->
+        <div class="pricing-box reveal">
           <p
-            class="reveal mt-8 text-base leading-relaxed text-white/65 md:text-lg"
+            class="text-[16px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            Chez Mariell on ne se cache pas.<br />Pas de prix à la tête, pas de bullshit.
+            Chez Mariell, <strong class="font-medium text-white">on ne se cache pas. Pas de prix à la tête, pas de bullshit.</strong>
           </p>
-        </div>
 
-        <div class="col-span-12 md:col-span-7">
-          <!-- Headline price card -->
-          <div class="reveal relative overflow-hidden border border-white/10 bg-black/40 backdrop-blur-sm">
-            <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl" aria-hidden="true" />
-            <div class="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl" aria-hidden="true" />
-
-            <div class="relative p-8 md:p-12">
-              <p class="font-mono-num text-xs uppercase tracking-[0.25em] text-white/45">
-                Fees · Pour 1 recrutement
-              </p>
-              <div class="mt-4 flex items-baseline gap-2">
-                <span class="font-serif-jp text-6xl text-white md:text-8xl">20</span>
-                <span class="gradient-text font-serif-jp text-5xl md:text-7xl">%</span>
-                <span
-                  class="ml-2 text-sm text-white/55 md:text-base"
-                  style="font-family: var(--font-grotesk); font-weight: 300;"
-                >
-                  du salaire fixe du candidat recruté
-                </span>
-              </div>
-
-              <div class="mt-8 h-px w-full bg-white/10" />
-
-              <ul
-                class="mt-8 space-y-4 text-sm text-white/75 md:text-base"
-                style="font-family: var(--font-grotesk); font-weight: 300;"
-              >
-                <li class="flex items-start gap-3">
-                  <span class="mt-1 h-px w-6 shrink-0 bg-cyan-400/70" aria-hidden="true" />
-                  <span>RDV à <span class="text-white">4 mois</span> pour constater les performances du candidat recruté.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="mt-1 h-px w-6 shrink-0 bg-fuchsia-400/70" aria-hidden="true" />
-                  <span>RDV à <span class="text-white">8 mois</span>, même exercice. Pas de « place and forget ».</span>
-                </li>
-              </ul>
-
-              <p
-                class="mt-6 text-xs text-white/40"
-                style="font-family: var(--font-grotesk); font-weight: 300;"
-              >
-                Devis sur-mesure pour les recrutements multiples, et les profils freelance.
-              </p>
-            </div>
+          <div
+            class="mt-6 mb-2 gradient-text text-[72px] leading-none tracking-[-0.04em]"
+            style="font-family: var(--font-serif-jp); font-weight: 500;"
+          >
+            20%
+          </div>
+          <div class="text-[13px] tracking-wide text-white/45">
+            du salaire fixe du candidat recruté
           </div>
 
-          <!-- CTA row -->
-          <div
-            class="reveal mt-8 flex flex-col items-start justify-between gap-5 border border-white/10 p-6 md:flex-row md:items-center md:p-8"
+          <p
+            class="mt-7 text-[16px] leading-[1.7] text-white/65"
+            style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            <p
-              class="font-serif-jp text-2xl text-white md:text-3xl"
+            + 2 RDV pour constater les performances du candidat recruté, à <strong class="font-medium text-white">4 mois puis 8 mois</strong>.
+          </p>
+
+          <p
+            class="mt-4 text-[16px] leading-[1.7] text-white/65"
+            style="font-family: var(--font-grotesk); font-weight: 300;"
+          >
+            Devis sur-mesure pour les recrutements multiples, et les profils freelance.
+          </p>
+
+          <div
+            class="mt-8 flex flex-wrap items-center justify-between gap-6 border-t border-white/8 pt-7"
+          >
+            <div
+              class="text-[22px] text-white"
+              style="font-family: var(--font-serif-jp); font-weight: 500;"
             >
               On en discute&thinsp;?
-            </p>
+            </div>
             <a
               :href="siteConfig.calendlyUrl"
               class="gradient-cta group inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm text-black md:text-base"
@@ -89,22 +75,25 @@ import { pricingBadges, siteConfig } from '~~/shared/config/site'
           </div>
         </div>
 
-        <!-- Badges strip -->
-        <div class="stagger col-span-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <!-- Right: vertical badges -->
+        <div class="flex flex-col gap-4">
           <div
-            v-for="(badge, idx) in pricingBadges"
-            :key="badge"
-            class="reveal flex items-center gap-5 rounded-2xl border border-white/10 bg-black/40 px-6 py-5 backdrop-blur-sm"
+            v-for="(b, idx) in sideBadges"
+            :key="idx"
+            class="reveal flex items-center gap-6 rounded-2xl border border-white/8 bg-white/[0.02] px-8 py-8"
           >
-            <span class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">
-              0{{ idx + 1 }}
-            </span>
-            <span
-              class="text-sm text-white/90 md:text-base"
-              style="font-family: var(--font-grotesk); font-weight: 400;"
+            <div
+              class="gradient-text min-w-[120px] text-[56px] leading-none tracking-[-0.03em]"
+              style="font-family: var(--font-serif-jp); font-weight: 500;"
             >
-              {{ badge }}
-            </span>
+              {{ b.value }}
+            </div>
+            <div
+              class="text-[15px] leading-snug text-white"
+              style="font-family: var(--font-grotesk); font-weight: 500;"
+            >
+              {{ b.label }}
+            </div>
           </div>
         </div>
       </div>

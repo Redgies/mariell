@@ -1,49 +1,95 @@
 <script setup lang="ts">
-// TODO: remplacer le conteneur placeholder par une <iframe> YouTube/Vimeo le jour où la vidéo est prête.
-// Exemple :
-// <iframe class="h-full w-full" src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen />
+// TODO: replace .video-wrap placeholder with <iframe src="..."> when the video is ready.
 </script>
 
 <template>
-  <section id="who" class="relative px-5 py-28 md:px-10 md:py-40 lg:px-16">
-    <div class="mx-auto grid max-w-7xl grid-cols-12 gap-x-6 gap-y-10">
-      <div class="col-span-12 md:col-span-4">
-        <SectionLabel number="— 01" label="Qui est Mariell" />
-        <h2 class="mt-6 headline-lg text-white" data-split>
-          Who is<br /><span class="gradient-text italic pr-2">Mariell</span>&thinsp;?
-        </h2>
-        <p
-          class="reveal mt-6 max-w-xs text-base leading-relaxed text-white/60"
-          style="font-family: var(--font-grotesk); font-weight: 300;"
-        >
-          Une équipe de Sales devenus recruteurs, par conviction et par exigence. L'histoire en deux minutes.
-        </p>
-      </div>
+  <section id="who" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
+    <div class="reveal mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+        <!-- Copy -->
+        <div>
+          <span class="eyebrow-cyan">Who is Mariell ?</span>
+          <h2 class="mt-5 headline-section text-white" data-split>
+            La personne<br />
+            derrière <span class="gradient-text italic">le cabinet.</span>
+          </h2>
+          <p
+            class="mt-5 text-[16px] leading-[1.7] text-white/65"
+            style="font-family: var(--font-grotesk); font-weight: 300;"
+          >
+            Une obsession&nbsp;: identifier les profils Sales qui transforment réellement le CA. Une méthode&nbsp;: chasse directe, évaluation critique, suivi long.
+          </p>
+        </div>
 
-      <div class="col-span-12 md:col-span-8">
-        <!-- TODO: remplacer par <iframe src="..."> ci-dessous -->
-        <div
-          class="reveal group relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-neutral-950"
-        >
-          <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-fuchsia-500/10" />
-          <div class="grain" />
-
-          <div class="relative flex h-full w-full flex-col items-center justify-center gap-5">
-            <button
-              type="button"
-              class="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-500 group-hover:scale-110 group-hover:border-cyan-400/50 group-hover:bg-white/10"
-              aria-label="Lire la vidéo (à venir)"
-            >
-              <svg class="ml-1" width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </button>
-            <p class="font-mono-num text-xs uppercase tracking-[0.25em] text-white/45">
-              Vidéo · à venir
-            </p>
+        <!-- Video placeholder -->
+        <div class="video-wrap">
+          <button
+            type="button"
+            class="video-play"
+            aria-label="Lire la vidéo (à venir)"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </button>
+          <div class="font-mono-num text-[12px] uppercase tracking-[0.28em] text-white/45">
+            Vidéo à venir
           </div>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.video-wrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  background: linear-gradient(135deg, #0e0e12, #16161c);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+.video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(94, 231, 231, 0.5), transparent 40%, transparent 60%, rgba(232, 94, 255, 0.5));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.video-play {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5ee7e7 0%, #e85eff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.45);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease-out;
+}
+.video-play:hover {
+  transform: scale(1.05);
+  box-shadow: 0 16px 56px rgba(139, 92, 246, 0.6);
+}
+.video-play svg {
+  width: 32px;
+  height: 32px;
+  fill: #0b0b12;
+  margin-left: 4px;
+}
+</style>
