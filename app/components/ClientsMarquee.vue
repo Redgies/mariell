@@ -4,8 +4,7 @@ import { clients } from '~~/shared/config/site'
 type Tile = { name: string; logo?: string; placeholder?: boolean }
 
 const baseTiles: Tile[] = [
-  ...clients.slice(0, 5).map((c) => ({ name: c.name, logo: c.logo })),
-  ...clients.slice(5, 8).map((c) => ({ name: c.name, logo: c.logo })),
+  ...clients.map((c) => ({ name: c.name, logo: c.logo })),
   { name: '+ Votre logo ?', placeholder: true },
 ]
 

@@ -172,6 +172,12 @@
       "type": "file"
     },
     {
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 7,
+      "lastAccessed": 1777333763556,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\FinalCta.vue",
       "accessCount": 6,
       "lastAccessed": 1777331589758,
@@ -187,12 +193,6 @@
       "path": "app\\components\\ProcessSteps.vue",
       "accessCount": 6,
       "lastAccessed": 1777332487152,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ClientsMarquee.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777332491755,
       "type": "file"
     },
     {
