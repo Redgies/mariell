@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1777068239170,
+  "lastScanned": 1777330802715,
   "projectRoot": "C:\\Users\\Mathias\\Documents\\Work\\Mariell",
   "techStack": {
     "languages": [
@@ -73,7 +73,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 1,
-      "lastAccessed": 1777068239146,
+      "lastAccessed": 1777330802685,
       "keyFiles": [
         "app.vue"
       ]
@@ -82,7 +82,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 13,
-      "lastAccessed": 1777068239146,
+      "lastAccessed": 1777330802700,
       "keyFiles": [
         "favicon.svg",
         "logo_1.png",
@@ -95,43 +95,52 @@
       "path": "shared",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1777068239159,
+      "lastAccessed": 1777330802700,
       "keyFiles": []
     },
     "app\\assets": {
       "path": "app\\assets",
       "purpose": "Static assets",
       "fileCount": 0,
-      "lastAccessed": 1777068239159,
+      "lastAccessed": 1777330802700,
       "keyFiles": []
     },
     "app\\components": {
       "path": "app\\components",
       "purpose": "UI components",
-      "fileCount": 14,
-      "lastAccessed": 1777068239160,
+      "fileCount": 15,
+      "lastAccessed": 1777330802701,
       "keyFiles": [
         "AppFooter.vue",
         "AppNavbar.vue",
-        "BenefitsGrid.vue"
+        "ApproachSection.vue"
       ]
     },
     "app\\pages": {
       "path": "app\\pages",
       "purpose": "Page components",
       "fileCount": 3,
-      "lastAccessed": 1777068239160,
+      "lastAccessed": 1777330802701,
       "keyFiles": [
         "index.vue",
         "mentions-legales.vue",
         "politique-confidentialite.vue"
       ]
     },
+    "app\\utils": {
+      "path": "app\\utils",
+      "purpose": "Utility functions",
+      "fileCount": 1,
+      "lastAccessed": 1777330802701,
+      "keyFiles": [
+        "silhouettes.ts"
+      ]
+    },
     "shared\\config": {
       "path": "shared\\config",
       "purpose": "Configuration files",
       "fileCount": 1,
-      "lastAccessed": 1777068239160,
+      "lastAccessed": 1777330802702,
       "keyFiles": [
         "site.ts"
       ]
@@ -140,122 +149,128 @@
   "hotPaths": [
     {
       "path": "app\\assets\\css\\main.css",
-      "accessCount": 5,
-      "lastAccessed": 1777069506506,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\FinalCta.vue",
-      "accessCount": 4,
-      "lastAccessed": 1777069421696,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\PeopleHunt.vue",
-      "accessCount": 4,
-      "lastAccessed": 1777070224326,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\HeroSection.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069413662,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\VideoSection.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069415941,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\BenefitsGrid.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069417095,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ProcessSteps.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069418278,
+      "accessCount": 9,
+      "lastAccessed": 1777332478426,
       "type": "file"
     },
     {
       "path": "app\\components\\PricingSection.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069419418,
+      "accessCount": 7,
+      "lastAccessed": 1777332485364,
       "type": "file"
     },
     {
-      "path": "app\\components\\TestimonialsCarousel.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069420573,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ClientsMarquee.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069513894,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ApproachSection.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777069699329,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\AppFooter.vue",
-      "accessCount": 2,
-      "lastAccessed": 1777068678936,
+      "path": "app\\components\\BenefitsGrid.vue",
+      "accessCount": 7,
+      "lastAccessed": 1777332519301,
       "type": "file"
     },
     {
       "path": "app\\pages\\index.vue",
-      "accessCount": 2,
-      "lastAccessed": 1777068699939,
+      "accessCount": 7,
+      "lastAccessed": 1777333380450,
       "type": "file"
     },
     {
-      "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1777068358344,
+      "path": "app\\components\\FinalCta.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777331589758,
       "type": "file"
     },
     {
-      "path": "nuxt.config.ts",
-      "accessCount": 1,
-      "lastAccessed": 1777068358712,
+      "path": "app\\components\\TestimonialsCarousel.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777332480775,
       "type": "file"
     },
     {
-      "path": "README.md",
-      "accessCount": 1,
-      "lastAccessed": 1777068359100,
+      "path": "app\\components\\ProcessSteps.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777332487152,
       "type": "file"
     },
     {
-      "path": "app\\app.vue",
-      "accessCount": 1,
-      "lastAccessed": 1777068370797,
+      "path": "app\\components\\ClientsMarquee.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777332491755,
       "type": "file"
     },
     {
-      "path": "shared\\config\\site.ts",
-      "accessCount": 1,
-      "lastAccessed": 1777068384031,
+      "path": "app\\components\\ApproachSection.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777332526311,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\VideoSection.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777332532028,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\PeopleHunt.vue",
+      "accessCount": 5,
+      "lastAccessed": 1777330872361,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\HeroSection.vue",
+      "accessCount": 5,
+      "lastAccessed": 1777332554977,
       "type": "file"
     },
     {
       "path": "app\\components\\AppNavbar.vue",
-      "accessCount": 1,
-      "lastAccessed": 1777068459879,
+      "accessCount": 4,
+      "lastAccessed": 1777331712340,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\AppFooter.vue",
+      "accessCount": 4,
+      "lastAccessed": 1777332565493,
+      "type": "file"
+    },
+    {
+      "path": "shared\\config\\site.ts",
+      "accessCount": 3,
+      "lastAccessed": 1777331623498,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1777330850465,
+      "type": "file"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1777330850853,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1777330851249,
+      "type": "file"
+    },
+    {
+      "path": "app\\app.vue",
+      "accessCount": 2,
+      "lastAccessed": 1777330856506,
       "type": "file"
     },
     {
       "path": "app\\components\\GradientBlobs.vue",
-      "accessCount": 1,
-      "lastAccessed": 1777068464132,
+      "accessCount": 2,
+      "lastAccessed": 1777330866128,
+      "type": "file"
+    },
+    {
+      "path": "public\\AGENTS.md",
+      "accessCount": 2,
+      "lastAccessed": 1777331122014,
       "type": "file"
     },
     {
@@ -268,6 +283,120 @@
       "path": "People Hunt.html",
       "accessCount": 1,
       "lastAccessed": 1777069937989,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.json",
+      "accessCount": 1,
+      "lastAccessed": 1777330851735,
+      "type": "file"
+    },
+    {
+      "path": "app\\composables\\useScrollReveal.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777330857409,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\mentions-legales.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777330859337,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\politique-confidentialite.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777330859647,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ScrollProgress.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777330866403,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\SectionLabel.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777330872506,
+      "type": "file"
+    },
+    {
+      "path": "app\\utils\\silhouettes.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777330879275,
+      "type": "directory"
+    },
+    {
+      "path": "AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777330920615,
+      "type": "file"
+    },
+    {
+      "path": "app\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777330934465,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777330982952,
+      "type": "file"
+    },
+    {
+      "path": "app\\composables\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777330995140,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331017361,
+      "type": "file"
+    },
+    {
+      "path": "app\\utils\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331033809,
+      "type": "file"
+    },
+    {
+      "path": "app\\assets\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331040649,
+      "type": "file"
+    },
+    {
+      "path": "app\\assets\\css\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331066770,
+      "type": "file"
+    },
+    {
+      "path": "shared\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331074619,
+      "type": "file"
+    },
+    {
+      "path": "shared\\config\\AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777331094573,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\lab.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777331697824,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\sections\\LabSection.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777333355628,
       "type": "file"
     }
   ],

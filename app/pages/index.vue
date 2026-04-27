@@ -111,12 +111,13 @@ onMounted(async () => {
 <template>
   <main class="relative">
     <HeroSection />
-    <ApproachSection />
     <VideoSection />
+    <ApproachSection />
     <ClientsMarquee />
     <BenefitsGrid />
     <ProcessSteps />
     <PricingSection />
+    <SectionsLabSection />
     <TestimonialsCarousel />
     <FinalCta />
   </main>

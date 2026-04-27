@@ -20,13 +20,13 @@ const initials = (name: string) =>
 </script>
 
 <template>
-  <section class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
+  <section class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+      <div class="reveal mb-12 flex flex-wrap items-end justify-between gap-6">
         <div>
           <span class="eyebrow-cyan">Témoignages</span>
           <h2 class="mt-5 headline-section text-white" data-split>
-            Ceux qui ont fait<br />
+            Ils ont fait<br />
             le choix <span class="gradient-text italic">Mariell.</span>
           </h2>
         </div>

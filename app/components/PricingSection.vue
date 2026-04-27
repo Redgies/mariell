@@ -3,15 +3,15 @@ import { siteConfig } from '~~/shared/config/site'
 
 const sideBadges = [
   { value: '94%', label: 'Success rate' },
-  { value: '✓', label: "Garantie période d'essai" },
+  { value: 'Avec', label: "Garantie période d'essai" },
   { value: '100%', label: 'Chasse sur-mesure' },
 ]
 </script>
 
 <template>
-  <section id="pricing" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
+  <section id="pricing" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <div class="reveal mb-14 max-w-2xl">
+      <div class="reveal mb-12 max-w-2xl">
         <span class="eyebrow-cyan">Pricing</span>
         <h2 class="mt-5 headline-section text-white" data-split>
           <span class="gradient-text italic">Simple.</span><br />
@@ -26,7 +26,7 @@ const sideBadges = [
             class="text-[16px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            Chez Mariell, <strong class="font-medium text-white">on ne se cache pas. Pas de prix à la tête, pas de bullshit.</strong>
+            <strong class="font-medium text-white">Chez Mariell, on ne se cache pas. Pas de prix à la tête, pas de bullshit.</strong>
           </p>
 
           <div

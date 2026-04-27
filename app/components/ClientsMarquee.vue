@@ -13,17 +13,14 @@ const doubled: Tile[] = [...baseTiles, ...baseTiles]
 </script>
 
 <template>
-  <section class="relative overflow-hidden py-16 md:pb-24">
-    <div class="reveal mx-auto mb-8 flex max-w-7xl flex-wrap items-baseline justify-between gap-3 px-5 md:px-10 lg:px-16">
+  <section class="relative overflow-hidden py-12 md:pb-16">
+    <div class="reveal mx-auto mb-8 flex max-w-7xl items-baseline px-5 md:px-10 lg:px-16">
       <h3
         class="text-[22px] tracking-[-0.01em] text-white/65"
         style="font-family: var(--font-serif-jp); font-weight: 500;"
       >
-        Ils ont chassé avec Mariell.
+        Mariell a chassé pour eux.
       </h3>
-      <span class="font-mono-num text-[11px] uppercase tracking-[0.28em] text-white/45">
-        8 + 1 emplacement libre
-      </span>
     </div>
 
     <div class="reveal">

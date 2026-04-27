@@ -28,12 +28,12 @@ const chronoSteps = [
 </script>
 
 <template>
-  <section id="process-section" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
+  <section id="process-section" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <!-- Editorial header — split 5 / 5 across 12 cols -->
-      <div class="mb-20 grid grid-cols-1 gap-8 md:grid-cols-12">
+      <div class="mb-14 grid grid-cols-1 gap-8 md:grid-cols-12">
         <div class="reveal md:col-span-5">
-          <span class="eyebrow-cyan">— 03 · Méthodologie</span>
+          <span class="eyebrow-cyan">Méthodologie</span>
           <h2 class="mt-5 headline-section text-white" data-split>
             Sur-mesure,<br />
             <span class="gradient-text italic">jamais standard.</span>

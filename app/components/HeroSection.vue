@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { siteConfig } from '~~/shared/config/site'
+
+interface HeroStat {
+  value: string
+  label: string
+}
+
+const heroStats: HeroStat[] = [
+  { value: '94%', label: 'de Succès sur nos recrutements' },
+  { value: '60+', label: 'Top Profils Sales placés\nchez nos clients' },
+  { value: '7-10j', label: 'pour recevoir le premier Pool\nde candidats' },
+]
 </script>
 
 <template>
@@ -12,25 +23,30 @@ import { siteConfig } from '~~/shared/config/site'
       <div>
         <div class="reveal eyebrow-cyan mb-8">Cabinet de recrutement Sales</div>
 
-        <h1 class="reveal headline-asym text-white" data-split>
+        <h1
+          class="reveal headline-asym text-white"
+          style="font-size: clamp(40px, 5.5vw, 76px); line-height: 0.97; letter-spacing: -0.035em;"
+          data-split
+        >
           Bienvenue<br />
           <span class="gradient-text italic">chez Mariell.</span>
         </h1>
 
         <p
-          class="reveal mt-7 max-w-xl text-[clamp(20px,2.2vw,28px)] leading-snug text-white/70"
+          class="reveal mt-7 max-w-2xl text-[clamp(18px,2vw,24px)] leading-snug text-white"
           style="font-family: var(--font-serif-jp); font-weight: 500; letter-spacing: -0.01em;"
         >
           Nous recrutons les meilleurs Sales, pour vous.
         </p>
 
         <div
-          class="reveal mt-9 max-w-xl space-y-3 text-[15.5px] leading-[1.75] text-white/65"
+          class="reveal mt-8 max-w-xl space-y-3 text-[15.5px] leading-[1.75] text-white/65"
           style="font-family: var(--font-grotesk); font-weight: 300;"
         >
           <p><em class="font-medium not-italic text-white">Des Sales qui chassent d'autres Sales.</em></p>
-          <p>On ne vend pas de rêve, mais une réalité&nbsp;: les tops profils sont rares, les meilleurs encore plus durs à déceler.</p>
-          <p>Notre mission&nbsp;: vous présenter ces profils, uniquement ces profils.</p>
+          <p>On ne vend pas de rêve, mais une réalité&nbsp;: les Tops Profils sont rares.</p>
+          <p>Ils ne viendront pas à vous d'eux-mêmes.</p>
+          <p>Notre mission&nbsp;: vous présenter ces profils, <em class="font-medium not-italic text-white">uniquement ces profils</em>.</p>
           <p>Les meilleures entreprises recrutent les meilleurs Sales, pourquoi pas vous&nbsp;?</p>
         </div>
 
@@ -45,29 +61,27 @@ import { siteConfig } from '~~/shared/config/site'
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </a>
-          <a href="#process-section" class="btn-ghost">Voir la méthode</a>
+          <a href="#approche" class="btn-ghost">Voir la méthode</a>
         </div>
       </div>
 
-      <!-- Right: stat card -->
+      <!-- Right: stat card. Grid keeps KPI numbers and labels aligned across rows. -->
       <div class="reveal">
-        <div class="stat-card-shell flex max-w-md flex-col gap-7 px-9 py-10">
-          <div class="absolute right-6 top-6 font-serif-jp text-sm font-bold tracking-wider text-white">M</div>
-
-          <div class="flex items-baseline gap-3.5 border-b border-white/8 pb-5">
-            <div class="font-serif-jp gradient-text text-[72px] leading-none tracking-[-0.04em]" style="font-weight: 500;">94%</div>
-            <div class="max-w-[160px] text-[13px] leading-snug text-white/65" style="font-weight: 500;">de succès sur nos recrutements</div>
-          </div>
-
-          <div class="flex items-baseline gap-3.5 border-b border-white/8 pb-5">
-            <div class="font-serif-jp gradient-text text-[72px] leading-none tracking-[-0.04em]" style="font-weight: 500;">60+</div>
-            <div class="max-w-[160px] text-[13px] leading-snug text-white/65" style="font-weight: 500;">tops profils Sales placés</div>
-          </div>
-
-          <div class="flex items-baseline gap-3.5">
-            <div class="font-serif-jp gradient-text text-[72px] leading-none tracking-[-0.04em]" style="font-weight: 500;">7j</div>
-            <div class="max-w-[160px] text-[13px] leading-snug text-white/65" style="font-weight: 500;">avant les premiers candidats</div>
-          </div>
+        <div class="stat-card-shell grid w-full max-w-md grid-cols-[auto_1fr] items-center gap-x-6 gap-y-0 px-9 py-8">
+          <template v-for="(stat, idx) in heroStats" :key="stat.value">
+            <div
+              class="font-serif-jp gradient-text py-5 text-[60px] leading-[1.1] tracking-[-0.04em]"
+              :class="{ 'border-b border-white/8': idx < heroStats.length - 1 }"
+              style="font-weight: 500;"
+            >
+              {{ stat.value }}
+            </div>
+            <div
+              class="whitespace-pre-line py-5 text-[13px] leading-[1.45] text-white/70"
+              :class="{ 'border-b border-white/8': idx < heroStats.length - 1 }"
+              style="font-weight: 500;"
+            >{{ stat.label }}</div>
+          </template>
         </div>
       </div>
     </div>

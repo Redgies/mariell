@@ -3,21 +3,23 @@
 </script>
 
 <template>
-  <section id="who" class="relative px-5 py-24 md:px-10 md:py-32 lg:px-16">
+  <section id="who" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
     <div class="reveal mx-auto max-w-7xl">
       <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
         <!-- Copy -->
         <div>
           <span class="eyebrow-cyan">Who is Mariell ?</span>
-          <h2 class="mt-5 headline-section text-white" data-split>
-            La personne<br />
-            derrière <span class="gradient-text italic">le cabinet.</span>
+          <h2 class="mt-5 headline-section pb-2 text-white" data-split>
+            Mariell<br />
+            se présente<br />
+            <span class="gradient-text italic">à vous.</span>
           </h2>
           <p
             class="mt-5 text-[16px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            Une obsession&nbsp;: identifier les profils Sales qui transforment réellement le CA. Une méthode&nbsp;: chasse directe, évaluation critique, suivi long.
+            Une obsession&nbsp;: identifier les meilleurs Sales, la crème du market.<br />
+            Une méthode&nbsp;: chasse directe, évaluation critique Soft &amp; Hard Skills.
           </p>
         </div>
 

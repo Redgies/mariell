@@ -5,7 +5,7 @@ import { siteConfig } from '~~/shared/config/site'
 <template>
   <section
     id="contact"
-    class="relative overflow-hidden px-5 pb-20 pt-28 text-center md:px-10 md:pb-24 md:pt-32 lg:px-16"
+    class="relative overflow-hidden px-5 pb-16 pt-20 text-center md:px-10 md:pb-20 md:pt-24 lg:px-16"
   >
     <div class="reveal flex justify-center">
       <span class="eyebrow-cyan eyebrow-cyan--center">Parlons-en</span>

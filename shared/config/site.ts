@@ -11,6 +11,7 @@ export interface NavLink {
   label: string
   href: string
   hasDropdown?: boolean
+  badge?: boolean
 }
 
 export const navLinks: NavLink[] = [
@@ -18,14 +19,17 @@ export const navLinks: NavLink[] = [
   { label: 'Who is Mariell ?', href: '#who' },
   { label: 'Process', href: '#process' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Ressources', href: '#ressources', hasDropdown: true },
+  { label: 'Le Lab Mariell', href: '/lab', hasDropdown: true, badge: true },
 ]
 
-export const resourcesDropdown = [
-  { label: 'Bientôt disponible', href: '#', disabled: true },
+export const labDropdown = [
+  { label: 'Découvrir le Lab', href: '/lab', disabled: false },
+  { label: 'Guides — bientôt', href: '#', disabled: true },
+  { label: 'Outils — bientôt', href: '#', disabled: true },
+  { label: 'Études — bientôt', href: '#', disabled: true },
 ] as const
 
-export const clients = Array.from({ length: 10 }, (_, i) => ({
+export const clients = Array.from({ length: 11 }, (_, i) => ({
   name: `Client ${i + 1}`,
   logo: `/logo_${i + 1}.png`,
 }))

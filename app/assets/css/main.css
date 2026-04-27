@@ -332,7 +332,7 @@ body {
   font-family: var(--font-serif-jp);
   font-weight: 500;
   font-size: clamp(40px, 5.5vw, 72px);
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: -0.03em;
 }
 
@@ -399,12 +399,19 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 22px;
-  transition: border-color 0.3s ease-out, background 0.3s ease-out;
+  transition:
+    border-color 0.3s ease-out,
+    background 0.3s ease-out,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
+  will-change: transform;
 }
 .benefit-card:hover {
   border-color: rgba(139, 92, 246, 0.5);
   background: rgba(139, 92, 246, 0.05);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px -28px rgba(139, 92, 246, 0.55);
 }
 .benefit-card::before {
   content: '';
@@ -551,10 +558,11 @@ body {
   }
 }
 
-/* Testimonials carousel snap track */
+/* Testimonials carousel snap track —
+   Mobile: 1 card visible (with peek of next for affordance).
+   lg+: exactly 2 cards visible, no partial card cut on the trailing edge. */
 .testi-card {
-  flex: 0 0 460px;
-  max-width: 88vw;
+  flex: 0 0 calc(100% - 28px);
   scroll-snap-align: start;
   padding: 40px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -563,6 +571,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 28px;
+}
+@media (min-width: 1024px) {
+  .testi-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+  }
 }
 .testi-mark {
   font-family: var(--font-serif-jp);

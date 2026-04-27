@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { navLinks, resourcesDropdown, siteConfig } from '~~/shared/config/site'
+import { navLinks, labDropdown, siteConfig } from '~~/shared/config/site'
 
 const route = useRoute()
 const isHome = computed(() => route.path === '/')
@@ -7,12 +7,14 @@ const resolveHref = (href: string) =>
   href.startsWith('#') && !isHome.value ? `/${href}` : href
 
 const isMobileMenuOpen = ref(false)
-const isResourcesOpen = ref(false)
+const isLabOpen = ref(false)
+const isMobileLabOpen = ref(false)
 const navRef = ref<HTMLElement | null>(null)
 
 const closeMobile = () => {
   isMobileMenuOpen.value = false
-  isResourcesOpen.value = false
+  isMobileLabOpen.value = false
+  isLabOpen.value = false
 }
 
 const onLinkClick = (href: string) => {
@@ -30,8 +32,9 @@ const onKeydown = (e: KeyboardEvent) => {
 const onDocClick = (e: MouseEvent) => {
   if (!navRef.value) return
   if (!navRef.value.contains(e.target as Node)) {
-    isResourcesOpen.value = false
+    isLabOpen.value = false
     isMobileMenuOpen.value = false
+    isMobileLabOpen.value = false
   }
 }
 
@@ -76,11 +79,12 @@ watch(isMobileMenuOpen, (open) => {
           v-for="link in navLinks"
           :key="link.label"
           class="relative"
-          @mouseenter="link.hasDropdown && (isResourcesOpen = true)"
-          @mouseleave="link.hasDropdown && (isResourcesOpen = false)"
+          @mouseenter="link.hasDropdown && (isLabOpen = true)"
+          @mouseleave="link.hasDropdown && (isLabOpen = false)"
         >
+          <!-- In-page anchor -->
           <a
-            v-if="!link.hasDropdown"
+            v-if="link.href.startsWith('#')"
             :href="resolveHref(link.href)"
             class="text-sm text-white/90 transition-colors hover:text-white"
             style="font-family: var(--font-grotesk); font-weight: 600;"
@@ -88,19 +92,30 @@ watch(isMobileMenuOpen, (open) => {
           >
             {{ link.label }}
           </a>
-          <button
+
+          <!-- Route link (with optional dropdown / badge) -->
+          <NuxtLink
             v-else
-            type="button"
-            class="flex items-center gap-1 text-sm text-white/90 transition-colors hover:text-white"
+            :to="link.href"
+            class="relative inline-flex items-center gap-1.5 text-sm text-white/90 transition-colors hover:text-white"
             style="font-family: var(--font-grotesk); font-weight: 600;"
-            :aria-expanded="isResourcesOpen"
-            aria-haspopup="true"
-            @click="isResourcesOpen = !isResourcesOpen"
+            :aria-haspopup="link.hasDropdown ? 'true' : undefined"
+            :aria-expanded="link.hasDropdown ? isLabOpen : undefined"
+            @click="closeMobile"
           >
             {{ link.label }}
+            <span
+              v-if="link.badge"
+              class="relative ml-0.5 inline-flex h-1.5 w-1.5"
+              aria-label="Nouveau"
+            >
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-70" />
+              <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-500" />
+            </span>
             <svg
-              class="h-3 w-3 transition-transform"
-              :class="{ 'rotate-180': isResourcesOpen }"
+              v-if="link.hasDropdown"
+              class="ml-0.5 h-3 w-3 transition-transform"
+              :class="{ 'rotate-180': isLabOpen }"
               viewBox="0 0 10 6"
               fill="none"
               aria-hidden="true"
@@ -113,9 +128,11 @@ watch(isMobileMenuOpen, (open) => {
                 stroke-linejoin="round"
               />
             </svg>
-          </button>
+          </NuxtLink>
 
+          <!-- Desktop dropdown panel -->
           <Transition
+            v-if="link.hasDropdown"
             enter-active-class="transition ease-out duration-200"
             enter-from-class="opacity-0 -translate-y-1"
             enter-to-class="opacity-100 translate-y-0"
@@ -124,13 +141,23 @@ watch(isMobileMenuOpen, (open) => {
             leave-to-class="opacity-0 -translate-y-1"
           >
             <div
-              v-if="link.hasDropdown && isResourcesOpen"
-              class="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-black/90 backdrop-blur-xl shadow-2xl shadow-black/50"
+              v-if="isLabOpen"
+              class="absolute right-0 top-full mt-2 w-64 overflow-hidden rounded-xl border border-white/10 bg-black/90 backdrop-blur-xl shadow-2xl shadow-black/50"
             >
               <ul class="py-2">
-                <li v-for="item in resourcesDropdown" :key="item.label">
+                <li v-for="item in labDropdown" :key="item.label">
+                  <NuxtLink
+                    v-if="!item.disabled"
+                    :to="item.href"
+                    class="block px-4 py-2.5 text-sm text-white/85 transition-colors hover:bg-white/5 hover:text-white"
+                    style="font-family: var(--font-grotesk); font-weight: 500;"
+                    @click="closeMobile"
+                  >
+                    {{ item.label }}
+                  </NuxtLink>
                   <span
-                    class="block px-4 py-2.5 text-sm text-white/60"
+                    v-else
+                    class="block px-4 py-2.5 text-sm text-white/40"
                     style="font-family: var(--font-grotesk); font-weight: 300;"
                   >
                     {{ item.label }}
@@ -185,8 +212,9 @@ watch(isMobileMenuOpen, (open) => {
       >
         <ul class="flex flex-col gap-1 px-6 py-8">
           <li v-for="link in navLinks" :key="link.label">
+            <!-- Hash link -->
             <a
-              v-if="!link.hasDropdown"
+              v-if="link.href.startsWith('#')"
               :href="resolveHref(link.href)"
               class="block rounded-lg px-4 py-4 text-lg text-white transition-colors hover:bg-white/5"
               style="font-family: var(--font-grotesk); font-weight: 600;"
@@ -194,40 +222,71 @@ watch(isMobileMenuOpen, (open) => {
             >
               {{ link.label }}
             </a>
+
+            <!-- Route link (with optional dropdown / badge) -->
             <div v-else>
-              <button
-                type="button"
-                class="flex w-full items-center justify-between rounded-lg px-4 py-4 text-left text-lg text-white transition-colors hover:bg-white/5"
-                style="font-family: var(--font-grotesk); font-weight: 600;"
-                :aria-expanded="isResourcesOpen"
-                @click="isResourcesOpen = !isResourcesOpen"
-              >
-                {{ link.label }}
-                <svg
-                  class="h-4 w-4 transition-transform"
-                  :class="{ 'rotate-180': isResourcesOpen }"
-                  viewBox="0 0 10 6"
-                  fill="none"
-                  aria-hidden="true"
+              <div class="flex items-stretch">
+                <NuxtLink
+                  :to="link.href"
+                  class="flex flex-1 items-center gap-2 rounded-lg px-4 py-4 text-lg text-white transition-colors hover:bg-white/5"
+                  style="font-family: var(--font-grotesk); font-weight: 600;"
+                  @click="closeMobile"
                 >
-                  <path
-                    d="M1 1l4 4 4-4"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <div v-if="isResourcesOpen" class="pl-4">
-                <span
-                  v-for="item in resourcesDropdown"
-                  :key="item.label"
-                  class="block px-4 py-3 text-base text-white/60"
-                  style="font-family: var(--font-grotesk); font-weight: 300;"
+                  {{ link.label }}
+                  <span
+                    v-if="link.badge"
+                    class="relative ml-0.5 inline-flex h-2 w-2"
+                    aria-label="Nouveau"
+                  >
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-70" />
+                    <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                  </span>
+                </NuxtLink>
+                <button
+                  v-if="link.hasDropdown"
+                  type="button"
+                  class="flex w-12 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/5 hover:text-white"
+                  :aria-expanded="isMobileLabOpen"
+                  aria-label="Voir le sous-menu"
+                  @click="isMobileLabOpen = !isMobileLabOpen"
                 >
-                  {{ item.label }}
-                </span>
+                  <svg
+                    class="h-4 w-4 transition-transform"
+                    :class="{ 'rotate-180': isMobileLabOpen }"
+                    viewBox="0 0 10 6"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M1 1l4 4 4-4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div v-if="link.hasDropdown && isMobileLabOpen" class="mt-1 flex flex-col gap-0.5 pl-4">
+                <template v-for="item in labDropdown" :key="item.label">
+                  <NuxtLink
+                    v-if="!item.disabled"
+                    :to="item.href"
+                    class="block rounded-md px-4 py-3 text-base text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                    style="font-family: var(--font-grotesk); font-weight: 500;"
+                    @click="closeMobile"
+                  >
+                    {{ item.label }}
+                  </NuxtLink>
+                  <span
+                    v-else
+                    class="block rounded-md px-4 py-3 text-base text-white/40"
+                    style="font-family: var(--font-grotesk); font-weight: 300;"
+                  >
+                    {{ item.label }}
+                  </span>
+                </template>
               </div>
             </div>
           </li>

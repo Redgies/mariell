@@ -1,7 +1,7 @@
 {
-  "tool_name": "WebFetch",
-  "tool_input_preview": "{\"url\":\"https://api.anthropic.com/v1/design/h/ONsp7i2l-s_PUXtMIdKxeQ\",\"prompt\":\"Show file listing and contents.\"}",
-  "error": "Request failed with status code 404",
-  "timestamp": "2026-04-24T22:26:55.811Z",
+  "tool_name": "Read",
+  "tool_input_preview": "{\"file_path\":\"C:\\\\Users\\\\Mathias\\\\Documents\\\\Work\\\\Mariell\\\\app\\\\utils\\\\silhouettes.ts\",\"limit\":40}",
+  "error": "File content (50838 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-04-27T23:01:13.313Z",
   "retry_count": 2
 }
