@@ -9,7 +9,7 @@ const sideBadges = [
 </script>
 
 <template>
-  <section id="pricing" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
+  <section id="pricing" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <div class="reveal mb-12 max-w-2xl">
         <span class="eyebrow-cyan">Pricing</span>
@@ -76,7 +76,7 @@ const sideBadges = [
         </div>
 
         <!-- Right: vertical badges -->
-        <div class="flex flex-col gap-4">
+        <div class="flex w-fit flex-col gap-4">
           <div
             v-for="(b, idx) in sideBadges"
             :key="idx"
@@ -89,7 +89,7 @@ const sideBadges = [
               {{ b.value }}
             </div>
             <div
-              class="text-[15px] leading-snug text-white"
+              class="text-[15px] uppercase leading-snug tracking-[0.08em] text-white"
               style="font-family: var(--font-grotesk); font-weight: 500;"
             >
               {{ b.label }}

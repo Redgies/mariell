@@ -28,7 +28,7 @@ const chronoSteps = [
 </script>
 
 <template>
-  <section id="process-section" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
+  <section id="process-section" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <!-- Editorial header — split 5 / 5 across 12 cols -->
       <div class="mb-14 grid grid-cols-1 gap-8 md:grid-cols-12">

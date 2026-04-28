@@ -117,7 +117,7 @@ onMounted(async () => {
     <BenefitsGrid />
     <ProcessSteps />
     <PricingSection />
-    <SectionsLabSection />
+    <LabSection />
     <TestimonialsCarousel />
     <FinalCta />
   </main>

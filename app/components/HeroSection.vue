@@ -8,8 +8,8 @@ interface HeroStat {
 
 const heroStats: HeroStat[] = [
   { value: '94%', label: 'de Succès sur nos recrutements' },
-  { value: '60+', label: 'Top Profils Sales placés\nchez nos clients' },
-  { value: '7-10j', label: 'pour recevoir le premier Pool\nde candidats' },
+  { value: '60+', label: 'Top Profils Sales placés' },
+  { value: '7-10j', label: 'pour recevoir le premier Pool' },
 ]
 </script>
 
@@ -25,7 +25,7 @@ const heroStats: HeroStat[] = [
 
         <h1
           class="reveal headline-asym text-white"
-          style="font-size: clamp(40px, 5.5vw, 76px); line-height: 0.97; letter-spacing: -0.035em;"
+          style="font-size: clamp(48px, 6.5vw, 92px); line-height: 1.05; letter-spacing: -0.035em;"
           data-split
         >
           Bienvenue<br />
@@ -67,17 +67,17 @@ const heroStats: HeroStat[] = [
 
       <!-- Right: stat card. Grid keeps KPI numbers and labels aligned across rows. -->
       <div class="reveal">
-        <div class="stat-card-shell grid w-full max-w-md grid-cols-[auto_1fr] items-center gap-x-6 gap-y-0 px-9 py-8">
+        <div class="stat-card-shell grid w-full max-w-md grid-cols-[auto_1fr] items-stretch gap-x-6 gap-y-0 px-9 py-8">
           <template v-for="(stat, idx) in heroStats" :key="stat.value">
             <div
-              class="font-serif-jp gradient-text py-5 text-[60px] leading-[1.1] tracking-[-0.04em]"
+              class="font-serif-jp gradient-text flex items-center py-5 text-[60px] leading-[1.1] tracking-[-0.04em]"
               :class="{ 'border-b border-white/8': idx < heroStats.length - 1 }"
               style="font-weight: 500;"
             >
               {{ stat.value }}
             </div>
             <div
-              class="whitespace-pre-line py-5 text-[13px] leading-[1.45] text-white/70"
+              class="flex items-center whitespace-pre-line py-5 text-[13px] leading-[1.45] tracking-[0.08em] text-white/70 uppercase"
               :class="{ 'border-b border-white/8': idx < heroStats.length - 1 }"
               style="font-weight: 500;"
             >{{ stat.label }}</div>

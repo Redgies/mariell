@@ -42,17 +42,17 @@ const tools: LabTool[] = [
 </script>
 
 <template>
-  <section class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
+  <section class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <!-- Header -->
       <div class="reveal mb-14 max-w-3xl md:mb-16">
-        <span class="eyebrow-cyan mb-5">Le Lab Mariell</span>
-        <h2 class="mt-5 headline-section text-white" data-split>
-          L'expertise Mariell,<br />
+        <span class="eyebrow-cyan">Le Lab Mariell</span>
+        <h2 class="mt-8 headline-section pb-4 text-white" data-split>
+          Mariell,<br />
           <span class="gradient-text italic">en libre-service.</span>
         </h2>
         <p
-          class="mt-6 max-w-xl text-[16px] leading-[1.65] text-white/65"
+          class="mt-8 max-w-xl text-[16px] leading-[1.65] text-white/65"
           style="font-family: var(--font-grotesk); font-weight: 300;"
         >
           3 outils gratuits pour calibrer votre recrutement Sales avec précision.
@@ -108,9 +108,9 @@ const tools: LabTool[] = [
   flex-direction: column;
   gap: 16px;
   padding: 32px 28px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(94, 231, 231, 0.3);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(94, 231, 231, 0.025);
   text-decoration: none;
   color: #fff;
   transition:
@@ -160,8 +160,6 @@ const tools: LabTool[] = [
   display: inline-block;
   font-size: 26px;
   line-height: 1;
-  filter: grayscale(1) brightness(1.1);
-  opacity: 0.85;
 }
 
 .lab-card__title {

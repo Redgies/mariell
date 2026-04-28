@@ -18,7 +18,8 @@
       "Bash(curl -s -o /tmp/page2.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s -o /tmp/page3.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s -o /tmp/page4.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(git mv *)"
     ]
   }
 }

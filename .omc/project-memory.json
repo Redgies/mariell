@@ -149,26 +149,62 @@
   "hotPaths": [
     {
       "path": "app\\assets\\css\\main.css",
-      "accessCount": 9,
-      "lastAccessed": 1777332478426,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\PricingSection.vue",
-      "accessCount": 7,
-      "lastAccessed": 1777332485364,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\BenefitsGrid.vue",
-      "accessCount": 7,
-      "lastAccessed": 1777332519301,
+      "accessCount": 22,
+      "lastAccessed": 1777387141528,
       "type": "file"
     },
     {
       "path": "app\\pages\\index.vue",
-      "accessCount": 7,
-      "lastAccessed": 1777333380450,
+      "accessCount": 11,
+      "lastAccessed": 1777386680955,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\HeroSection.vue",
+      "accessCount": 11,
+      "lastAccessed": 1777386755266,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\PricingSection.vue",
+      "accessCount": 11,
+      "lastAccessed": 1777387296805,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\BenefitsGrid.vue",
+      "accessCount": 9,
+      "lastAccessed": 1777387278625,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ApproachSection.vue",
+      "accessCount": 9,
+      "lastAccessed": 1777387308905,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\VideoSection.vue",
+      "accessCount": 8,
+      "lastAccessed": 1777387275079,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\ProcessSteps.vue",
+      "accessCount": 8,
+      "lastAccessed": 1777387293544,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\TestimonialsCarousel.vue",
+      "accessCount": 8,
+      "lastAccessed": 1777387304305,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\FinalCta.vue",
+      "accessCount": 8,
+      "lastAccessed": 1777387313774,
       "type": "file"
     },
     {
@@ -178,45 +214,9 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\FinalCta.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777331589758,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\TestimonialsCarousel.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777332480775,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ProcessSteps.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777332487152,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\ApproachSection.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777332526311,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\VideoSection.vue",
-      "accessCount": 6,
-      "lastAccessed": 1777332532028,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\PeopleHunt.vue",
       "accessCount": 5,
       "lastAccessed": 1777330872361,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\HeroSection.vue",
-      "accessCount": 5,
-      "lastAccessed": 1777332554977,
       "type": "file"
     },
     {
@@ -229,6 +229,18 @@
       "path": "app\\components\\AppFooter.vue",
       "accessCount": 4,
       "lastAccessed": 1777332565493,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\sections\\LabSection.vue",
+      "accessCount": 4,
+      "lastAccessed": 1777386198800,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\LabSection.vue",
+      "accessCount": 4,
+      "lastAccessed": 1777387282541,
       "type": "file"
     },
     {
@@ -272,6 +284,12 @@
       "accessCount": 2,
       "lastAccessed": 1777331122014,
       "type": "file"
+    },
+    {
+      "path": "app\\components",
+      "accessCount": 2,
+      "lastAccessed": 1777387264175,
+      "type": "directory"
     },
     {
       "path": "preview-on-dark.html",
@@ -394,10 +412,10 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\sections\\LabSection.vue",
+      "path": "",
       "accessCount": 1,
-      "lastAccessed": 1777333355628,
-      "type": "file"
+      "lastAccessed": 1777386296898,
+      "type": "directory"
     }
   ],
   "userDirectives": []

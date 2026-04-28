@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <section id="who" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
+  <section id="who" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="reveal mx-auto max-w-7xl">
       <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
         <!-- Copy -->

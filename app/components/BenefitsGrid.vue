@@ -36,7 +36,7 @@ const benefitsAsym = [
 </script>
 
 <template>
-  <section id="process" class="relative px-5 py-16 md:px-10 md:py-20 lg:px-16">
+  <section id="process" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <div class="reveal mb-12 max-w-3xl">
         <span class="eyebrow-cyan mb-5">Pourquoi Mariell&nbsp;?</span>
