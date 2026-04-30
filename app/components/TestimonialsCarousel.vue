@@ -20,7 +20,7 @@ const initials = (name: string) =>
 </script>
 
 <template>
-  <section class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
+  <section class="relative px-5 pt-10 pb-12 md:px-10 md:pt-12 md:pb-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <div class="reveal mb-12 flex flex-wrap items-end justify-between gap-6">
         <div>

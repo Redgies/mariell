@@ -42,17 +42,17 @@ const tools: LabTool[] = [
 </script>
 
 <template>
-  <section class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
+  <section class="relative px-5 pt-7 pb-9 md:px-10 md:pt-10 md:pb-12 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <!-- Header -->
-      <div class="reveal mb-14 max-w-3xl md:mb-16">
+      <div class="reveal mb-9 max-w-3xl md:mb-11">
         <span class="eyebrow-cyan">Le Lab Mariell</span>
-        <h2 class="mt-8 headline-section pb-4 text-white" data-split>
+        <h2 class="mt-5 headline-section pb-2 text-white" data-split>
           Mariell,<br />
           <span class="gradient-text italic">en libre-service.</span>
         </h2>
         <p
-          class="mt-8 max-w-xl text-[16px] leading-[1.65] text-white/65"
+          class="mt-5 max-w-xl text-[16px] leading-[1.6] text-white/65"
           style="font-family: var(--font-grotesk); font-weight: 300;"
         >
           3 outils gratuits pour calibrer votre recrutement Sales avec précision.
@@ -89,7 +89,7 @@ const tools: LabTool[] = [
       </div>
 
       <!-- Footer link -->
-      <div class="reveal mt-14 flex justify-center md:mt-16">
+      <div class="reveal mt-10 flex justify-center md:mt-12">
         <NuxtLink to="/lab" class="lab-more">
           Voir toutes les ressources
           <svg class="lab-more__arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -106,8 +106,8 @@ const tools: LabTool[] = [
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 32px 28px;
+  gap: 12px;
+  padding: 24px 24px;
   border: 1px solid rgba(94, 231, 231, 0.3);
   border-radius: 6px;
   background: rgba(94, 231, 231, 0.025);
@@ -187,8 +187,8 @@ const tools: LabTool[] = [
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-top: 18px;
-  margin-top: 4px;
+  padding-top: 14px;
+  margin-top: 2px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 

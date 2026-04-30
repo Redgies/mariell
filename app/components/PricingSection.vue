@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { siteConfig } from '~~/shared/config/site'
 
-const sideBadges = [
+interface SideBadge {
+  value?: string
+  label: string
+}
+
+const sideBadges: SideBadge[] = [
   { value: '94%', label: 'Success rate' },
-  { value: 'Avec', label: "Garantie période d'essai" },
   { value: '100%', label: 'Chasse sur-mesure' },
+  { label: "Garantie période d'essai" },
 ]
 </script>
 
 <template>
-  <section id="pricing" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
+  <section id="pricing" class="relative px-5 pt-10 pb-12 md:px-10 md:pt-12 md:pb-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
       <div class="reveal mb-12 max-w-2xl">
         <span class="eyebrow-cyan">Pricing</span>
@@ -80,9 +85,11 @@ const sideBadges = [
           <div
             v-for="(b, idx) in sideBadges"
             :key="idx"
-            class="reveal flex items-center gap-6 rounded-2xl border border-white/8 bg-white/[0.02] px-8 py-8"
+            class="reveal flex min-h-[120px] items-center rounded-2xl border border-white/8 bg-white/[0.02] px-8 py-8"
+            :class="b.value ? 'gap-6' : 'justify-center'"
           >
             <div
+              v-if="b.value"
               class="gradient-text min-w-[120px] text-[56px] leading-none tracking-[-0.03em]"
               style="font-family: var(--font-serif-jp); font-weight: 500;"
             >
@@ -90,6 +97,7 @@ const sideBadges = [
             </div>
             <div
               class="text-[15px] uppercase leading-snug tracking-[0.08em] text-white"
+              :class="{ 'text-center': !b.value }"
               style="font-family: var(--font-grotesk); font-weight: 500;"
             >
               {{ b.label }}

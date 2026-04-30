@@ -23,10 +23,10 @@
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">1. Responsable du traitement</h2>
         <p>
           Le responsable du traitement des données personnelles collectées sur ce site est :
-          <span class="text-red-400">[ Nom de la société ]</span>, dont le siège social est situé
-          <span class="text-red-400">[ Adresse complète ]</span>.
+          <span class="text-white">Sean José LIGEIRO</span>, exerçant sous le nom commercial <span class="text-white">Mariell</span>, dont le siège social est situé
+          <span class="text-white">108 rue des Bourguignons, 92600 Asnières-sur-Seine</span>.
         </p>
-        <p>Contact : <span class="text-red-400">[ contact@mariell.fr ]</span></p>
+        <p>Contact : <a href="mailto:chez@mariell.fr" class="text-white underline underline-offset-4 hover:text-white/70">chez@mariell.fr</a></p>
       </section>
 
       <div class="hairline revealed" />
@@ -38,19 +38,15 @@
         <ul class="space-y-2 pl-4">
           <li class="flex items-start gap-2">
             <span class="mt-2 h-px w-4 shrink-0 bg-cyan-400/70" />
-            <span>Données d'identification : nom, prénom, adresse email, numéro de téléphone</span>
+            <span><strong class="text-white">Données d'identification</strong> — nom, prénom, adresse email, numéro de téléphone</span>
           </li>
           <li class="flex items-start gap-2">
             <span class="mt-2 h-px w-4 shrink-0 bg-cyan-400/70" />
-            <span>Données professionnelles : intitulé de poste, entreprise, secteur d'activité</span>
+            <span><strong class="text-white">Données professionnelles</strong> — intitulé de poste, entreprise, secteur d'activité</span>
           </li>
           <li class="flex items-start gap-2">
             <span class="mt-2 h-px w-4 shrink-0 bg-cyan-400/70" />
-            <span>Données de navigation : adresse IP, type de navigateur, pages visitées <span class="text-red-400">[ si applicable ]</span></span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="mt-2 h-px w-4 shrink-0 bg-cyan-400/70" />
-            <span><span class="text-red-400">[ Ajouter toute autre donnée collectée ]</span></span>
+            <span><strong class="text-white">Données de navigation</strong> — adresse IP, type de navigateur, pages visitées</span>
           </li>
         </ul>
       </section>
@@ -72,7 +68,7 @@
           </li>
           <li class="flex items-start gap-2">
             <span class="mt-2 h-px w-4 shrink-0 bg-fuchsia-400/70" />
-            <span>L'envoi d'informations commerciales <span class="text-red-400">[ si applicable — préciser la base légale : consentement ]</span></span>
+            <span>L'envoi d'informations commerciales avec votre consentement</span>
           </li>
           <li class="flex items-start gap-2">
             <span class="mt-2 h-px w-4 shrink-0 bg-fuchsia-400/70" />
@@ -88,7 +84,6 @@
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">4. Base légale</h2>
         <p>
           Les traitements reposent sur les bases légales suivantes : exécution d'un contrat, intérêt légitime, et/ou consentement de la personne concernée, conformément à l'article 6 du RGPD.
-          <span class="text-red-400">[ Préciser la base légale pour chaque traitement si nécessaire ]</span>
         </p>
       </section>
 
@@ -98,10 +93,10 @@
       <section class="space-y-3">
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">5. Durée de conservation</h2>
         <ul class="space-y-2 pl-4">
-          <li><span class="text-white/50">Données prospects :</span> <span class="text-red-400">[ X mois / ans ]</span> à compter du dernier contact</li>
-          <li><span class="text-white/50">Données clients :</span> <span class="text-red-400">[ X ans ]</span> à compter de la fin de la relation contractuelle</li>
-          <li><span class="text-white/50">Données candidats :</span> <span class="text-red-400">[ X ans ]</span> à compter du dernier contact</li>
-          <li><span class="text-white/50">Données de navigation :</span> <span class="text-red-400">[ X mois ]</span></li>
+          <li><span class="text-white/50">Données prospects :</span> <span class="text-white">12 mois</span> à compter du dernier contact</li>
+          <li><span class="text-white/50">Données clients :</span> <span class="text-white">5 ans</span> à compter de la fin de la relation contractuelle</li>
+          <li><span class="text-white/50">Données candidats :</span> <span class="text-white">5 ans</span> à compter du dernier contact</li>
+          <li><span class="text-white/50">Données de navigation :</span> <span class="text-white">24 mois</span></li>
         </ul>
       </section>
 
@@ -111,9 +106,8 @@
       <section class="space-y-3">
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">6. Destinataires des données</h2>
         <p>
-          Vos données sont destinées aux membres habilités de <span class="text-red-400">[ Nom de la société ]</span>.
-          Elles peuvent être transmises à des prestataires techniques dans le cadre strict de l'exécution de leurs missions
-          <span class="text-red-400">[ ex : hébergeur, outil CRM, plateforme de prise de rendez-vous — lister les sous-traitants ]</span>.
+          Vos données sont destinées aux membres habilités de <span class="text-white">Mariell</span>.
+          Elles peuvent être transmises à des prestataires techniques dans le cadre strict de l'exécution de leurs missions (ex&nbsp;: hébergeur, outil CRM, plateforme de prise de rendez-vous).
         </p>
         <p>Aucune donnée n'est vendue ou cédée à des tiers à des fins commerciales.</p>
       </section>
@@ -133,7 +127,7 @@
           <li class="flex items-start gap-2"><span class="mt-2 h-px w-4 shrink-0 bg-cyan-400/70" /><span><strong class="text-white">Droit de limitation</strong> — restreindre le traitement de vos données</span></li>
         </ul>
         <p>
-          Pour exercer ces droits, contactez-nous à : <span class="text-red-400">[ contact@mariell.fr ]</span>.
+          Pour exercer ces droits, contactez-nous à : <a href="mailto:chez@mariell.fr" class="text-white underline underline-offset-4 hover:text-white/70">chez@mariell.fr</a>.
           Vous pouvez également introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener" class="text-white underline underline-offset-4 hover:text-white/70">www.cnil.fr</a>).
         </p>
       </section>
@@ -145,7 +139,6 @@
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">8. Sécurité</h2>
         <p>
           Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, perte, destruction ou altération.
-          <span class="text-red-400">[ Préciser les mesures si pertinent : chiffrement, accès restreint, etc. ]</span>
         </p>
       </section>
 
@@ -154,16 +147,13 @@
       <!-- Cookies -->
       <section class="space-y-3">
         <h2 class="font-mono-num text-xs uppercase tracking-[0.22em] text-white/40">9. Cookies</h2>
-        <p>
-          <span class="text-red-400">[ Ce site utilise / n'utilise pas ]</span> des cookies.
-          <span class="text-red-400">[ Si applicable : Détailler les types de cookies (fonctionnels, analytiques, marketing), leur durée de vie et comment les refuser. ]</span>
-        </p>
+        <p>Ce site n'utilise pas de cookies.</p>
       </section>
 
       <div class="hairline revealed" />
 
       <p class="text-xs text-white/30">
-        Dernière mise à jour : <span class="text-red-400">[ JJ/MM/AAAA ]</span>
+        Dernière mise à jour : 18/04/2026
       </p>
     </div>
   </main>
