@@ -4,12 +4,12 @@
 
 <template>
   <section id="who" class="relative px-5 pt-10 pb-12 md:px-10 md:pt-14 md:pb-16 lg:px-16">
-    <div class="mx-auto max-w-7xl">
+    <div class="reveal mx-auto max-w-7xl">
       <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
         <!-- Copy -->
         <div>
           <span class="eyebrow-cyan">Who is Mariell ?</span>
-          <h2 class="mt-5 headline-section pb-2 text-white">
+          <h2 class="mt-5 headline-section pb-2 text-white" data-split>
             Mariell<br />
             se présente<br />
             <span class="gradient-text italic">à vous.</span>
