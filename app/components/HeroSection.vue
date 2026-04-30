@@ -16,7 +16,7 @@ const heroStats: HeroStat[] = [
 <template>
   <section
     id="accueil"
-    class="relative flex min-h-screen items-center px-5 pt-24 pb-10 md:px-10 lg:px-16"
+    class="relative flex min-h-screen items-start px-5 pt-28 pb-9 md:px-10 lg:px-16"
   >
     <div class="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
       <!-- Left: editorial copy -->
@@ -25,7 +25,7 @@ const heroStats: HeroStat[] = [
 
         <h1
           class="reveal headline-asym text-white"
-          style="font-size: clamp(44px, 5.6vw, 78px); line-height: 1.04; letter-spacing: -0.035em;"
+          style="font-size: clamp(56px, 7vw, 96px); line-height: 1.04; letter-spacing: -0.035em;"
           data-split
         >
           Bienvenue<br />
@@ -33,8 +33,8 @@ const heroStats: HeroStat[] = [
         </h1>
 
         <p
-          class="reveal mt-5 max-w-2xl text-[clamp(18px,2vw,24px)] leading-snug text-white"
-          style="font-family: var(--font-serif-jp); font-weight: 500; letter-spacing: -0.01em;"
+          class="reveal mt-5 max-w-2xl text-[clamp(20px,2.2vw,27px)] leading-snug text-white"
+          style="font-family: var(--font-serif-jp); font-weight: 500; letter-spacing: -0.025em;"
         >
           Nous recrutons les meilleurs Sales, pour vous.
         </p>
