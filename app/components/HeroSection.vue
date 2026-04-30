@@ -16,7 +16,7 @@ const heroStats: HeroStat[] = [
 <template>
   <section
     id="accueil"
-    class="relative flex min-h-screen items-start px-5 pt-28 pb-9 md:px-10 lg:px-16"
+    class="relative flex items-start px-5 pt-28 pb-9 md:px-10 lg:px-16"
   >
     <div class="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
       <!-- Left: editorial copy -->

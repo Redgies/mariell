@@ -156,8 +156,8 @@
   "hotPaths": [
     {
       "path": "app\\components\\HeroSection.vue",
-      "accessCount": 17,
-      "lastAccessed": 1777557106989,
+      "accessCount": 19,
+      "lastAccessed": 1777558615194,
       "type": "file"
     },
     {
@@ -167,15 +167,15 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\PricingSection.vue",
-      "accessCount": 5,
-      "lastAccessed": 1777516711971,
+      "path": "app\\components\\VideoSection.vue",
+      "accessCount": 6,
+      "lastAccessed": 1777558700630,
       "type": "file"
     },
     {
-      "path": "app\\components\\VideoSection.vue",
-      "accessCount": 3,
-      "lastAccessed": 1777557089365,
+      "path": "app\\components\\PricingSection.vue",
+      "accessCount": 5,
+      "lastAccessed": 1777516711971,
       "type": "file"
     },
     {
@@ -215,15 +215,33 @@
       "type": "file"
     },
     {
+      "path": "app\\pages\\index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1777558630763,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1777558690095,
+      "type": "directory"
+    },
+    {
       "path": "legal.pdf",
       "accessCount": 1,
       "lastAccessed": 1777516973971,
       "type": "file"
     },
     {
-      "path": "app\\pages\\index.vue",
+      "path": "app",
       "accessCount": 1,
-      "lastAccessed": 1777541078375,
+      "lastAccessed": 1777558623069,
+      "type": "directory"
+    },
+    {
+      "path": "app\\components\\ApproachSection.vue",
+      "accessCount": 1,
+      "lastAccessed": 1777558623500,
       "type": "file"
     }
   ],
