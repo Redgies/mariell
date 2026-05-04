@@ -1,7 +1,7 @@
 {
   "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"C:\\\\Users\\\\Mathias\\\\Documents\\\\Work\\\\Mariell\\\\app\\\\utils\\\\silhouettes.ts\",\"limit\":40}",
-  "error": "File content (50838 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
-  "timestamp": "2026-04-27T23:01:13.313Z",
-  "retry_count": 2
+  "tool_input_preview": "{\"file_path\":\"C:\\\\Users\\\\Mathias\\\\AppData\\\\Local\\\\Temp\\\\design2\\\\guide-salaire-sales-2026\\\\project\\\\Guide salaires Sales 2026.html\"}",
+  "error": "File content (27071 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-05-04T20:14:50.736Z",
+  "retry_count": 1
 }

@@ -1,42 +1,48 @@
 <script setup lang="ts">
+import type { LabCardIcon } from './LabCard.vue'
+
 interface LabTool {
-  emoji: string
-  title: string
+  tag: string
+  titleLead: string
+  titleEm: string
+  titleTrail?: string
   description: string
-  meta: string
   cta: string
   href: string
-  variant?: 'service'
+  icon: LabCardIcon
 }
 
 const tools: LabTool[] = [
   {
-    emoji: '📊',
-    title: 'Plan de sourcing LinkedIn',
+    tag: 'IA · 3 minutes',
+    titleLead: 'Plan de ',
+    titleEm: 'sourcing LinkedIn',
     description:
-      "Recevez une stratégie de chasse personnalisée pour votre prochain recrutement Sales : ciblage, templates, screening.",
-    meta: '3 minutes · Gratuit',
+      'Votre stratégie de chasse pour le prochain recrutement Sales : entreprises cibles, requête booléenne, plan en 4 phases.',
     cta: 'Démarrer',
     href: '/lab/plan-de-sourcing',
+    icon: 'target',
   },
   {
-    emoji: '🎯',
-    title: "Évaluation d'attractivité",
+    tag: 'IA · 4 minutes',
+    titleLead: 'Évaluation ',
+    titleEm: "d'attractivité",
     description:
-      "Mesurez l'attractivité de votre offre Sales sur le marché. Forces, leviers d'amélioration, recommandations actionnables.",
-    meta: '4 minutes · Gratuit',
+      "Votre offre Sales, confrontée au marché 2026. Diagnostic chiffré, comparatif, points de levier à activer.",
     cta: 'Démarrer',
     href: '/lab/evaluation-attractivite',
+    icon: 'gauge',
   },
   {
-    emoji: '🤝',
-    title: 'Stage / Alternance',
+    tag: 'Service offert · 7 à 10 jours',
+    titleLead: 'Demande ',
+    titleEm: 'stage ou alternance',
+    titleTrail: ' Sales',
     description:
-      "Service offert : faites une demande de candidat stage ou alternance Sales. Réponse sous 7-10 jours.",
-    meta: 'Gratuit · Service',
+      'Activez notre vivier de stagiaires et alternants Sales. Profils proposés sous 7 à 10 jours.',
     cta: 'Faire une demande',
     href: '/lab/demande-stage-alternance',
-    variant: 'service',
+    icon: 'team',
   },
 ]
 </script>
@@ -60,32 +66,13 @@ const tools: LabTool[] = [
       </div>
 
       <!-- Grid of tools -->
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-7 lg:gap-8">
-        <NuxtLink
+      <div class="lab-grid">
+        <LabCard
           v-for="tool in tools"
-          :key="tool.title"
-          :to="tool.href"
-          class="lab-card reveal"
-          :class="{ 'lab-card--service': tool.variant === 'service' }"
-        >
-          <span v-if="tool.variant === 'service'" class="lab-card__badge">Service offert</span>
-
-          <span class="lab-card__emoji" aria-hidden="true">{{ tool.emoji }}</span>
-
-          <h3 class="lab-card__title">{{ tool.title }}</h3>
-
-          <p class="lab-card__desc">{{ tool.description }}</p>
-
-          <div class="lab-card__footer">
-            <span class="lab-card__meta">{{ tool.meta }}</span>
-            <span class="lab-card__cta">
-              {{ tool.cta }}
-              <svg class="lab-card__arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </span>
-          </div>
-        </NuxtLink>
+          :key="tool.href"
+          v-bind="tool"
+          class="reveal"
+        />
       </div>
 
       <!-- Footer link -->
@@ -102,121 +89,21 @@ const tools: LabTool[] = [
 </template>
 
 <style scoped>
-.lab-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px 24px;
-  border: 1px solid rgba(94, 231, 231, 0.3);
-  border-radius: 6px;
-  background: rgba(94, 231, 231, 0.025);
-  text-decoration: none;
-  color: #fff;
-  transition:
-    border-color 0.3s ease-out,
-    background 0.3s ease-out,
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
-  will-change: transform;
+.lab-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
 }
-
-.lab-card:hover {
-  border-color: rgba(94, 231, 231, 0.35);
-  background: rgba(255, 255, 255, 0.03);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 50px -28px rgba(94, 231, 231, 0.4);
+@media (min-width: 720px) {
+  .lab-grid { grid-template-columns: repeat(2, 1fr); }
+  .lab-grid > :nth-child(3) { grid-column: 1 / -1; }
 }
-
-.lab-card--service {
-  border-color: rgba(232, 94, 255, 0.3);
-  background: rgba(232, 94, 255, 0.025);
-}
-
-.lab-card--service:hover {
-  border-color: rgba(232, 94, 255, 0.55);
-  box-shadow: 0 20px 50px -28px rgba(232, 94, 255, 0.45);
-}
-
-.lab-card__badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: inline-flex;
-  align-items: center;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-  padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.lab-card__emoji {
-  display: inline-block;
-  font-size: 26px;
-  line-height: 1;
-}
-
-.lab-card__title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
-  color: #fff;
-  margin: 4px 0 0;
-}
-
-.lab-card__desc {
-  font-family: var(--font-grotesk);
-  font-weight: 300;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
-  margin: 0;
-  flex: 1;
-}
-
-.lab-card__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 14px;
-  margin-top: 2px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.lab-card__meta {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
-}
-
-.lab-card__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-grotesk);
-  font-weight: 600;
-  font-size: 13.5px;
-  color: #fff;
-  white-space: nowrap;
-}
-
-.lab-card__arrow {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.lab-card:hover .lab-card__arrow {
-  transform: translateX(3px);
+@media (min-width: 1024px) {
+  .lab-grid {
+    gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .lab-grid > :nth-child(3) { grid-column: auto; }
 }
 
 .lab-more {
@@ -248,18 +135,9 @@ const tools: LabTool[] = [
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lab-card,
-  .lab-card__arrow,
   .lab-more,
   .lab-more__arrow {
     transition: none;
-  }
-  .lab-card:hover {
-    transform: none;
-  }
-  .lab-card:hover .lab-card__arrow,
-  .lab-more:hover .lab-more__arrow {
-    transform: none;
   }
 }
 </style>
