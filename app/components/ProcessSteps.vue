@@ -77,7 +77,7 @@ const chronoSteps = [
           </div>
           <h3
             class="mb-3.5 text-[1.75rem] leading-[1.1] tracking-[-0.015em] text-white"
-            style="font-family: var(--font-serif-jp); font-weight: 500;"
+            style="font-family: var(--font-grotesk); font-weight: 800;"
           >
             {{ step.title }}
           </h3>

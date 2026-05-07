@@ -7,7 +7,6 @@
   --color-accent-cyan: #00ffff;
   --color-accent-magenta: #ff00ff;
 
-  --font-serif-jp: "Noto Serif JP", ui-serif, Georgia, serif;
   --font-grotesk: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -39,8 +38,8 @@ body {
 }
 
 .font-serif-jp {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 
@@ -56,16 +55,16 @@ body {
 
 /* Editorial: giant headline */
 .headline-xl {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(3.25rem, 8vw + 1rem, 8rem);
   line-height: 0.95;
   letter-spacing: -0.035em;
 }
 
 .headline-lg {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(2rem, 4.5vw + 1rem, 4.5rem);
   line-height: 1.02;
   letter-spacing: -0.025em;
@@ -322,32 +321,32 @@ body {
    directly so the splitter (index.vue) treats them as a single token and the
    background-clip: text actually has a solid descendant to clip. */
 .headline-asym {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(58px, 10vw, 140px);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .headline-section {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(40px, 5.5vw, 72px);
   line-height: 1.18;
   letter-spacing: -0.03em;
 }
 
 .headline-approach {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(44px, 6vw, 88px);
   line-height: 1.08;
   letter-spacing: -0.035em;
 }
 
 .headline-final {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(48px, 6.5vw, 92px);
   letter-spacing: -0.035em;
   line-height: 1.05;
@@ -589,7 +588,8 @@ body {
   }
 }
 .testi-mark {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 80px;
   line-height: 0.5;
   color: #e85eff;
@@ -604,8 +604,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 18px;
   color: #fff;
 }

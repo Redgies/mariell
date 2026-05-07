@@ -36,7 +36,7 @@ const sideBadges: SideBadge[] = [
 
           <div
             class="mt-6 mb-2 gradient-text text-[72px] leading-none tracking-[-0.04em]"
-            style="font-family: var(--font-serif-jp); font-weight: 500;"
+            style="font-family: var(--font-grotesk); font-weight: 800;"
           >
             20%
           </div>
@@ -63,7 +63,7 @@ const sideBadges: SideBadge[] = [
           >
             <div
               class="text-[22px] text-white"
-              style="font-family: var(--font-serif-jp); font-weight: 500;"
+              style="font-family: var(--font-grotesk); font-weight: 800;"
             >
               On en discute&thinsp;?
             </div>
@@ -91,7 +91,7 @@ const sideBadges: SideBadge[] = [
             <div
               v-if="b.value"
               class="gradient-text min-w-[120px] text-[56px] leading-none tracking-[-0.03em]"
-              style="font-family: var(--font-serif-jp); font-weight: 500;"
+              style="font-family: var(--font-grotesk); font-weight: 800;"
             >
               {{ b.value }}
             </div>

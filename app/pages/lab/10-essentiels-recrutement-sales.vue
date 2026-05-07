@@ -127,7 +127,7 @@ const essentiels: Essentiel[] = [
           <span class="lab-cartouche__dot" />
           LE LAB MARIELL
           <span class="lab-cartouche__sep" />
-          <span class="lab-cartouche__num">GUIDE 02</span>
+          <span class="lab-cartouche__num">GUIDES PRATIQUES</span>
         </div>
         <h1 class="reveal lab-h1">
           Les <span class="gradient-text italic">10 essentiels</span><br />
@@ -139,7 +139,6 @@ const essentiels: Essentiel[] = [
         <div class="reveal lab-meta">
           <div>ÉDITION <strong>MAI&nbsp;2026</strong></div>
           <div>ESSENTIELS <strong>10</strong></div>
-          <div>LECTURE <strong>~12 MIN</strong></div>
           <div>ACCÈS <strong>LIBRE</strong></div>
         </div>
       </div>
@@ -223,7 +222,7 @@ const essentiels: Essentiel[] = [
    `background-clip: text` slope isn't chopped on the right edge. */
 .lab-page :deep(.gradient-text) {
   display: inline-block;
-  padding-right: 0.08em;
+  padding-right: 0.15em;
 }
 
 /* ============ Page-specific opaque background — masks the global GradientBlobs. ============ */
@@ -334,8 +333,8 @@ const essentiels: Essentiel[] = [
 .lab-cartouche__num { color: var(--fg2); }
 
 .lab-h1 {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(44px, 7.2vw, 96px);
   line-height: 1.02;
   letter-spacing: -0.025em;
@@ -345,7 +344,8 @@ const essentiels: Essentiel[] = [
 }
 
 .lab-sub {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   color: var(--fg3);
@@ -410,7 +410,8 @@ const essentiels: Essentiel[] = [
   box-shadow: 0 0 14px rgba(94, 231, 240, 0.35);
 }
 .lab-foreword__quote p {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: clamp(19px, 2.05vw, 23px);
@@ -446,7 +447,8 @@ const essentiels: Essentiel[] = [
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: clamp(72px, 9vw, 120px);
@@ -472,8 +474,8 @@ const essentiels: Essentiel[] = [
 .essentiel__body { padding-top: 8px; }
 
 .essentiel__title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(28px, 3.4vw, 40px);
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -482,7 +484,10 @@ const essentiels: Essentiel[] = [
   max-width: 760px;
 }
 .essentiel__concept {
-  padding-right: 0.05em;
+  padding-right: 0.18em;
+}
+.essentiel:nth-child(9) .essentiel__concept {
+  white-space: nowrap;
 }
 .essentiel__colon {
   color: var(--fg4);
@@ -523,7 +528,8 @@ const essentiels: Essentiel[] = [
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 13px;
@@ -598,7 +604,8 @@ const essentiels: Essentiel[] = [
 }
 
 .lab-signature__quote {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: clamp(20px, 2.3vw, 26px);
@@ -614,8 +621,8 @@ const essentiels: Essentiel[] = [
 .lab-signature__sig {
   margin-top: 64px;
   text-align: center;
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-size: clamp(22px, 2.5vw, 30px);
   line-height: 1.3;

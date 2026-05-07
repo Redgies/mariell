@@ -14,8 +14,7 @@ export default defineNuxtConfig({
 
   googleFonts: {
     families: {
-      'Noto+Serif+JP': [500],
-      'Inter': [300, 400, 600],
+      'Inter': [300, 400, 500, 600, 800],
     },
     display: 'swap',
     preload: true,

@@ -49,7 +49,7 @@ const year = new Date().getFullYear()
         </p>
         <p
           class="text-[0.95rem] italic text-white/55"
-          style="font-family: var(--font-serif-jp); font-weight: 500;"
+          style="font-family: var(--font-grotesk); font-weight: 500;"
         >
           Recruter n'est pas un pari.
         </p>

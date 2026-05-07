@@ -16,7 +16,7 @@ const doubled: Tile[] = [...baseTiles, ...baseTiles]
     <div class="reveal mx-auto mb-8 flex max-w-7xl items-baseline px-5 md:px-10 lg:px-16">
       <h3
         class="text-[22px] tracking-[-0.01em] text-white/65"
-        style="font-family: var(--font-serif-jp); font-weight: 500;"
+        style="font-family: var(--font-grotesk); font-weight: 800;"
       >
         Mariell a chassé pour eux.
       </h3>

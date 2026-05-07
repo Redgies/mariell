@@ -320,8 +320,8 @@ const fiches: Fiche[] = [
           <span class="lab-cartouche__num">GUIDES PRATIQUES</span>
         </div>
         <h1 class="reveal lab-h1">
-          Guide des salaires Sales<br />
-          <span class="gradient-text italic">— Édition 2026.</span>
+          Guide des<br />
+          salaires Sales <span class="gradient-text italic">— Édition 2026.</span>
         </h1>
         <div class="reveal lab-edition-row">
           <p class="lab-sub-line">La grille à jour, par poste, par séniorité, par contexte.</p>
@@ -709,6 +709,13 @@ const fiches: Fiche[] = [
   padding-top: 80px;
 }
 
+/* Italic gradient text — give the trailing italic glyph room so the
+   `background-clip: text` slope isn't chopped on the right edge. */
+.lab-page :deep(.gradient-text) {
+  display: inline-block;
+  padding-right: 0.15em;
+}
+
 .lab-container {
   max-width: 1100px;
   margin: 0 auto;
@@ -798,8 +805,8 @@ const fiches: Fiche[] = [
 .lab-cartouche__num { color: rgba(255, 255, 255, 0.9); }
 
 .lab-h1 {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(48px, 7.5vw, 104px);
   line-height: 1.02;
   letter-spacing: -0.035em;
@@ -816,7 +823,8 @@ const fiches: Fiche[] = [
   margin-top: 22px;
 }
 .lab-sub-line {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -865,7 +873,8 @@ const fiches: Fiche[] = [
 }
 .lab-intro blockquote { margin: 0; padding: 0; border: 0; }
 .lab-intro__lead {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: clamp(22px, 2.4vw, 28px);
@@ -909,8 +918,8 @@ const fiches: Fiche[] = [
 }
 
 .lab-section-title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(34px, 4.6vw, 56px);
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -973,7 +982,8 @@ const fiches: Fiche[] = [
 }
 .lab-table tbody td.num {
   text-align: right;
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 19px;
@@ -1043,8 +1053,8 @@ const fiches: Fiche[] = [
   background: radial-gradient(ellipse 400px 200px at 100% 0%, rgba(232, 94, 255, 0.10), transparent 60%);
 }
 .lab-howto__title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 28px;
   margin: 0 0 6px;
   color: #fff;
@@ -1179,8 +1189,8 @@ const fiches: Fiche[] = [
 }
 
 .fiche__title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(36px, 4.6vw, 56px);
   line-height: 1.08;
   letter-spacing: -0.035em;
@@ -1190,7 +1200,8 @@ const fiches: Fiche[] = [
 }
 
 .fiche__subtitle {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 18px;
@@ -1236,7 +1247,8 @@ const fiches: Fiche[] = [
   background: #5ee7e7;
 }
 .fiche__mission p {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: clamp(19px, 2vw, 22px);
@@ -1324,7 +1336,8 @@ const fiches: Fiche[] = [
 }
 .rates-table .fix,
 .rates-table .var {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 19px;
@@ -1333,7 +1346,8 @@ const fiches: Fiche[] = [
   white-space: nowrap;
 }
 .rates-table .ote {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 21px;
@@ -1497,7 +1511,8 @@ const fiches: Fiche[] = [
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .lab-lectures-intro__sub {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -1514,7 +1529,8 @@ const fiches: Fiche[] = [
   position: relative;
 }
 .lecture__num {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 14px;
@@ -1540,8 +1556,8 @@ const fiches: Fiche[] = [
   text-transform: uppercase;
 }
 .lecture h3 {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(28px, 3.4vw, 42px);
   line-height: 1.1;
   letter-spacing: -0.035em;
@@ -1636,7 +1652,8 @@ const fiches: Fiche[] = [
 }
 .lecture-table tr:last-child td { border-bottom: 0; }
 .lecture-table td.num {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 18px;
@@ -1656,7 +1673,8 @@ const fiches: Fiche[] = [
   max-width: 820px;
 }
 .world-card__title {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 19px;
@@ -1712,8 +1730,8 @@ const fiches: Fiche[] = [
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .lab-methodo h2 {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(32px, 4.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -1811,7 +1829,8 @@ const fiches: Fiche[] = [
   max-width: 820px;
 }
 .lab-signoff blockquote p {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-weight: 500;
   font-size: 19px;
@@ -1830,8 +1849,8 @@ const fiches: Fiche[] = [
   display: block;
 }
 .lab-signoff__signature {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-size: clamp(34px, 4.4vw, 56px);
   line-height: 1.1;

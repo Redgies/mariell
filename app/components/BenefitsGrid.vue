@@ -57,7 +57,7 @@ const benefitsAsym = [
           </div>
           <div
             class="mb-4 text-[24px] leading-tight tracking-[-0.01em] text-white"
-            style="font-family: var(--font-serif-jp); font-weight: 500;"
+            style="font-family: var(--font-grotesk); font-weight: 800;"
           >
             {{ benefit.title }}
           </div>

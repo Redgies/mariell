@@ -34,7 +34,7 @@ const heroStats: HeroStat[] = [
 
         <p
           class="reveal mt-5 max-w-2xl text-[clamp(20px,2.2vw,27px)] leading-snug text-white"
-          style="font-family: var(--font-serif-jp); font-weight: 500; letter-spacing: -0.025em;"
+          style="font-family: var(--font-grotesk); font-weight: 800; letter-spacing: -0.025em;"
         >
           Nous recrutons les meilleurs Sales, pour vous.
         </p>

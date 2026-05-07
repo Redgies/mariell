@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1777924641462,
+  "lastScanned": 1778149818707,
   "projectRoot": "C:\\Users\\Mathias\\Documents\\Work\\Mariell",
   "techStack": {
     "languages": [
@@ -73,7 +73,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 2,
-      "lastAccessed": 1777924641429,
+      "lastAccessed": 1778149818673,
       "keyFiles": [
         "AGENTS.md",
         "app.vue"
@@ -83,7 +83,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 15,
-      "lastAccessed": 1777924641429,
+      "lastAccessed": 1778149818674,
       "keyFiles": [
         "AGENTS.md",
         "favicon.svg",
@@ -96,7 +96,7 @@
       "path": "shared",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1777924641441,
+      "lastAccessed": 1778149818687,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -105,7 +105,7 @@
       "path": "app\\assets",
       "purpose": "Static assets",
       "fileCount": 1,
-      "lastAccessed": 1777924641442,
+      "lastAccessed": 1778149818687,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -113,8 +113,8 @@
     "app\\components": {
       "path": "app\\components",
       "purpose": "UI components",
-      "fileCount": 17,
-      "lastAccessed": 1777924641442,
+      "fileCount": 18,
+      "lastAccessed": 1778149818688,
       "keyFiles": [
         "AGENTS.md",
         "AppFooter.vue",
@@ -124,19 +124,19 @@
     "app\\pages": {
       "path": "app\\pages",
       "purpose": "Page components",
-      "fileCount": 5,
-      "lastAccessed": 1777924641442,
+      "fileCount": 4,
+      "lastAccessed": 1778149818688,
       "keyFiles": [
         "AGENTS.md",
         "index.vue",
-        "lab.vue"
+        "mentions-legales.vue"
       ]
     },
     "app\\utils": {
       "path": "app\\utils",
       "purpose": "Utility functions",
       "fileCount": 2,
-      "lastAccessed": 1777924641442,
+      "lastAccessed": 1778149818688,
       "keyFiles": [
         "AGENTS.md",
         "silhouettes.ts"
@@ -146,7 +146,7 @@
       "path": "shared\\config",
       "purpose": "Configuration files",
       "fileCount": 2,
-      "lastAccessed": 1777924641442,
+      "lastAccessed": 1778149818688,
       "keyFiles": [
         "AGENTS.md",
         "site.ts"
@@ -155,21 +155,39 @@
   },
   "hotPaths": [
     {
+      "path": "app\\pages\\lab\\10-essentiels-recrutement-sales.vue",
+      "accessCount": 27,
+      "lastAccessed": 1778152011645,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\HeroSection.vue",
       "accessCount": 20,
       "lastAccessed": 1777924860556,
       "type": "file"
     },
     {
-      "path": "app\\pages\\lab\\10-essentiels-recrutement-sales.vue",
-      "accessCount": 12,
-      "lastAccessed": 1777927817889,
+      "path": "app\\components\\LabSection.vue",
+      "accessCount": 11,
+      "lastAccessed": 1778150850223,
       "type": "file"
     },
     {
-      "path": "app\\components\\LabSection.vue",
+      "path": "app\\pages\\lab\\index.vue",
+      "accessCount": 11,
+      "lastAccessed": 1778151366638,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\lab\\guide-salaires-sales.vue",
+      "accessCount": 11,
+      "lastAccessed": 1778152129015,
+      "type": "file"
+    },
+    {
+      "path": "app\\assets\\css\\main.css",
       "accessCount": 10,
-      "lastAccessed": 1777925536374,
+      "lastAccessed": 1778150065384,
       "type": "file"
     },
     {
@@ -185,6 +203,12 @@
       "type": "file"
     },
     {
+      "path": "app\\components\\LabCard.vue",
+      "accessCount": 6,
+      "lastAccessed": 1778151155405,
+      "type": "file"
+    },
+    {
       "path": "app\\components\\PricingSection.vue",
       "accessCount": 5,
       "lastAccessed": 1777516711971,
@@ -197,12 +221,6 @@
       "type": "file"
     },
     {
-      "path": "app\\assets\\css\\main.css",
-      "accessCount": 3,
-      "lastAccessed": 1777924872613,
-      "type": "file"
-    },
-    {
       "path": "app\\components\\AppNavbar.vue",
       "accessCount": 3,
       "lastAccessed": 1777925709723,
@@ -212,6 +230,12 @@
       "path": "shared\\config\\site.ts",
       "accessCount": 3,
       "lastAccessed": 1777926499449,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\AppFooter.vue",
+      "accessCount": 3,
+      "lastAccessed": 1778150104514,
       "type": "file"
     },
     {
@@ -243,6 +267,12 @@
       "accessCount": 2,
       "lastAccessed": 1777558690095,
       "type": "directory"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778150046087,
+      "type": "file"
     },
     {
       "path": "legal.pdf",
@@ -281,21 +311,9 @@
       "type": "file"
     },
     {
-      "path": "app\\components\\AppFooter.vue",
+      "path": "app\\components\\PeopleHunt.vue",
       "accessCount": 1,
-      "lastAccessed": 1777924891421,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\LabCard.vue",
-      "accessCount": 1,
-      "lastAccessed": 1777925443791,
-      "type": "file"
-    },
-    {
-      "path": "app\\pages\\lab\\guide-salaires-sales.vue",
-      "accessCount": 1,
-      "lastAccessed": 1777926129504,
+      "lastAccessed": 1778150169556,
       "type": "file"
     }
   ],

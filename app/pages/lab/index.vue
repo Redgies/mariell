@@ -102,11 +102,11 @@ const guides: LabResource[] = [
       <div class="reveal eyebrow-cyan">Le Lab Mariell</div>
 
       <h1 class="reveal lab-h1 mt-7 text-white" data-split>
-        L'expertise Sales,<br />
+        Mariell,<br />
         <span class="gradient-text italic">en libre-service.</span>
       </h1>
 
-      <p class="reveal lab-subtitle mt-8">
+      <p class="reveal lab-subtitle mt-14">
         Trois outils, deux guides. De quoi cadrer un brief, sourcer un profil, calibrer une offre — sans nous appeler.
       </p>
 
@@ -156,13 +156,14 @@ const guides: LabResource[] = [
       <div class="lab-footer-page__rule" aria-hidden="true" />
       <div class="lab-footer-page__inner">
         <p class="reveal lab-footer-page__text">
-          D'autres ressources arrivent. Et si vous voulez aller plus vite que ce que ces outils permettent, on peut en parler.
+          D'autres ressources arrivent. Et si vous voulez aller plus loin, et plus vite, parlons-en.
         </p>
         <a
           :href="siteConfig.calendlyUrl"
           target="_blank"
           rel="noopener"
-          class="reveal btn-ghost lab-footer-page__cta"
+          class="reveal gradient-cta group inline-flex items-center gap-3 rounded-full px-7 py-4 text-base text-black lab-footer-page__cta"
+          style="font-family: var(--font-grotesk); font-weight: 600;"
         >
           Prendre rendez-vous
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -178,8 +179,8 @@ const guides: LabResource[] = [
 /* Headline — sized between the design (44→104px) and the site's headline-asym,
    but rendered in Noto Serif JP to match the live site signature. */
 .lab-h1 {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: clamp(48px, 7.4vw, 104px);
   line-height: 1.02;
   letter-spacing: -0.035em;
@@ -204,7 +205,7 @@ const guides: LabResource[] = [
 }
 
 .lab-header__rule {
-  margin-top: 64px;
+  margin-top: 32px;
   height: 1px;
   background: linear-gradient(90deg,
     rgba(94, 231, 231, 0.45) 0%,
@@ -213,10 +214,10 @@ const guides: LabResource[] = [
 }
 
 .lab-section {
-  padding: 72px 0;
+  padding: 72px 0 0;
 }
 @media (min-width: 768px) {
-  .lab-section { padding: 96px 0; }
+  .lab-section { padding: 96px 0 0; }
 }
 
 .lab-section__head {
@@ -280,8 +281,11 @@ const guides: LabResource[] = [
 
 /* ============ FOOTER PAGE (closing block, before global AppFooter) ============ */
 .lab-footer-page {
-  padding: 96px 0 24px;
+  padding: 72px 0 24px;
   position: relative;
+}
+@media (min-width: 768px) {
+  .lab-footer-page { padding: 96px 0 24px; }
 }
 
 .lab-footer-page__rule {
@@ -310,8 +314,8 @@ const guides: LabResource[] = [
 
 /* Closing line — italic Noto Serif JP, same gesture as the rest of the site. */
 .lab-footer-page__text {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-size: clamp(22px, 2.2vw, 30px);
   line-height: 1.35;

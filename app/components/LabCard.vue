@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 export type LabCardIcon = 'target' | 'gauge' | 'team' | 'bars' | 'check'
 
 interface Props {
@@ -193,14 +193,21 @@ defineProps<Props>()
 }
 
 .lab-card__title {
-  font-family: var(--font-serif-jp);
-  font-weight: 500;
-  font-size: clamp(22px, 1.6vw, 26px);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  font-size: clamp(19px, 1.35vw, 22px);
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: #fff;
   margin: 0;
   text-wrap: balance;
+  hyphens: manual;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+.lab-card__title :deep(.gradient-text) {
+  display: inline-block;
+  padding-right: 0.12em;
 }
 
 .lab-card__desc {

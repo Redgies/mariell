@@ -504,7 +504,8 @@ onBeforeUnmount(() => {
   z-index: 10; pointer-events: none;
 }
 .ph-kicker {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 22px;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -660,7 +661,8 @@ onBeforeUnmount(() => {
 .ph-tag.ph-best {
   top: -28px;
   transform: translate(-50%, calc(-100% - 22px)) translateY(8px);
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-size: 22px;
   font-weight: 500;
@@ -737,7 +739,8 @@ onBeforeUnmount(() => {
   content: ""; width: 18px; height: 1px; background: currentColor; opacity: .6;
 }
 .ph-name {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 28px;
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -790,7 +793,8 @@ onBeforeUnmount(() => {
   background: linear-gradient(135deg, #5EE7E7 0%, #8B5CF6 50%, #E85EFF 100%);
 }
 .ph-row .ph-val {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: 0;
@@ -819,7 +823,8 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 10px rgba(139,92,246,0.6);
 }
 .ph-rarity {
-  font-family: var(--font-serif-jp);
+  font-family: var(--font-grotesk);
+  font-weight: 800;
   font-style: italic;
   font-size: 13px;
   color: rgba(255,255,255,0.48);
