@@ -38,7 +38,8 @@
       "Bash(node *)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm view *)",
-      "Bash(npm ls *)"
+      "Bash(npm ls *)",
+      "WebFetch(domain:api-docs.jarvi.tech)"
     ]
   }
 }

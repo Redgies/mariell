@@ -128,17 +128,14 @@ export default defineEventHandler(async (event) => {
     if (companyId) {
       try {
         const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-        const fieldValueId = process.env.JARVI_FIELD_VALUE_STAGE_ALTERNANCE
-        if (!statusId || !fieldValueId) {
-          throw new Error('Missing JARVI_STATUS_ID_LAB_RECUE or JARVI_FIELD_VALUE_STAGE_ALTERNANCE')
-        }
+        if (!statusId) throw new Error('Missing JARVI_STATUS_ID_LAB_RECUE')
 
         const project = await createProject(
           {
             companyId,
             name: `Lab — Stage/Alternance — ${getDisplayProfil(validated)} — ${formatDateFr(new Date())}`,
             statusId,
-            typeDemandeLabFieldValueId: fieldValueId,
+            typeDemandeLabValue: 'Stage/Alternance',
             description: buildProjectDescription(validated),
           },
           { retry: true },

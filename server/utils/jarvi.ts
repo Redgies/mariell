@@ -1,20 +1,40 @@
 // ============================================================
 // Jarvi (CRM) — generic helpers + outil 1 specifics
+//
+// Reference: https://api-docs.jarvi.tech/en/
+//   POST /companies → returns { companyId, taskId, message }
+//   GET  /companies → returns { companies: [...], total: N }
+//   POST /projects  → returns { projectId, taskId, message }
+//   GET  /projects  → returns { projects: [...], total: N }
+//
 // All calls return null/false in stub mode (no JARVI_API_KEY) so dev works
 // without credentials. Real failures escalate to caller for fail-soft.
 // ============================================================
 
+interface JarviCompanyFieldValue {
+  fieldId?: string
+  value?: string
+  title?: string
+  [key: string]: unknown
+}
+
 export interface JarviCompany {
   id: string
   name?: string
+  website?: string
+  linkedinUrl?: string
   statusId?: string
   updatedAt?: string
-  // Jarvi may nest public data under companyPublicData; keep loose typing
+  fieldsValues?: JarviCompanyFieldValue[]
   [key: string]: unknown
 }
 
 interface JarviProject {
   id: string
+  name?: string
+  companyId?: string
+  statusId?: string
+  fieldsValues?: JarviCompanyFieldValue[]
   [key: string]: unknown
 }
 
@@ -50,6 +70,10 @@ function extractDomain(url: string): string {
   }
 }
 
+function isLinkedinUrl(url: string): boolean {
+  return /linkedin\.com/i.test(url)
+}
+
 // ============================================================
 // Outil 1 — Stage / Alternance
 // ============================================================
@@ -61,9 +85,9 @@ interface FindCompanyParams {
 }
 
 /**
- * Search a Company by exact-or-partial name match OR website domain match.
+ * Search a Company by name OR website domain OR LinkedIn URL OR email domain.
  * Returns the most-recently-updated match, or null.
- * Returns null in stub mode (no JARVI_API_KEY).
+ * Returns null in stub mode.
  */
 export async function findCompanyByNameOrDomain(
   params: FindCompanyParams,
@@ -78,9 +102,10 @@ export async function findCompanyByNameOrDomain(
   const websiteDomain = extractDomain(params.websiteUrl)
   const where = {
     _or: [
-      { companyPublicData: { name: { _ilike: `%${params.name}%` } } },
-      { companyPublicData: { website: { _ilike: `%${websiteDomain}%` } } },
-      { companyPublicData: { website: { _ilike: `%${params.emailDomain}%` } } },
+      { name: { _ilike: `%${params.name}%` } },
+      { website: { _ilike: `%${websiteDomain}%` } },
+      { linkedinUrl: { _ilike: `%${websiteDomain}%` } },
+      { website: { _ilike: `%${params.emailDomain}%` } },
     ],
   }
 
@@ -90,13 +115,13 @@ export async function findCompanyByNameOrDomain(
       { headers: jarviHeaders() },
     )
     if (!res.ok) {
-      console.warn('[jarvi] findCompany HTTP', res.status)
+      console.warn('[jarvi] findCompany HTTP', res.status, await res.text().catch(() => ''))
       return null
     }
-    const data = (await res.json()) as { data?: JarviCompany[] }
-    if (!data.data || data.data.length === 0) return null
+    const data = (await res.json()) as { companies?: JarviCompany[] }
+    if (!data.companies || data.companies.length === 0) return null
 
-    return [...data.data].sort((a, b) => {
+    return [...data.companies].sort((a, b) => {
       const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
       const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
       return tb - ta
@@ -110,7 +135,7 @@ export async function findCompanyByNameOrDomain(
 /**
  * Resolve the human label shown in the notif email.
  * Fail-soft: if `JARVI_CLIENT_STATUS_IDS` is empty, every existing Company
- * shows up as "Contact connu" (intended — no false-positive "Client").
+ * shows up as "Contact connu" (intended).
  */
 export function resolveCompanyStatusLabel(company: JarviCompany | null): string {
   if (!company) return 'Nouveau prospect'
@@ -131,11 +156,12 @@ interface HasActiveLabProjectParams {
 }
 
 /**
- * Returns true if there's already a Project on that Company with:
+ * True iff there's a Project on that Company with:
  *   - statusId in JARVI_LAB_ACTIVE_STATUS_IDS (typically Reçue + En traitement)
  *   - custom field "Type de demande Lab" = "Stage/Alternance"
  *
- * Fail-soft: returns false if Jarvi is unreachable (don't penalize the prospect).
+ * Status filter via where, custom field filter client-side (relation queries
+ * are awkward and small N per Company makes this fine).
  */
 export async function hasActiveLabProject(params: HasActiveLabProjectParams): Promise<boolean> {
   if (!hasJarvi()) return false
@@ -144,29 +170,38 @@ export async function hasActiveLabProject(params: HasActiveLabProjectParams): Pr
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
-  const fieldValueIdStageAlt = process.env.JARVI_FIELD_VALUE_STAGE_ALTERNANCE
-  if (activeStatusIds.length === 0 || !fieldValueIdStageAlt) {
-    console.warn('[jarvi] hasActiveLabProject — env vars missing, allowing submission')
+  const fieldId = process.env.JARVI_FIELD_ID_TYPE_DEMANDE_LAB
+
+  if (activeStatusIds.length === 0) {
+    console.warn('[jarvi] hasActiveLabProject — JARVI_LAB_ACTIVE_STATUS_IDS empty, allowing submission')
     return false
   }
 
   const where = {
     companyId: { _eq: params.companyId },
     statusId: { _in: activeStatusIds },
-    fieldsValues: { fieldValueId: { _eq: fieldValueIdStageAlt } },
   }
 
   try {
     const res = await fetch(
-      jarviUrl('/projects', { where: JSON.stringify(where), limit: '1' }),
+      jarviUrl('/projects', { where: JSON.stringify(where), limit: '20' }),
       { headers: jarviHeaders() },
     )
     if (!res.ok) {
       console.warn('[jarvi] hasActiveLabProject HTTP', res.status)
       return false
     }
-    const data = (await res.json()) as { data?: JarviProject[] }
-    return Array.isArray(data.data) && data.data.length > 0
+    const data = (await res.json()) as { projects?: JarviProject[] }
+    if (!data.projects || data.projects.length === 0) return false
+
+    // Without a field id configured, conservative: any active Lab project counts as duplicate
+    if (!fieldId) return true
+
+    return data.projects.some((p) => {
+      const fv = p.fieldsValues
+      if (!Array.isArray(fv)) return false
+      return fv.some((v) => v.fieldId === fieldId && (v.value === 'Stage/Alternance' || v.title === 'Stage/Alternance'))
+    })
   } catch (err) {
     console.error('[jarvi] hasActiveLabProject threw', err)
     return false
@@ -179,7 +214,14 @@ interface UpsertCompanyParams {
   websiteUrl: string
 }
 
-/** If Company exists → return it. Else create it. Retries once on failure. */
+/**
+ * Returns existing Company if found. Else creates one.
+ * Jarvi POST /companies is upsert-by-name internally.
+ *
+ * Note: POST /companies has NO `website` field. The URL goes into:
+ *   - `linkedinUrl` if it's a LinkedIn URL
+ *   - `description` (prefixed) otherwise — we keep the trace somewhere visible
+ */
 export async function upsertCompany(
   params: UpsertCompanyParams,
   options: { retry?: boolean } = {},
@@ -194,7 +236,12 @@ export async function upsertCompany(
     throw new Error('[jarvi] not configured in production')
   }
 
-  const body = { name: params.name, website: params.websiteUrl }
+  const body: Record<string, unknown> = { name: params.name }
+  if (isLinkedinUrl(params.websiteUrl)) {
+    body.linkedinUrl = params.websiteUrl
+  } else {
+    body.description = `Site web : ${params.websiteUrl}`
+  }
 
   const doRequest = async (): Promise<JarviCompany> => {
     const res = await fetch(jarviUrl('/companies'), {
@@ -206,10 +253,11 @@ export async function upsertCompany(
       const text = await res.text().catch(() => '')
       throw new Error(`[jarvi] upsertCompany failed: ${res.status} ${text}`)
     }
-    const json = (await res.json()) as { data?: JarviCompany } | JarviCompany
-    return ('data' in json && (json as { data?: JarviCompany }).data
-      ? (json as { data: JarviCompany }).data
-      : (json as JarviCompany))
+    const json = (await res.json()) as { companyId?: string; message?: string }
+    if (!json.companyId) {
+      throw new Error(`[jarvi] upsertCompany: no companyId in response: ${JSON.stringify(json)}`)
+    }
+    return { id: json.companyId, name: params.name }
   }
 
   try {
@@ -228,10 +276,18 @@ interface CreateProjectParams {
   companyId: string
   name: string
   statusId: string
-  typeDemandeLabFieldValueId: string
   description: string
+  /** Label of the multi-choice value, e.g. "Stage/Alternance" */
+  typeDemandeLabValue: string
 }
 
+/**
+ * POST /projects with the "Type de demande Lab" custom field set.
+ * Reads `JARVI_FIELD_ID_TYPE_DEMANDE_LAB` from env to know which field to set.
+ *
+ * customFieldsValues format per Jarvi docs:
+ *   { [fieldId]: "<label string>" }   — multi-choice values pass as text labels
+ */
 export async function createProject(
   params: CreateProjectParams,
   options: { retry?: boolean } = {},
@@ -247,15 +303,17 @@ export async function createProject(
   const fieldId = process.env.JARVI_FIELD_ID_TYPE_DEMANDE_LAB
   if (!fieldId) throw new Error('[jarvi] JARVI_FIELD_ID_TYPE_DEMANDE_LAB missing')
 
-  const body = {
-    companyId: params.companyId,
+  const body: Record<string, unknown> = {
     name: params.name,
     statusId: params.statusId,
-    description: params.description,
-    fieldsValues: [
-      { fieldId, fieldValueId: params.typeDemandeLabFieldValueId },
-    ],
+    companyId: params.companyId,
+    customFieldsValues: {
+      [fieldId]: params.typeDemandeLabValue,
+    },
   }
+  // Description: Jarvi accepts a description but we found no formal schema for it
+  // on POST /projects. Pass through as a generic field — Jarvi will keep or ignore.
+  if (params.description) body.description = params.description
 
   const doRequest = async (): Promise<{ id: string }> => {
     const res = await fetch(jarviUrl('/projects'), {
@@ -267,12 +325,11 @@ export async function createProject(
       const text = await res.text().catch(() => '')
       throw new Error(`[jarvi] createProject failed: ${res.status} ${text}`)
     }
-    const json = (await res.json()) as { data?: { id: string } } | { id: string }
-    const id =
-      'data' in json && (json as { data?: { id: string } }).data
-        ? (json as { data: { id: string } }).data.id
-        : (json as { id: string }).id
-    return { id }
+    const json = (await res.json()) as { projectId?: string; message?: string }
+    if (!json.projectId) {
+      throw new Error(`[jarvi] createProject: no projectId in response: ${JSON.stringify(json)}`)
+    }
+    return { id: json.projectId }
   }
 
   try {
@@ -287,9 +344,13 @@ export async function createProject(
   }
 }
 
+// ============================================================
+// UI URL builders for email links
+// Modern Jarvi UI uses non-hash routing.
+// ============================================================
 export function jarviProjectUrl(projectId: string): string {
-  return `https://app.jarvi.tech/#/projects/${projectId}`
+  return `https://app.jarvi.tech/projects/${projectId}`
 }
 export function jarviCompanyUrl(companyId: string): string {
-  return `https://app.jarvi.tech/#/companies/${companyId}`
+  return `https://app.jarvi.tech/companies/${companyId}`
 }
