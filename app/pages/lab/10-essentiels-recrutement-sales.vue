@@ -439,7 +439,7 @@ const essentiels: Essentiel[] = [
 .essentiel__row {
   display: grid;
   grid-template-columns: 132px 1fr;
-  gap: 32px;
+  gap: 56px;
   align-items: start;
 }
 

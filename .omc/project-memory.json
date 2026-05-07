@@ -156,38 +156,38 @@
   "hotPaths": [
     {
       "path": "app\\pages\\lab\\10-essentiels-recrutement-sales.vue",
-      "accessCount": 27,
-      "lastAccessed": 1778152011645,
+      "accessCount": 31,
+      "lastAccessed": 1778161803502,
       "type": "file"
     },
     {
       "path": "app\\components\\HeroSection.vue",
-      "accessCount": 20,
-      "lastAccessed": 1777924860556,
-      "type": "file"
-    },
-    {
-      "path": "app\\components\\LabSection.vue",
-      "accessCount": 11,
-      "lastAccessed": 1778150850223,
-      "type": "file"
-    },
-    {
-      "path": "app\\pages\\lab\\index.vue",
-      "accessCount": 11,
-      "lastAccessed": 1778151366638,
-      "type": "file"
-    },
-    {
-      "path": "app\\pages\\lab\\guide-salaires-sales.vue",
-      "accessCount": 11,
-      "lastAccessed": 1778152129015,
+      "accessCount": 21,
+      "lastAccessed": 1778161895528,
       "type": "file"
     },
     {
       "path": "app\\assets\\css\\main.css",
-      "accessCount": 10,
-      "lastAccessed": 1778150065384,
+      "accessCount": 16,
+      "lastAccessed": 1778162101338,
+      "type": "file"
+    },
+    {
+      "path": "app\\components\\LabSection.vue",
+      "accessCount": 12,
+      "lastAccessed": 1778161880367,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\lab\\index.vue",
+      "accessCount": 12,
+      "lastAccessed": 1778161905742,
+      "type": "file"
+    },
+    {
+      "path": "app\\pages\\lab\\guide-salaires-sales.vue",
+      "accessCount": 12,
+      "lastAccessed": 1778161922031,
       "type": "file"
     },
     {
@@ -204,8 +204,8 @@
     },
     {
       "path": "app\\components\\LabCard.vue",
-      "accessCount": 6,
-      "lastAccessed": 1778151155405,
+      "accessCount": 7,
+      "lastAccessed": 1778161885672,
       "type": "file"
     },
     {
@@ -275,6 +275,12 @@
       "type": "file"
     },
     {
+      "path": "app\\composables\\useScrollReveal.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778161982941,
+      "type": "file"
+    },
+    {
       "path": "legal.pdf",
       "accessCount": 1,
       "lastAccessed": 1777516973971,
@@ -302,12 +308,6 @@
       "path": "app\\app.vue",
       "accessCount": 1,
       "lastAccessed": 1777924867576,
-      "type": "file"
-    },
-    {
-      "path": "app\\composables\\useScrollReveal.ts",
-      "accessCount": 1,
-      "lastAccessed": 1777924872947,
       "type": "file"
     },
     {

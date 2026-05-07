@@ -103,7 +103,8 @@ body {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease-out, filter 0.2s ease-out;
 }
 
-.gradient-cta:hover {
+.gradient-cta:hover,
+.gradient-cta.revealed:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
   box-shadow: 0 20px 60px -15px rgba(255, 0, 255, 0.55), 0 8px 30px -10px rgba(0, 255, 255, 0.4);
@@ -659,7 +660,7 @@ body {
   .marquee-track, .blob, .scroll-dot {
     animation: none;
   }
-  .gradient-cta:hover, .card-tilt:hover {
+  .gradient-cta:hover, .gradient-cta.revealed:hover, .card-tilt:hover {
     transform: none;
   }
 }
