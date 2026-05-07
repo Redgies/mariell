@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Nouvelle demande Lab — Stage / Alternance</title>
+  <style>
+    /* Reset email-safe */
+    body { margin: 0; padding: 0; background: #f5f5f7; -webkit-font-smoothing: antialiased; }
+    table { border-collapse: collapse; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { color: #0d0d12; }
+
+    .wrap { width: 100%; background: #f5f5f7; padding: 32px 16px; }
+    .card {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #0d0d12;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px -16px rgba(0,0,0,0.08);
+    }
+
+    .gradient-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%);
+    }
+
+    .header { padding: 40px 40px 24px; }
+    .eyebrow {
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #5ee7e7;
+      margin: 0 0 18px;
+    }
+    .h1 {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: #0d0d12;
+      margin: 0 0 6px;
+    }
+    .h1-sub {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #51515a;
+      margin: 0;
+    }
+
+    /* Status pill — color depends on COMPANY_STATUS_LABEL */
+    .pill {
+      display: inline-block;
+      margin: 22px 0 0;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      border: 1px solid;
+    }
+    .pill--client    { color: #a30094; border-color: rgba(232, 94, 255, 0.5); background: rgba(232, 94, 255, 0.06); }
+    .pill--connu     { color: #0d0d12; border-color: rgba(0,0,0,0.18); background: rgba(0,0,0,0.03); }
+    .pill--nouveau   { color: #0090a3; border-color: rgba(94, 231, 231, 0.5); background: rgba(94, 231, 231, 0.08); }
+
+    .section { padding: 0 40px; }
+    .section + .section { padding-top: 28px; }
+
+    .label {
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8a8a93;
+      margin: 0 0 10px;
+    }
+
+    .row {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #0d0d12;
+      margin: 0 0 6px;
+    }
+    .row--muted { color: #51515a; font-size: 14px; }
+    .row strong { font-weight: 600; }
+    .row a { color: #0090a3; text-decoration: none; border-bottom: 1px solid rgba(0, 144, 163, 0.25); }
+
+    .brief {
+      margin-top: 12px;
+      padding: 18px 20px;
+      background: #fafafb;
+      border: 1px solid #ececef;
+      border-left: 2px solid #5ee7e7;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #2a2a32;
+      white-space: pre-wrap;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ececef 30%, #ececef 70%, transparent);
+      margin: 32px 40px 28px;
+    }
+
+    /* CTA buttons (table-based for Outlook compat) */
+    .cta-table { margin: 8px 0 0; }
+    .cta-cell { padding: 0 8px 0 0; }
+    .cta {
+      display: inline-block;
+      padding: 11px 20px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      letter-spacing: 0.005em;
+    }
+    .cta--primary {
+      background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+      color: #000 !important;
+    }
+    .cta--ghost {
+      background: #ffffff;
+      color: #0d0d12 !important;
+      border: 1px solid #d6d6dc;
+    }
+
+    .footer {
+      padding: 28px 40px 36px;
+      border-top: 1px solid #ececef;
+      margin-top: 32px;
+    }
+    .footer-line {
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8a8a93;
+      margin: 0 0 6px;
+    }
+    .footer-tag {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-style: italic;
+      font-size: 13px;
+      color: #5e5e66;
+      margin: 0;
+    }
+
+    @media only screen and (max-width: 540px) {
+      .header, .section, .footer { padding-left: 24px; padding-right: 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+      .h1 { font-size: 22px; }
+      .cta { padding: 10px 16px; font-size: 12.5px; }
+    }
+  </style>
+</head>
+<body>
+  <table role="presentation" class="wrap" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center">
+        <table role="presentation" class="card" cellpadding="0" cellspacing="0" width="600">
+
+          <!-- En-tête / Logo Mariell -->
+          <tr>
+            <td style="background-color: #1a1a1a; padding: 32px 24px; text-align: center;">
+              <img
+                src="https://mariell-dusky.vercel.app/logo_site.png"
+                alt="Mariell"
+                height="40"
+                style="display: inline-block; height: 40px; width: auto; max-width: 180px;"
+              />
+            </td>
+          </tr>
+
+          <!-- Top gradient bar -->
+          <tr><td class="gradient-bar">&nbsp;</td></tr>
+
+          <!-- Header -->
+          <tr>
+            <td class="header">
+              <h1 class="h1">Nouvelle demande Stage / Alternance.</h1>
+              <p class="h1-sub">Reçue le {{ params.DATE_SOUMISSION }}.</p>
+
+              {% if params.COMPANY_STATUS_LABEL == "Client / ancien client" %}
+                <span class="pill pill--client">{{ params.COMPANY_STATUS_LABEL }}</span>
+              {% elif params.COMPANY_STATUS_LABEL == "Contact connu" %}
+                <span class="pill pill--connu">{{ params.COMPANY_STATUS_LABEL }}</span>
+              {% else %}
+                <span class="pill pill--nouveau">{{ params.COMPANY_STATUS_LABEL }}</span>
+              {% endif %}
+            </td>
+          </tr>
+
+          <!-- Section : Contact -->
+          <tr>
+            <td class="section">
+              <p class="label">— 01 — Contact</p>
+              <p class="row"><strong>{{ params.PRENOM_NOM }}</strong></p>
+              <p class="row"><a href="mailto:{{ params.EMAIL }}">{{ params.EMAIL }}</a></p>
+              <p class="row row--muted">{{ params.TELEPHONE }}</p>
+            </td>
+          </tr>
+
+          <!-- Section : Entreprise -->
+          <tr>
+            <td class="section">
+              <p class="label">— 02 — Entreprise</p>
+              <p class="row"><strong>{{ params.ENTREPRISE }}</strong></p>
+              <p class="row"><a href="{{ params.URL_ENTREPRISE }}" target="_blank" rel="noopener">{{ params.URL_ENTREPRISE }}</a></p>
+            </td>
+          </tr>
+
+          <!-- Section : Besoin -->
+          <tr>
+            <td class="section">
+              <p class="label">— 03 — Besoin</p>
+              <p class="row"><strong>Type de contrat</strong> · {{ params.TYPE_CONTRAT }}</p>
+              <p class="row"><strong>Profil recherché</strong> · {{ params.PROFIL_RECHERCHE }}</p>
+              <p class="row"><strong>Démarrage</strong> · {{ params.DATE_DEMARRAGE }}</p>
+              <p class="row"><strong>Localisation</strong> · {{ params.LOCALISATION }}</p>
+            </td>
+          </tr>
+
+          <!-- Section : Brief -->
+          <tr>
+            <td class="section">
+              <p class="label">Brief de la mission</p>
+              <div class="brief">{{ params.BRIEF_MISSION }}</div>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr><td><div class="divider"></div></td></tr>
+
+          <!-- Section : Liens Jarvi -->
+          <tr>
+            <td class="section" style="padding-bottom: 12px;">
+              <p class="label">Suivi dans Jarvi</p>
+              <table role="presentation" class="cta-table" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="cta-cell">
+                    <a href="{{ params.URL_JARVI_PROJECT }}" class="cta cta--primary" target="_blank" rel="noopener">Voir le Project →</a>
+                  </td>
+                  <td class="cta-cell">
+                    <a href="{{ params.URL_JARVI_COMPANY }}" class="cta cta--ghost" target="_blank" rel="noopener">Voir la Company</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td class="footer">
+              <p class="footer-line">Mariell · Cabinet de recrutement Sales</p>
+              <p class="footer-tag">Recruter n'est pas un pari.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

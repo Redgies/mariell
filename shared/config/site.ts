@@ -24,9 +24,9 @@ export const navLinks: NavLink[] = [
 
 export const labDropdown = [
   { label: 'Découvrir le Lab', href: '/lab', disabled: false },
+  { label: 'Demande stagiaire / alternance', href: '/lab/demande-stage-alternance', disabled: false },
   { label: 'Guide des salaires Sales 2026', href: '/lab/guide-salaires-sales', disabled: false },
   { label: 'Les 10 essentiels du recrutement Sales', href: '/lab/10-essentiels-recrutement-sales', disabled: false },
-  { label: 'Outils — bientôt', href: '#', disabled: true },
   { label: 'Études — bientôt', href: '#', disabled: true },
 ] as const
 

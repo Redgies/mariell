@@ -215,6 +215,12 @@
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 4,
+      "lastAccessed": 1778169748208,
+      "type": "file"
+    },
+    {
       "path": "app\\pages\\index.vue",
       "accessCount": 3,
       "lastAccessed": 1777924859808,
@@ -269,15 +275,27 @@
       "type": "directory"
     },
     {
-      "path": "nuxt.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778150046087,
-      "type": "file"
-    },
-    {
       "path": "app\\composables\\useScrollReveal.ts",
       "accessCount": 2,
       "lastAccessed": 1778161982941,
+      "type": "file"
+    },
+    {
+      "path": "shared/config/site.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778169758203,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-1/brevo-templates/template-1-notification-interne.html",
+      "accessCount": 2,
+      "lastAccessed": 1778172537884,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-1/brevo-templates/template-2-confirmation-prospect.html",
+      "accessCount": 2,
+      "lastAccessed": 1778172541200,
       "type": "file"
     },
     {
@@ -314,6 +332,126 @@
       "path": "app\\components\\PeopleHunt.vue",
       "accessCount": 1,
       "lastAccessed": 1778150169556,
+      "type": "file"
+    },
+    {
+      "path": "AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165688789,
+      "type": "file"
+    },
+    {
+      "path": "app/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165689104,
+      "type": "file"
+    },
+    {
+      "path": "app/composables/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165689410,
+      "type": "file"
+    },
+    {
+      "path": "app/utils/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165690233,
+      "type": "file"
+    },
+    {
+      "path": "app/components/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165690580,
+      "type": "file"
+    },
+    {
+      "path": "app/assets/css/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165690929,
+      "type": "file"
+    },
+    {
+      "path": "app/assets/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165691447,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165692193,
+      "type": "file"
+    },
+    {
+      "path": "shared/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165692460,
+      "type": "file"
+    },
+    {
+      "path": "shared/config/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165693045,
+      "type": "file"
+    },
+    {
+      "path": "public/AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778165693288,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-1/INSTRUCTIONS-DEV-outil-1.md",
+      "accessCount": 1,
+      "lastAccessed": 1778166032416,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-1/formulaire-specs-outil-1 (1).md",
+      "accessCount": 1,
+      "lastAccessed": 1778166033009,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-1/spec-technique-route-nitro-outil-1 (1).md",
+      "accessCount": 1,
+      "lastAccessed": 1778166033659,
+      "type": "file"
+    },
+    {
+      "path": "app/assets/css/main.css",
+      "accessCount": 1,
+      "lastAccessed": 1778168487813,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/index.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778168586713,
+      "type": "file"
+    },
+    {
+      "path": "app/components/AppNavbar.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778168587067,
+      "type": "file"
+    },
+    {
+      "path": "app/components/LabSection.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778168624472,
+      "type": "file"
+    },
+    {
+      "path": "app/components/LabCard.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778168625722,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 1,
+      "lastAccessed": 1778168882816,
       "type": "file"
     }
   ],
