@@ -10,7 +10,17 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  modules: ['@nuxtjs/google-fonts', '@nuxtjs/turnstile'],
+  modules: [
+    // @nuxt/scripts MUST come before @nuxtjs/turnstile so Turnstile's widget
+    // loads Cloudflare's api.js through the Trusted Types-compliant loader.
+    '@nuxt/scripts',
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/turnstile',
+    // To re-enable Vercel Analytics later:
+    //   1. npm install @vercel/analytics
+    //   2. uncomment the line below (note the /nuxt subpath, NOT '@vercel/analytics')
+    // '@vercel/analytics/nuxt',
+  ],
 
   googleFonts: {
     families: {
@@ -27,6 +37,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    turnstile: {
+      // Auto-overridden by NUXT_TURNSTILE_SECRET_KEY at runtime.
+      secretKey: '',
+    },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     },
