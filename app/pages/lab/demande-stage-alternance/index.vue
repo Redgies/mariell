@@ -55,6 +55,12 @@ const form = reactive({
 })
 
 const turnstileToken = ref(hasTurnstile.value ? '' : 'dev-stub')
+const turnstile = ref<{ reset?: () => void } | null>(null)
+
+function resetTurnstile() {
+  turnstile.value?.reset?.()
+  turnstileToken.value = hasTurnstile.value ? '' : 'dev-stub'
+}
 
 // ---------- Errors + touched tracking ----------
 type FieldKey =
@@ -285,6 +291,10 @@ async function onSubmit() {
   const result = await submit(payload)
 
   if (!result.success) {
+    // Token Turnstile consommé par la tentative — on regénère pour permettre
+    // un retry sans avoir à rafraîchir la page
+    resetTurnstile()
+
     if (result.code === 'PERSONAL_EMAIL') {
       errors.email = result.message
       touched.email = true
@@ -693,7 +703,7 @@ async function onSubmit() {
 
           <!-- ====== Cloudflare Turnstile (invisible) ====== -->
           <div v-if="hasTurnstile" class="cf-mount">
-            <NuxtTurnstile v-model="turnstileToken" />
+            <NuxtTurnstile ref="turnstile" v-model="turnstileToken" />
           </div>
 
           <!-- ====== Submit ====== -->
