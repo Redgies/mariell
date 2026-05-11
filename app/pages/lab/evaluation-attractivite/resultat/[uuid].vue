@@ -184,8 +184,9 @@ const STEP_LABELS = [
   'Synthèse et recommandations...',
   'Finalisation de votre évaluation...',
 ]
-// pct = 100 * (1 - exp(-t/TAU)). TAU=36 → ~73% à 50s, ~87% à 75s, ~94% à 100s.
-const PROGRESS_TAU = 36
+// pct = 100 * (1 - exp(-t/TAU)). TAU=50 → ~70% à 60s (1min), ~84% à 90s, ~91% à 120s,
+// ~95% à 150s, ~99% seulement à ~4 minutes. Le user voit toujours du mouvement.
+const PROGRESS_TAU = 50
 let loadStart: number | null = null
 let raf: number | null = null
 
@@ -372,7 +373,7 @@ async function onRetry() {
             </div>
           </div>
 
-          <p class="reassure">Cette opération prend en général 30 à 60 secondes. Merci de ne pas fermer cette fenêtre.</p>
+          <p class="reassure">Cette opération prend en général 1 à 2 minutes. Merci de ne pas fermer cette fenêtre.</p>
         </div>
       </section>
 

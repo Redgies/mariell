@@ -179,8 +179,9 @@ const STEPS = [
   { at: 75, end: Infinity },
 ]
 // Asymptotic progress curve : pct = 100 * (1 - exp(-t/TAU)).
-// TAU=28 → ~75% à 40s, ~88% à 60s, ~95% à 85s. Le user voit toujours du mouvement.
-const PROGRESS_TAU = 28
+// TAU=40 → ~78% à 60s, ~90% à 90s (1m30), ~95% à 120s (2min), ~99% seulement à ~3m30.
+// Le user voit toujours du mouvement, même si le LLM tarde.
+const PROGRESS_TAU = 40
 let loadStart: number | null = null
 let raf: number | null = null
 
@@ -354,7 +355,7 @@ async function onRetry() {
           </div>
 
           <p class="reassure">
-            Cette opération prend en général 25 à 35 secondes. Merci de ne pas fermer cette fenêtre.
+            Cette opération prend en général 1 à 2 minutes. Merci de ne pas fermer cette fenêtre.
           </p>
         </div>
       </section>

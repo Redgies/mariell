@@ -668,7 +668,7 @@ async function onSubmit() {
             <p class="submit__hint">Renseignez tous les champs obligatoires pour activer l'évaluation.</p>
             <p class="submit__loading-note">
               Notre IA analyse votre offre sur les <em>4 dimensions clés.</em><br />
-              Cela peut prendre jusqu'à 60 secondes — merci de ne pas fermer cette page.
+              Cela peut prendre 1 à 2 minutes — merci de ne pas fermer cette page.
             </p>
           </div>
 

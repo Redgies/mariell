@@ -675,7 +675,7 @@ async function onSubmit() {
 
             <p class="submit__loading-note">
               Notre IA construit votre stratégie de sourcing sur les <em>8 livrables clés.</em><br />
-              Cela peut prendre jusqu'à 60 secondes — merci de ne pas fermer cette page.
+              Cela peut prendre 1 à 2 minutes — merci de ne pas fermer cette page.
             </p>
           </div>
 
