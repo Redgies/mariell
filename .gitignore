@@ -6,6 +6,9 @@
 .cache
 dist
 
+# Vercel build artifacts (générés par `nuxt build` avec preset vercel)
+.vercel
+
 # Node dependencies
 node_modules
 
