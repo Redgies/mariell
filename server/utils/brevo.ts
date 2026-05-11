@@ -404,6 +404,7 @@ function buildEvaluationInternalParams(input: FormulaireOutil3, json?: LlmOutput
     PACKAGE_FIXE: `${input.package_fixe.toLocaleString('fr-FR')} €`,
     PACKAGE_OTE: `${input.package_ote.toLocaleString('fr-FR')} €`,
     NIVEAU_ATTRACTIVITE: json?.niveau_attractivite || 'En cours d\'évaluation',
+    NIVEAU_INDEX: json?.niveau_index?.toString() || '0',
     JAUGE_POSITION: json?.jauge_position?.toString() || '—',
     DIMENSIONS_MARQUE: json?.dimensions?.marque || '—',
     DIMENSIONS_SECTEUR: json?.dimensions?.secteur || '—',

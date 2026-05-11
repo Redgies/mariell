@@ -130,7 +130,7 @@
             <td class="header">
               <h1 class="h1">Nouvelle évaluation d'attractivité.</h1>
               <p class="h1-sub">Reçue le {{ params.DATE_SOUMISSION }} · Évaluation générée et livrée au prospect.</p>
-              <span class="verdict-pill verdict-pill--lvl-{{ params.JAUGE_POSITION | default(0) | int }}">
+              <span class="verdict-pill verdict-pill--lvl-{{ params.NIVEAU_INDEX | default: 0 }}">
                 {{ params.NIVEAU_ATTRACTIVITE }} · {{ params.JAUGE_POSITION }} / 10
               </span>
             </td>

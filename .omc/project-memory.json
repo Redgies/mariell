@@ -270,6 +270,12 @@
       "type": "file"
     },
     {
+      "path": "server/utils/brevo.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778514111500,
+      "type": "file"
+    },
+    {
       "path": "shared/config/site.ts",
       "accessCount": 2,
       "lastAccessed": 1778505653121,
@@ -303,6 +309,12 @@
       "path": "app/assets/css/main.css",
       "accessCount": 2,
       "lastAccessed": 1778507404085,
+      "type": "file"
+    },
+    {
+      "path": "docs/outil-3/brevo-templates/template-1-notif-interne-livree.html",
+      "accessCount": 2,
+      "lastAccessed": 1778514113337,
       "type": "file"
     },
     {
