@@ -40,7 +40,8 @@
       "Bash(npm view *)",
       "Bash(npm ls *)",
       "WebFetch(domain:api-docs.jarvi.tech)",
-      "Bash(tee /tmp/mariell-build.log)"
+      "Bash(tee /tmp/mariell-build.log)",
+      "Bash(awk '/Sections markdown obligatoires|## 1\\\\.|## 2\\\\.|## 3\\\\.|## 4\\\\.|## 5\\\\.|## 6\\\\.|## 7\\\\.|## 8\\\\./' /Users/mathiasriotor/Documents/Work/mariell/server/prompts/outil-3/system-prompt-v9.md)"
     ]
   }
 }

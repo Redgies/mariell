@@ -88,6 +88,26 @@ export async function getEvaluation(uuid: string): Promise<EvaluationRecord | nu
 }
 
 // ============================================================
+// Status de génération (utilisé par le polling front pendant ~60s)
+// ============================================================
+
+export type EvaluationGenerationStatus =
+  | { status: 'pending'; updatedAt: string }
+  | { status: 'done'; updatedAt: string }
+  | { status: 'deferred'; updatedAt: string; deferredId: string }
+  | { status: 'error'; updatedAt: string; errorCode: string; errorMessage: string }
+
+const STATUS_TTL_SECONDS = 10 * 60
+
+export async function saveEvaluationStatus(uuid: string, status: EvaluationGenerationStatus): Promise<void> {
+  await kvSet(`eval-status:${uuid}`, status, STATUS_TTL_SECONDS)
+}
+
+export async function getEvaluationStatus(uuid: string): Promise<EvaluationGenerationStatus | null> {
+  return kvGet<EvaluationGenerationStatus>(`eval-status:${uuid}`)
+}
+
+// ============================================================
 // Demande différée (rate limit ou API en panne — TTL 7 jours)
 // ============================================================
 

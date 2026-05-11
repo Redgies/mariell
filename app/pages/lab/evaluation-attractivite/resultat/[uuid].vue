@@ -58,7 +58,79 @@ async function fetchEvaluation() {
   }
 }
 
+// ---------- Polling status (mode "submission en cours") ----------
+
+type PollStatus =
+  | { status: 'pending'; updatedAt: string }
+  | { status: 'done'; updatedAt: string }
+  | { status: 'deferred'; updatedAt: string; deferredId: string }
+  | { status: 'error'; updatedAt: string; errorCode: string; errorMessage: string }
+
+const POLL_INTERVAL_MS = 3000
+const POLL_MAX_ATTEMPTS = 35 // 35 * 3s = 105s max (l'éval peut prendre 60-80s)
+const POLL_404_GRACE = 6
+let pollAborted = false
+
+async function pollStatus(): Promise<void> {
+  let attempts = 0
+  let notFoundStreak = 0
+
+  while (attempts < POLL_MAX_ATTEMPTS && !pollAborted) {
+    attempts++
+    try {
+      const result = await $fetch<PollStatus>(`/api/lab/evaluation-attractivite/status/${uuid.value}`)
+      notFoundStreak = 0
+
+      if (result.status === 'done') {
+        await fetchEvaluation()
+        cleanupPending()
+        return
+      }
+      if (result.status === 'deferred') {
+        state.value = 'deferred'
+        cleanupPending()
+        return
+      }
+      if (result.status === 'error') {
+        errorMessage.value = result.errorMessage || 'Une erreur est survenue.'
+        state.value = 'error'
+        cleanupPending()
+        return
+      }
+      // pending → on continue
+    } catch (err: any) {
+      if (err?.statusCode === 404) {
+        notFoundStreak++
+        if (notFoundStreak > POLL_404_GRACE) {
+          errorMessage.value = 'Demande introuvable. Merci de réessayer.'
+          state.value = 'error'
+          cleanupPending()
+          return
+        }
+      } else {
+        console.warn('[evaluation-attractivite] status poll failed', err)
+      }
+    }
+
+    await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS))
+  }
+
+  if (!pollAborted) {
+    errorMessage.value =
+      "L'évaluation prend plus de temps que prévu. Merci de réessayer ou de nous contacter à bonjour@mariell.fr."
+    state.value = 'error'
+    cleanupPending()
+  }
+}
+
+function cleanupPending() {
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.removeItem(`eval-attr-pending:${uuid.value}`)
+  }
+}
+
 onMounted(async () => {
+  // 1. Mode différé legacy (uuid === 'deferred') — gardé pour compat.
   if (uuid.value === 'deferred' && typeof sessionStorage !== 'undefined') {
     const raw = sessionStorage.getItem('eval-attr-deferred')
     if (raw) {
@@ -71,31 +143,22 @@ onMounted(async () => {
     return
   }
 
+  // 2. Submission en cours : flag posé par le formulaire.
   if (typeof sessionStorage !== 'undefined') {
-    const cached = sessionStorage.getItem(`eval-attr-cache:${uuid.value}`)
-    if (cached) {
+    const pendingRaw = sessionStorage.getItem(`eval-attr-pending:${uuid.value}`)
+    if (pendingRaw) {
       try {
-        const parsed = JSON.parse(cached) as { json: LlmOutputJson | null; markdown: string }
-        if (parsed.markdown) {
-          evalJson.value = parsed.json
-          evalMarkdown.value = parsed.markdown
-          evalMetadata.value = {
-            prenom: '',
-            nom: '',
-            entreprise: '',
-            intitule_poste: "Évaluation d'attractivité",
-            createdAt: new Date().toISOString(),
-          }
-          $fetch<{ metadata: EvalMetadata }>(`/api/lab/evaluation-attractivite/${uuid.value}`)
-            .then((data) => { evalMetadata.value = data.metadata })
-            .catch(() => {})
-          state.value = 'result'
-          return
-        }
+        const pending = JSON.parse(pendingRaw) as { email?: string; prenom?: string }
+        deferredEmail.value = pending.email || ''
       } catch {}
+      startLoadingAnimation()
+      await pollStatus()
+      stopLoadingAnimation()
+      return
     }
   }
 
+  // 3. Arrivée directe via lien email.
   startLoadingAnimation()
   await fetchEvaluation()
   stopLoadingAnimation()
@@ -142,7 +205,10 @@ function stopLoadingAnimation() {
   if (raf !== null) cancelAnimationFrame(raf)
   raf = null
 }
-onBeforeUnmount(() => stopLoadingAnimation())
+onBeforeUnmount(() => {
+  pollAborted = true
+  stopLoadingAnimation()
+})
 
 // Gauge animation
 const gaugeRevealed = ref<number>(0)

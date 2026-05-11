@@ -251,7 +251,7 @@ const isFormReady = computed(() => {
 })
 
 // ---------- Submit ----------
-const { isLoading, generate } = usePlanSourcing()
+const { isLoading, submit } = usePlanSourcing()
 
 interface AlertConfig { title: string; text: string }
 const globalAlert = ref<AlertConfig | null>(null)
@@ -309,39 +309,25 @@ async function onSubmit() {
   }
 
   globalAlert.value = null
-  const result = await generate(payload)
+  const { uuid, immediateError } = await submit(payload)
 
-  if (result.success === false) {
+  if (immediateError) {
     resetTurnstile()
-    const cfg = ALERT_BY_CODE[result.code] || ALERT_BY_CODE.INTERNAL_ERROR
+    const cfg = ALERT_BY_CODE[immediateError.code] || ALERT_BY_CODE.INTERNAL_ERROR
     globalAlert.value = cfg!
     window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
 
-  if (result.deferred) {
-    // Mode différé : on stocke le marker dans sessionStorage et on redirige
-    // vers une page résultat qui détectera l'état "deferred"
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('plan-sourcing-deferred', JSON.stringify({
-        deferredId: result.deferredId,
-        message: result.message,
-        email: form.email.trim(),
-      }))
-    }
-    await navigateTo('/lab/plan-de-sourcing/resultat/deferred')
-    return
-  }
-
-  // Cas nominal : on stocke le plan dans sessionStorage pour éviter
-  // un re-fetch sur la page suivante (le plan est déjà en mémoire)
+  // Marqueur "submission en cours" pour que la page résultat sache qu'elle doit poller.
   if (typeof sessionStorage !== 'undefined') {
-    sessionStorage.setItem(`plan-sourcing-cache:${result.uuid}`, JSON.stringify({
-      content: result.plan,
-      cachedAt: Date.now(),
+    sessionStorage.setItem(`plan-sourcing-pending:${uuid}`, JSON.stringify({
+      submittedAt: Date.now(),
+      email: form.email.trim(),
+      prenom: form.prenom.trim(),
     }))
   }
-  await navigateTo(result.redirectUrl)
+  await navigateTo(`/lab/plan-de-sourcing/resultat/${uuid}`)
 }
 </script>
 

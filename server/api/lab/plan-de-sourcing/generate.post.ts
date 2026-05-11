@@ -21,26 +21,49 @@ import {
 } from '../../../utils/brevo'
 import { generatePlanWithAnthropic, hasAnthropic } from '../../../utils/anthropic'
 import { SYSTEM_PROMPT, buildUserPrompt } from '../../../utils/prompts/plan-de-sourcing'
-import { savePlan, saveDeferred } from '../../../utils/plan-storage'
+import { savePlan, saveDeferred, savePlanStatus } from '../../../utils/plan-storage'
+
+const UUID_RE = /^[a-zA-Z0-9_-]{8,20}$/
+
+function extractRequestUuid(body: unknown): string {
+  if (body && typeof body === 'object' && 'request_uuid' in body) {
+    const raw = (body as { request_uuid?: unknown }).request_uuid
+    if (typeof raw === 'string' && UUID_RE.test(raw)) return raw
+  }
+  return nanoid(10)
+}
 
 export default defineEventHandler(async (event) => {
   const startTime = Date.now()
+  const body = await readBody(event)
+  const requestUuid = extractRequestUuid(body)
+
+  // Init status as 'pending' immédiatement — le polling front commence dès le navigateTo.
+  await savePlanStatus(requestUuid, { status: 'pending', updatedAt: new Date().toISOString() }).catch((err) => {
+    console.error('[plan-de-sourcing] savePlanStatus(pending) failed', err)
+  })
 
   try {
     // ============================================================
     // PHASE 1 — Validations bloquantes
     // ============================================================
 
-    const body = await readBody(event)
     let validated: PlanDeSourcingInput
     try {
       validated = planDeSourcingSchema.parse(body)
     } catch (zodErr: any) {
       const issues = zodErr?.issues || zodErr?.errors
+      const message = issues?.[0]?.message || 'Champs invalides.'
+      await savePlanStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'VALIDATION_FAILED',
+        errorMessage: message,
+      }).catch(() => {})
       throw createError({
         statusCode: 400,
         statusMessage: 'VALIDATION_FAILED',
-        message: issues?.[0]?.message || 'Champs invalides.',
+        message,
         data: { issues },
       })
     }
@@ -51,10 +74,17 @@ export default defineEventHandler(async (event) => {
     // Cloudflare Turnstile
     const turnstileOk = await verifyTurnstile(validated.turnstileToken, ip)
     if (!turnstileOk) {
+      const message = 'Vérification de sécurité échouée. Merci de rafraîchir la page et réessayer.'
+      await savePlanStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'TURNSTILE_FAILED',
+        errorMessage: message,
+      }).catch(() => {})
       throw createError({
         statusCode: 403,
         statusMessage: 'TURNSTILE_FAILED',
-        message: 'Vérification de sécurité échouée. Merci de rafraîchir la page et réessayer.',
+        message,
       })
     }
 
@@ -66,7 +96,13 @@ export default defineEventHandler(async (event) => {
     const rateCheck = await checkPlanSourcingRateLimit(ip, emailDomain)
     if (!rateCheck.allowed) {
       console.warn('[plan-de-sourcing] rate limit hit, switching to deferred', rateCheck)
-      return await handleDeferredProcessing(validated, 'rate_limit')
+      const deferredResult = await handleDeferredProcessing(validated, 'rate_limit')
+      await savePlanStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     // ============================================================
@@ -76,10 +112,16 @@ export default defineEventHandler(async (event) => {
     if (!hasAnthropic()) {
       if (process.env.NODE_ENV !== 'production') {
         console.warn('[plan-de-sourcing] ANTHROPIC_API_KEY missing — using stub plan in dev')
-        return buildStubResponse(validated)
+        return await buildStubResponse(validated, requestUuid)
       }
       console.error('[plan-de-sourcing] ANTHROPIC_API_KEY missing in production — switching to deferred')
-      return await handleDeferredProcessing(validated, 'api_failure')
+      const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+      await savePlanStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     const userPrompt = buildUserPrompt(validated)
@@ -99,21 +141,33 @@ export default defineEventHandler(async (event) => {
       } catch (retryErr) {
         console.error('[plan-de-sourcing] Anthropic retry failed', retryErr)
         sendCriticalAlert('Anthropic API failed twice (Plan de sourcing)', retryErr).catch(() => {})
-        return await handleDeferredProcessing(validated, 'api_failure')
+        const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+        await savePlanStatus(requestUuid, {
+          status: 'deferred',
+          updatedAt: new Date().toISOString(),
+          deferredId: deferredResult.deferredId,
+        }).catch(() => {})
+        return deferredResult
       }
     }
 
     if (!generatedContent || generatedContent.length < 200) {
       console.error('[plan-de-sourcing] Anthropic returned suspiciously short content', generatedContent.length)
       sendCriticalAlert('Anthropic returned empty/short content (Plan de sourcing)', { length: generatedContent.length }).catch(() => {})
-      return await handleDeferredProcessing(validated, 'api_failure')
+      const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+      await savePlanStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     // ============================================================
     // PHASE 4 — Sauvegarde KV (BLOQUANT)
     // ============================================================
 
-    const uuid = nanoid(10)
+    const uuid = requestUuid
     try {
       await savePlan(uuid, {
         content: generatedContent,
@@ -132,12 +186,27 @@ export default defineEventHandler(async (event) => {
     } catch (kvErr) {
       console.error('[plan-de-sourcing] KV save failed', kvErr)
       sendCriticalAlert('KV savePlan failed (Plan de sourcing)', kvErr).catch(() => {})
+      await savePlanStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'INTERNAL_ERROR',
+        errorMessage: "Une erreur est survenue. Votre demande n'a pas pu être enregistrée.",
+      }).catch(() => {})
       throw createError({
         statusCode: 500,
         statusMessage: 'INTERNAL_ERROR',
         message: 'Une erreur est survenue. Votre demande n\'a pas pu être enregistrée.',
       })
     }
+
+    // Marque le statut 'done' AVANT les side effects — le front peut afficher le résultat
+    // dès que la persistance est faite, sans attendre Brevo/Jarvi.
+    await savePlanStatus(requestUuid, {
+      status: 'done',
+      updatedAt: new Date().toISOString(),
+    }).catch((err) => {
+      console.error('[plan-de-sourcing] savePlanStatus(done) failed (non-blocking)', err)
+    })
 
     // ============================================================
     // PHASE 5 — Side effects en parallèle (Promise.allSettled)
@@ -236,6 +305,12 @@ export default defineEventHandler(async (event) => {
     if (err?.statusCode) throw err
     console.error('[plan-de-sourcing] unexpected error', err)
     sendCriticalAlert('Plan-de-sourcing route unexpected error', err).catch(() => {})
+    await savePlanStatus(requestUuid, {
+      status: 'error',
+      updatedAt: new Date().toISOString(),
+      errorCode: 'INTERNAL_ERROR',
+      errorMessage: "Une erreur technique s'est produite. Merci de réessayer dans quelques minutes.",
+    }).catch(() => {})
     throw createError({
       statusCode: 500,
       statusMessage: 'INTERNAL_ERROR',
@@ -389,8 +464,9 @@ function getSiteUrl(): string {
  * Skips KV save, skips emails, skips Jarvi — just enough for the front-end
  * to render the result page without any external service.
  */
-function buildStubResponse(input: PlanDeSourcingInput) {
-  const uuid = `dev-${nanoid(8)}`
+async function buildStubResponse(input: PlanDeSourcingInput, requestUuid: string) {
+  const uuid = requestUuid
+  await savePlanStatus(uuid, { status: 'done', updatedAt: new Date().toISOString() }).catch(() => {})
   const posteAffiche =
     input.posteRecherche === 'Autre'
       ? input.posteRecherchePrecisionAutre || 'Autre'

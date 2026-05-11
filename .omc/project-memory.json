@@ -199,14 +199,116 @@
   "hotPaths": [
     {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
+      "accessCount": 13,
+      "lastAccessed": 1778506156934,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
+      "accessCount": 8,
+      "lastAccessed": 1778506105742,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/plan-de-sourcing/index.vue",
       "accessCount": 4,
-      "lastAccessed": 1778504256801,
+      "lastAccessed": 1778506214487,
       "type": "file"
     },
     {
       "path": "app/pages/lab/evaluation-attractivite/index.vue",
+      "accessCount": 4,
+      "lastAccessed": 1778506226231,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
+      "accessCount": 4,
+      "lastAccessed": 1778506294223,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
+      "accessCount": 4,
+      "lastAccessed": 1778506633375,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/prompts/plan-de-sourcing.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778506662679,
+      "type": "file"
+    },
+    {
+      "path": "server/prompts/outil-3/system-prompt-v9.md",
+      "accessCount": 3,
+      "lastAccessed": 1778506677385,
+      "type": "file"
+    },
+    {
+      "path": "shared/config/site.ts",
       "accessCount": 2,
-      "lastAccessed": 1778504180130,
+      "lastAccessed": 1778505653121,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/plan-storage.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778506050935,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/evaluation-storage.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778506054020,
+      "type": "file"
+    },
+    {
+      "path": "app/composables/usePlanSourcing.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778506185047,
+      "type": "file"
+    },
+    {
+      "path": "app/composables/useEvaluationAttractivite.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778506188072,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/index.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778505608919,
+      "type": "file"
+    },
+    {
+      "path": "app/components/LabSection.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778505609161,
+      "type": "file"
+    },
+    {
+      "path": "app/components/AppNavbar.vue",
+      "accessCount": 1,
+      "lastAccessed": 1778505628082,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/plan-de-sourcing/status/[uuid].get.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778506114451,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/evaluation-attractivite/status/[uuid].get.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778506164492,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-3/parse-llm-response.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778506596441,
       "type": "file"
     }
   ],

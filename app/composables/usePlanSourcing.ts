@@ -1,62 +1,61 @@
+import { nanoid } from 'nanoid'
 import type { PlanDeSourcingInput } from '~~/server/schemas/plan-de-sourcing'
 
-interface GenerateSuccess {
-  success: true
-  deferred: false
+interface SubmitResult {
   uuid: string
-  plan: string
-  redirectUrl: string
+  immediateError?: { code: string; message: string }
 }
 
-interface GenerateDeferred {
-  success: true
-  deferred: true
-  deferredId: string
-  message: string
-}
-
-interface GenerateError {
-  success: false
-  code: string
-  message: string
-}
-
-type GenerateResult = GenerateSuccess | GenerateDeferred | GenerateError
+const FAST_FAIL_WINDOW_MS = 800
 
 export function usePlanSourcing() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const errorCode = ref<string | null>(null)
 
-  async function generate(payload: Partial<PlanDeSourcingInput>): Promise<GenerateResult> {
+  /**
+   * Fire-and-forget submit : génère un uuid côté client, lance le POST sans bloquer,
+   * et résout au bout de FAST_FAIL_WINDOW_MS (ou plus tôt si une erreur immédiate arrive
+   * type Turnstile/Validation). Tout le reste (deferred, done, erreur LLM) est observé
+   * via le polling /status/[uuid] sur la page résultat.
+   */
+  async function submit(payload: Partial<PlanDeSourcingInput>): Promise<SubmitResult> {
+    const requestUuid = nanoid(10)
     isLoading.value = true
     error.value = null
     errorCode.value = null
 
-    try {
-      const result = await $fetch<
-        | { success: true; deferred: false; uuid: string; plan: string; redirectUrl: string }
-        | { success: true; deferred: true; deferredId: string; message: string }
-      >('/api/lab/plan-de-sourcing/generate', {
-        method: 'POST',
-        body: payload,
+    let immediateError: SubmitResult['immediateError']
+
+    const fetchPromise = $fetch('/api/lab/plan-de-sourcing/generate', {
+      method: 'POST',
+      body: { ...payload, request_uuid: requestUuid },
+    })
+      .then(() => {
+        // success path — résultat est déjà persisté côté serveur, le polling l'attrapera
       })
-      if (result.deferred) {
-        return result
-      }
-      return { success: true, deferred: false, ...result } as GenerateSuccess
-    } catch (err: any) {
-      const data = err?.data
-      const code = data?.statusMessage || err?.statusMessage || 'INTERNAL_ERROR'
-      const message =
-        data?.message || err?.message || "Une erreur technique s'est produite. Merci de réessayer."
-      errorCode.value = code
-      error.value = message
-      return { success: false, code, message }
-    } finally {
-      isLoading.value = false
-    }
+      .catch((err: any) => {
+        const data = err?.data
+        const code = data?.statusMessage || err?.statusMessage
+        if (code === 'TURNSTILE_FAILED' || code === 'VALIDATION_FAILED' || code === 'INVALID_UUID') {
+          immediateError = {
+            code,
+            message: data?.message || err?.message || 'Erreur de validation.',
+          }
+        } else {
+          // Erreur tardive (réseau coupé, 500 LLM, etc.) → polling status='error' la prendra
+          console.warn('[plan-sourcing] fetch rejected (handled by polling)', err)
+        }
+      })
+
+    await Promise.race([
+      fetchPromise,
+      new Promise((resolve) => setTimeout(resolve, FAST_FAIL_WINDOW_MS)),
+    ])
+
+    isLoading.value = false
+    return { uuid: requestUuid, immediateError }
   }
 
-  return { isLoading, error, errorCode, generate }
+  return { isLoading, error, errorCode, submit }
 }

@@ -136,6 +136,8 @@ La web search est activée pour cet outil. Règles d'usage :
 
 5. **Format** : Markdown enrichi (titres, sous-titres, listes courtes, citations pour les leviers d'action, blocs de mise en exergue pour le verdict synthétique).
 
+   **Règle gradient dans les titres** : dans CHAQUE titre H1 et H2 que tu écris, tu DOIS mettre en italique markdown (`*…*`) UN seul mot ou court groupe de mots (1 à 3 mots maximum) — celui qui porte l'accent visuel naturel du titre, généralement le dernier mot porteur de sens. Exemples : `## 2. Verdict *synthétique*`, `## 3. Lecture *marque & secteur*`, `## 4. Lecture *mission*`, `## 5. Lecture *package*`, `## 6. Synthèse & *leviers d'action*`, `## 7. *Le twist*`, `## 8. CTA *Calendly*`. **Ne mets PAS d'italique markdown ailleurs** (corps de texte, listes, tableaux) — l'italique markdown est réservé à ces accents de titre et à la ligne de méta sous le H1. Pour mettre du texte en avant dans le corps, utilise **gras** (`**…**`) ou des citations (`>`).
+
 6. **Séquence obligatoire de l'output** : tu DOIS impérativement produire les 8 sections dans l'ordre indiqué, ENTIÈREMENT, sans en sauter aucune. Après avoir écrit la section 5 (Lecture package), tu DOIS continuer avec la section 6 (Synthèse & leviers), puis la section 7 (Le twist), puis la section 8 (CTA Calendly). L'output ne peut se terminer que par le wording exact de la section 8.
 
 # 📦 FORMAT DE SORTIE — HYBRIDE JSON + MARKDOWN
@@ -149,7 +151,7 @@ Ton output doit suivre **strictement** le format suivant : un bloc JSON de méta
   ...JSON de méta-données...
 }
 ---END_META---
-# Évaluation d'attractivité — [Poste recherché]
+# Évaluation *d'attractivité* — [Poste recherché]
 
 *Préparée par Mariell pour [Entreprise]*
 
@@ -157,6 +159,8 @@ Ton output doit suivre **strictement** le format suivant : un bloc JSON de méta
 
 [... contenu markdown des 8 sections ...]
 ```
+
+**Note importante sur le H1** : les astérisques autour de `*d'attractivité*` sont OBLIGATOIRES — ils déclenchent le rendu gradient visuel du mot. Ne pas les oublier.
 
 **Règles strictes** :
 - Le tout premier caractère de l'output est `{` (ouverture du JSON)

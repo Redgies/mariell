@@ -26,27 +26,50 @@ import { validateLlmOutput } from '../../../utils/outil-3/validate-output'
 import {
   saveEvaluation,
   saveDeferredEvaluation,
+  saveEvaluationStatus,
   anonymizeInputs,
 } from '../../../utils/evaluation-storage'
 
+const UUID_RE = /^[a-zA-Z0-9_-]{8,20}$/
+
+function extractRequestUuid(body: unknown): string {
+  if (body && typeof body === 'object' && 'request_uuid' in body) {
+    const raw = (body as { request_uuid?: unknown }).request_uuid
+    if (typeof raw === 'string' && UUID_RE.test(raw)) return raw
+  }
+  return nanoid(10)
+}
+
 export default defineEventHandler(async (event) => {
   const startTime = Date.now()
+  const body = await readBody(event)
+  const requestUuid = extractRequestUuid(body)
+
+  await saveEvaluationStatus(requestUuid, { status: 'pending', updatedAt: new Date().toISOString() }).catch((err) => {
+    console.error('[evaluation-attractivite] saveEvaluationStatus(pending) failed', err)
+  })
 
   try {
     // ============================================================
     // PHASE 1 — Validations bloquantes
     // ============================================================
 
-    const body = await readBody(event)
     let validated: FormulaireOutil3
     try {
       validated = formulaireOutil3SchemaRefined.parse(body)
     } catch (zodErr: any) {
       const issues = zodErr?.issues || zodErr?.errors
+      const message = issues?.[0]?.message || 'Champs invalides.'
+      await saveEvaluationStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'VALIDATION_FAILED',
+        errorMessage: message,
+      }).catch(() => {})
       throw createError({
         statusCode: 400,
         statusMessage: 'VALIDATION_FAILED',
-        message: issues?.[0]?.message || 'Champs invalides.',
+        message,
         data: { issues },
       })
     }
@@ -56,10 +79,17 @@ export default defineEventHandler(async (event) => {
     // Cloudflare Turnstile
     const turnstileOk = await verifyTurnstile(validated.turnstile_token, ip)
     if (!turnstileOk) {
+      const message = 'Vérification de sécurité échouée. Merci de rafraîchir la page et réessayer.'
+      await saveEvaluationStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'TURNSTILE_FAILED',
+        errorMessage: message,
+      }).catch(() => {})
       throw createError({
         statusCode: 403,
         statusMessage: 'TURNSTILE_FAILED',
-        message: 'Vérification de sécurité échouée. Merci de rafraîchir la page et réessayer.',
+        message,
       })
     }
 
@@ -70,7 +100,13 @@ export default defineEventHandler(async (event) => {
     const rateCheck = await checkEvaluationAttractiviteRateLimit(ip)
     if (!rateCheck.allowed) {
       console.warn('[evaluation-attractivite] rate limit hit, switching to deferred', rateCheck)
-      return await handleDeferredProcessing(validated, 'rate_limit')
+      const deferredResult = await handleDeferredProcessing(validated, 'rate_limit')
+      await saveEvaluationStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     // ============================================================
@@ -80,10 +116,16 @@ export default defineEventHandler(async (event) => {
     if (!hasAnthropic()) {
       if (process.env.NODE_ENV !== 'production') {
         console.warn('[evaluation-attractivite] ANTHROPIC_API_KEY missing — using stub in dev')
-        return buildStubResponse(validated)
+        return await buildStubResponse(validated, requestUuid)
       }
       console.error('[evaluation-attractivite] ANTHROPIC_API_KEY missing in production — switching to deferred')
-      return await handleDeferredProcessing(validated, 'api_failure')
+      const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+      await saveEvaluationStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     const systemBlocks = await buildSystemBlocks()
@@ -111,13 +153,25 @@ export default defineEventHandler(async (event) => {
       } catch (retryErr) {
         console.error('[evaluation-attractivite] Anthropic retry failed', retryErr)
         sendCriticalAlert('Anthropic API failed twice (Évaluation attractivité)', retryErr).catch(() => {})
-        return await handleDeferredProcessing(validated, 'api_failure')
+        const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+        await saveEvaluationStatus(requestUuid, {
+          status: 'deferred',
+          updatedAt: new Date().toISOString(),
+          deferredId: deferredResult.deferredId,
+        }).catch(() => {})
+        return deferredResult
       }
     }
 
     if (!llmResult.content || llmResult.content.length < 200) {
       console.error('[evaluation-attractivite] Anthropic returned suspiciously short content')
-      return await handleDeferredProcessing(validated, 'api_failure')
+      const deferredResult = await handleDeferredProcessing(validated, 'api_failure')
+      await saveEvaluationStatus(requestUuid, {
+        status: 'deferred',
+        updatedAt: new Date().toISOString(),
+        deferredId: deferredResult.deferredId,
+      }).catch(() => {})
+      return deferredResult
     }
 
     console.log('[evaluation-attractivite] cache stats', {
@@ -163,7 +217,7 @@ export default defineEventHandler(async (event) => {
     // PHASE 5 — Persistance KV (BLOQUANT)
     // ============================================================
 
-    const uuid = nanoid(10)
+    const uuid = requestUuid
     try {
       await saveEvaluation(uuid, {
         uuid,
@@ -185,12 +239,26 @@ export default defineEventHandler(async (event) => {
     } catch (kvErr) {
       console.error('[evaluation-attractivite] KV save failed', kvErr)
       sendCriticalAlert('KV saveEvaluation failed', kvErr).catch(() => {})
+      await saveEvaluationStatus(requestUuid, {
+        status: 'error',
+        updatedAt: new Date().toISOString(),
+        errorCode: 'INTERNAL_ERROR',
+        errorMessage: "Une erreur est survenue. Votre évaluation n'a pas pu être enregistrée.",
+      }).catch(() => {})
       throw createError({
         statusCode: 500,
         statusMessage: 'INTERNAL_ERROR',
         message: "Une erreur est survenue. Votre évaluation n'a pas pu être enregistrée.",
       })
     }
+
+    // Marque le statut 'done' avant les side effects — le polling peut afficher le résultat.
+    await saveEvaluationStatus(requestUuid, {
+      status: 'done',
+      updatedAt: new Date().toISOString(),
+    }).catch((err) => {
+      console.error('[evaluation-attractivite] saveEvaluationStatus(done) failed (non-blocking)', err)
+    })
 
     // ============================================================
     // PHASE 6 — Side effects en parallèle
@@ -280,6 +348,12 @@ export default defineEventHandler(async (event) => {
     if (err?.statusCode) throw err
     console.error('[evaluation-attractivite] unexpected error', err)
     sendCriticalAlert('Évaluation attractivité route unexpected error', err).catch(() => {})
+    await saveEvaluationStatus(requestUuid, {
+      status: 'error',
+      updatedAt: new Date().toISOString(),
+      errorCode: 'INTERNAL_ERROR',
+      errorMessage: "Une erreur technique s'est produite. Merci de réessayer dans quelques minutes.",
+    }).catch(() => {})
     throw createError({
       statusCode: 500,
       statusMessage: 'INTERNAL_ERROR',
@@ -429,8 +503,9 @@ function getSiteUrl(): string {
   return (process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/+$/, '')
 }
 
-function buildStubResponse(input: FormulaireOutil3) {
-  const uuid = `dev-${nanoid(8)}`
+async function buildStubResponse(input: FormulaireOutil3, requestUuid: string) {
+  const uuid = requestUuid
+  await saveEvaluationStatus(uuid, { status: 'done', updatedAt: new Date().toISOString() }).catch(() => {})
   const intituleAffiche =
     input.intitule_poste === 'Autre' && input.intitule_poste_precision_autre
       ? input.intitule_poste_precision_autre

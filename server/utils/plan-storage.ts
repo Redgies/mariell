@@ -72,6 +72,26 @@ export async function getPlan(uuid: string): Promise<PlanRecord | null> {
 }
 
 // ============================================================
+// Status de génération (utilisé par le polling front pendant ~60s)
+// ============================================================
+
+export type PlanGenerationStatus =
+  | { status: 'pending'; updatedAt: string }
+  | { status: 'done'; updatedAt: string }
+  | { status: 'deferred'; updatedAt: string; deferredId: string }
+  | { status: 'error'; updatedAt: string; errorCode: string; errorMessage: string }
+
+const STATUS_TTL_SECONDS = 10 * 60 // 10 min — le polling ne devrait jamais dépasser ~75s
+
+export async function savePlanStatus(uuid: string, status: PlanGenerationStatus): Promise<void> {
+  await kvSet(`plan-status:${uuid}`, status, STATUS_TTL_SECONDS)
+}
+
+export async function getPlanStatus(uuid: string): Promise<PlanGenerationStatus | null> {
+  return kvGet<PlanGenerationStatus>(`plan-status:${uuid}`)
+}
+
+// ============================================================
 // Demandes différées (rate limit ou Anthropic en panne — TTL 7 jours)
 // ============================================================
 

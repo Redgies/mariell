@@ -261,7 +261,7 @@ const isFormReady = computed(() => {
   return true
 })
 
-const { isLoading, generate } = useEvaluationAttractivite()
+const { isLoading, submit } = useEvaluationAttractivite()
 interface AlertConfig { title: string; text: string }
 const globalAlert = ref<AlertConfig | null>(null)
 const ALERT_BY_CODE: Record<string, AlertConfig> = {
@@ -313,37 +313,24 @@ async function onSubmit() {
   }
 
   globalAlert.value = null
-  const result = await generate(payload)
+  const { uuid, immediateError } = await submit(payload)
 
-  if (result.success === false) {
+  if (immediateError) {
     resetTurnstile()
-    const cfg = ALERT_BY_CODE[result.code] || ALERT_BY_CODE.INTERNAL_ERROR
+    const cfg = ALERT_BY_CODE[immediateError.code] || ALERT_BY_CODE.INTERNAL_ERROR
     globalAlert.value = cfg!
     window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
 
-  if (result.deferred) {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('eval-attr-deferred', JSON.stringify({
-        deferredId: result.deferredId,
-        message: result.message,
-        email: form.email.trim(),
-      }))
-    }
-    await navigateTo('/lab/evaluation-attractivite/resultat/deferred')
-    return
-  }
-
   if (typeof sessionStorage !== 'undefined') {
-    sessionStorage.setItem(`eval-attr-cache:${result.uuid}`, JSON.stringify({
-      json: result.json,
-      markdown: result.markdown,
-      degraded: result.degraded,
-      cachedAt: Date.now(),
+    sessionStorage.setItem(`eval-attr-pending:${uuid}`, JSON.stringify({
+      submittedAt: Date.now(),
+      email: form.email.trim(),
+      prenom: form.prenom.trim(),
     }))
   }
-  await navigateTo(result.redirectUrl)
+  await navigateTo(`/lab/evaluation-attractivite/resultat/${uuid}`)
 }
 </script>
 

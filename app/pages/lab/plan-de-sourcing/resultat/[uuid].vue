@@ -54,8 +54,79 @@ async function fetchPlan() {
   }
 }
 
+// ---------- Polling status (mode "submission en cours") ----------
+
+type PollStatus =
+  | { status: 'pending'; updatedAt: string }
+  | { status: 'done'; updatedAt: string }
+  | { status: 'deferred'; updatedAt: string; deferredId: string }
+  | { status: 'error'; updatedAt: string; errorCode: string; errorMessage: string }
+
+const POLL_INTERVAL_MS = 3000
+const POLL_MAX_ATTEMPTS = 30 // 30 * 3s = 90s max
+const POLL_404_GRACE = 6 // 6 * 3s = 18s de tolérance avant d'abandonner (POST peut être en route)
+let pollAborted = false
+
+async function pollStatus(): Promise<void> {
+  let attempts = 0
+  let notFoundStreak = 0
+
+  while (attempts < POLL_MAX_ATTEMPTS && !pollAborted) {
+    attempts++
+    try {
+      const result = await $fetch<PollStatus>(`/api/lab/plan-de-sourcing/status/${uuid.value}`)
+      notFoundStreak = 0
+
+      if (result.status === 'done') {
+        await fetchPlan()
+        cleanupPending()
+        return
+      }
+      if (result.status === 'deferred') {
+        state.value = 'deferred'
+        cleanupPending()
+        return
+      }
+      if (result.status === 'error') {
+        errorMessage.value = result.errorMessage || 'Une erreur est survenue.'
+        state.value = 'error'
+        cleanupPending()
+        return
+      }
+      // status === 'pending' → on continue à poller
+    } catch (err: any) {
+      if (err?.statusCode === 404) {
+        notFoundStreak++
+        if (notFoundStreak > POLL_404_GRACE) {
+          errorMessage.value = 'Demande introuvable. Merci de réessayer.'
+          state.value = 'error'
+          cleanupPending()
+          return
+        }
+      } else {
+        console.warn('[plan-sourcing] status poll failed', err)
+      }
+    }
+
+    await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS))
+  }
+
+  if (!pollAborted) {
+    errorMessage.value =
+      "La génération prend plus de temps que prévu. Merci de réessayer ou de nous contacter à bonjour@mariell.fr."
+    state.value = 'error'
+    cleanupPending()
+  }
+}
+
+function cleanupPending() {
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.removeItem(`plan-sourcing-pending:${uuid.value}`)
+  }
+}
+
 onMounted(async () => {
-  // 1. Mode différé : marker stocké par le form après redirect
+  // 1. Mode différé legacy (uuid === 'deferred') — gardé pour compat liens existants.
   if (uuid.value === 'deferred' && typeof sessionStorage !== 'undefined') {
     const raw = sessionStorage.getItem('plan-sourcing-deferred')
     if (raw) {
@@ -65,43 +136,33 @@ onMounted(async () => {
       } catch {}
     }
     state.value = 'deferred'
-    startLoadingAnimation() // even if we don't show, no-op safe
     return
   }
 
-  // 2. Cache sessionStorage : si on vient juste de soumettre, le plan est en mémoire
+  // 2. Submission en cours : le formulaire a posé un flag avant de naviguer.
+  //    On poll /status jusqu'à done/deferred/error.
   if (typeof sessionStorage !== 'undefined') {
-    const cached = sessionStorage.getItem(`plan-sourcing-cache:${uuid.value}`)
-    if (cached) {
+    const pendingRaw = sessionStorage.getItem(`plan-sourcing-pending:${uuid.value}`)
+    if (pendingRaw) {
       try {
-        const parsed = JSON.parse(cached) as { content: string }
-        if (parsed.content) {
-          planContent.value = parsed.content
-          // metadata best-effort: derive minimal from URL
-          planMetadata.value = {
-            prenom: '',
-            nom: '',
-            entreprise: '',
-            posteRecherche: 'Plan de sourcing LinkedIn',
-            createdAt: new Date().toISOString(),
-          }
-          // try to fetch fresh metadata in background (non-blocking)
-          $fetch<{ content: string; metadata: PlanMetadata }>(`/api/lab/plan-de-sourcing/${uuid.value}`)
-            .then((data) => {
-              planMetadata.value = data.metadata
-            })
-            .catch(() => {})
-          state.value = 'plan'
-          return
-        }
+        const pending = JSON.parse(pendingRaw) as { email?: string; prenom?: string }
+        deferredEmail.value = pending.email || ''
       } catch {}
+      startLoadingAnimation()
+      await pollStatus()
+      stopLoadingAnimation()
+      return
     }
   }
 
-  // 3. Fetch normal — sur arrivée directe via lien email
+  // 3. Arrivée directe via lien email — fetch immédiat du résultat persisté.
   startLoadingAnimation()
   await fetchPlan()
   stopLoadingAnimation()
+})
+
+onBeforeUnmount(() => {
+  pollAborted = true
 })
 
 // ---------- Loading animation (raf-driven 33s timeline) ----------

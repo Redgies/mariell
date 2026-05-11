@@ -1,68 +1,52 @@
+import { nanoid } from 'nanoid'
 import type { FormulaireOutil3 } from '~~/server/schemas/outil-3/formulaire'
-import type { LlmOutputJson } from '~~/server/schemas/outil-3/llm-output-json'
 
-interface GenerateSuccess {
-  success: true
-  deferred: false
+interface SubmitResult {
   uuid: string
-  json: LlmOutputJson | null
-  markdown: string
-  degraded: boolean
-  redirectUrl: string
-}
-interface GenerateDeferred {
-  success: true
-  deferred: true
-  deferredId: string
-  message: string
-}
-interface GenerateError {
-  success: false
-  code: string
-  message: string
+  immediateError?: { code: string; message: string }
 }
 
-type GenerateResult = GenerateSuccess | GenerateDeferred | GenerateError
+const FAST_FAIL_WINDOW_MS = 800
 
 export function useEvaluationAttractivite() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const errorCode = ref<string | null>(null)
 
-  async function generate(payload: Partial<FormulaireOutil3>): Promise<GenerateResult> {
+  async function submit(payload: Partial<FormulaireOutil3>): Promise<SubmitResult> {
+    const requestUuid = nanoid(10)
     isLoading.value = true
     error.value = null
     errorCode.value = null
 
-    try {
-      const result = await $fetch<
-        | {
-            success: true
-            deferred: false
-            uuid: string
-            json: LlmOutputJson | null
-            markdown: string
-            degraded: boolean
-            redirectUrl: string
+    let immediateError: SubmitResult['immediateError']
+
+    const fetchPromise = $fetch('/api/lab/evaluation-attractivite/generate', {
+      method: 'POST',
+      body: { ...payload, request_uuid: requestUuid },
+    })
+      .then(() => {})
+      .catch((err: any) => {
+        const data = err?.data
+        const code = data?.statusMessage || err?.statusMessage
+        if (code === 'TURNSTILE_FAILED' || code === 'VALIDATION_FAILED' || code === 'INVALID_UUID') {
+          immediateError = {
+            code,
+            message: data?.message || err?.message || 'Erreur de validation.',
           }
-        | { success: true; deferred: true; deferredId: string; message: string }
-      >('/api/lab/evaluation-attractivite/generate', {
-        method: 'POST',
-        body: payload,
+        } else {
+          console.warn('[evaluation-attractivite] fetch rejected (handled by polling)', err)
+        }
       })
-      return result as GenerateSuccess | GenerateDeferred
-    } catch (err: any) {
-      const data = err?.data
-      const code = data?.statusMessage || err?.statusMessage || 'INTERNAL_ERROR'
-      const message =
-        data?.message || err?.message || "Une erreur technique s'est produite. Merci de réessayer."
-      errorCode.value = code
-      error.value = message
-      return { success: false, code, message }
-    } finally {
-      isLoading.value = false
-    }
+
+    await Promise.race([
+      fetchPromise,
+      new Promise((resolve) => setTimeout(resolve, FAST_FAIL_WINDOW_MS)),
+    ])
+
+    isLoading.value = false
+    return { uuid: requestUuid, immediateError }
   }
 
-  return { isLoading, error, errorCode, generate }
+  return { isLoading, error, errorCode, submit }
 }

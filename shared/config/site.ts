@@ -23,6 +23,8 @@ export const navLinks: NavLink[] = [
 
 export const labDropdown = [
   { label: 'Découvrir le Lab', href: '/lab', disabled: false },
+  { label: 'Plan de sourcing LinkedIn', href: '/lab/plan-de-sourcing', disabled: false },
+  { label: "Évaluation d'attractivité", href: '/lab/evaluation-attractivite', disabled: false },
   { label: 'Demande stagiaire / alternance', href: '/lab/demande-stage-alternance', disabled: false },
   { label: 'Guide des salaires Sales 2026', href: '/lab/guide-salaires-sales', disabled: false },
   { label: 'Les 10 essentiels du recrutement Sales', href: '/lab/10-essentiels-recrutement-sales', disabled: false },
