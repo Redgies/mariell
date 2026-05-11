@@ -169,26 +169,29 @@ onBeforeUnmount(() => {
 
 const loaderPct = ref(0)
 const activeStepIdx = ref(0)
+// Steps stretched over ~75s — last step stays until the polling resolves.
 const STEPS = [
-  { at: 0,  end: 5 },
-  { at: 5,  end: 10 },
-  { at: 10, end: 15 },
-  { at: 15, end: 22 },
-  { at: 22, end: 28 },
-  { at: 28, end: 35 },
+  { at: 0,  end: 10 },
+  { at: 10, end: 22 },
+  { at: 22, end: 38 },
+  { at: 38, end: 56 },
+  { at: 56, end: 75 },
+  { at: 75, end: Infinity },
 ]
+// Asymptotic progress curve : pct = 100 * (1 - exp(-t/TAU)).
+// TAU=28 → ~75% à 40s, ~88% à 60s, ~95% à 85s. Le user voit toujours du mouvement.
+const PROGRESS_TAU = 28
 let loadStart: number | null = null
 let raf: number | null = null
 
 function tick(t: number) {
   if (loadStart === null) loadStart = t
   const elapsed = (t - loadStart) / 1000
-  const total = 33
-  loaderPct.value = Math.min(99, Math.floor((elapsed / total) * 100))
+  loaderPct.value = Math.min(99, Math.floor(100 * (1 - Math.exp(-elapsed / PROGRESS_TAU))))
   let idx = STEPS.findIndex((s) => elapsed >= s.at && elapsed < s.end)
   if (idx < 0) idx = STEPS.length - 1
   activeStepIdx.value = idx
-  if (elapsed < total + 1) raf = requestAnimationFrame(tick)
+  raf = requestAnimationFrame(tick)
 }
 function startLoadingAnimation() {
   stopLoadingAnimation()
@@ -725,7 +728,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
-  padding-bottom: 0.06em;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 .prose :deep(h2) {
   margin: 88px 0 28px;
@@ -739,6 +745,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 .prose :deep(h3) {
   margin: 44px 0 16px;
@@ -746,7 +756,11 @@ main { position: relative; z-index: 2; }
   font-size: 22px; line-height: 1.25; letter-spacing: -0.025em;
   color: #fff;
 }
-.prose :deep(h3 em) { font-style: italic; color: #e85eff; opacity: 0.95; }
+.prose :deep(h3 em) {
+  font-style: italic; color: #e85eff; opacity: 0.95;
+  display: inline-block;
+  padding-right: 0.1em;
+}
 .prose :deep(p), .prose :deep(ul), .prose :deep(ol) {
   font-size: 17px; line-height: 1.75;
   color: rgba(255,255,255,0.65);

@@ -164,16 +164,17 @@ onMounted(async () => {
   stopLoadingAnimation()
 })
 
-// Loading animation 33s timeline
+// Loading animation : steps stretched on ~90s, progress courbe asymptotique
+// pour ne jamais bloquer à 99% si le LLM prend plus longtemps que prévu.
 const loaderPct = ref(0)
 const activeStepIdx = ref(0)
 const STEPS = [
-  { at: 0,  end: 8  },
-  { at: 8,  end: 16 },
-  { at: 16, end: 26 },
-  { at: 26, end: 38 },
-  { at: 38, end: 48 },
-  { at: 48, end: 60 },
+  { at: 0,  end: 12 },
+  { at: 12, end: 28 },
+  { at: 28, end: 48 },
+  { at: 48, end: 70 },
+  { at: 70, end: 95 },
+  { at: 95, end: Infinity },
 ]
 const STEP_LABELS = [
   'Analyse de votre contexte...',
@@ -183,18 +184,19 @@ const STEP_LABELS = [
   'Synthèse et recommandations...',
   'Finalisation de votre évaluation...',
 ]
-const TOTAL_LOADING = 48
+// pct = 100 * (1 - exp(-t/TAU)). TAU=36 → ~73% à 50s, ~87% à 75s, ~94% à 100s.
+const PROGRESS_TAU = 36
 let loadStart: number | null = null
 let raf: number | null = null
 
 function tick(t: number) {
   if (loadStart === null) loadStart = t
   const elapsed = (t - loadStart) / 1000
-  loaderPct.value = Math.min(99, Math.floor((elapsed / TOTAL_LOADING) * 100))
+  loaderPct.value = Math.min(99, Math.floor(100 * (1 - Math.exp(-elapsed / PROGRESS_TAU))))
   let idx = STEPS.findIndex((s) => elapsed >= s.at && elapsed < s.end)
   if (idx < 0) idx = STEPS.length - 1
   activeStepIdx.value = idx
-  if (elapsed < TOTAL_LOADING + 1) raf = requestAnimationFrame(tick)
+  raf = requestAnimationFrame(tick)
 }
 function startLoadingAnimation() {
   stopLoadingAnimation()
@@ -848,6 +850,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 .prose :deep(h2) {
   margin: 56px 0 22px;
@@ -861,6 +867,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 .prose :deep(h3) {
   margin: 36px 0 14px;

@@ -20,7 +20,7 @@ import {
   sendCriticalAlert,
 } from '../../../utils/brevo'
 import { generatePlanWithAnthropic, hasAnthropic } from '../../../utils/anthropic'
-import { SYSTEM_PROMPT, buildUserPrompt } from '../../../utils/prompts/plan-de-sourcing'
+import { getSystemPrompt, buildUserPrompt } from '../../../utils/prompts/plan-de-sourcing'
 import { savePlan, saveDeferred, savePlanStatus } from '../../../utils/plan-storage'
 
 const UUID_RE = /^[a-zA-Z0-9_-]{8,20}$/
@@ -124,18 +124,19 @@ export default defineEventHandler(async (event) => {
       return deferredResult
     }
 
+    const systemPrompt = await getSystemPrompt()
     const userPrompt = buildUserPrompt(validated)
     let generatedContent: string
     try {
       generatedContent = await generatePlanWithAnthropic({
-        systemPrompt: SYSTEM_PROMPT,
+        systemPrompt,
         userPrompt,
       })
     } catch (firstErr) {
       console.warn('[plan-de-sourcing] Anthropic first attempt failed, retrying…', firstErr)
       try {
         generatedContent = await generatePlanWithAnthropic({
-          systemPrompt: SYSTEM_PROMPT,
+          systemPrompt,
           userPrompt,
         })
       } catch (retryErr) {

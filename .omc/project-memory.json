@@ -198,6 +198,12 @@
   },
   "hotPaths": [
     {
+      "path": "server/utils/prompts/plan-de-sourcing.ts",
+      "accessCount": 18,
+      "lastAccessed": 1778508513835,
+      "type": "file"
+    },
+    {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
       "accessCount": 13,
       "lastAccessed": 1778506156934,
@@ -205,14 +211,20 @@
     },
     {
       "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 8,
-      "lastAccessed": 1778506105742,
+      "accessCount": 10,
+      "lastAccessed": 1778507978672,
       "type": "file"
     },
     {
-      "path": "server/utils/prompts/plan-de-sourcing.ts",
-      "accessCount": 6,
-      "lastAccessed": 1778506947716,
+      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
+      "accessCount": 8,
+      "lastAccessed": 1778507721407,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
+      "accessCount": 7,
+      "lastAccessed": 1778507729366,
       "type": "file"
     },
     {
@@ -228,21 +240,15 @@
       "type": "file"
     },
     {
-      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
-      "accessCount": 4,
-      "lastAccessed": 1778506294223,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
-      "accessCount": 4,
-      "lastAccessed": 1778506633375,
-      "type": "file"
-    },
-    {
       "path": "server/prompts/outil-3/system-prompt-v9.md",
+      "accessCount": 4,
+      "lastAccessed": 1778507457269,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-2/load-prompts.ts",
       "accessCount": 3,
-      "lastAccessed": 1778506677385,
+      "lastAccessed": 1778508511225,
       "type": "file"
     },
     {
@@ -273,6 +279,12 @@
       "path": "app/composables/useEvaluationAttractivite.ts",
       "accessCount": 2,
       "lastAccessed": 1778506188072,
+      "type": "file"
+    },
+    {
+      "path": "app/assets/css/main.css",
+      "accessCount": 2,
+      "lastAccessed": 1778507404085,
       "type": "file"
     },
     {
@@ -309,6 +321,24 @@
       "path": "server/utils/outil-3/parse-llm-response.ts",
       "accessCount": 1,
       "lastAccessed": 1778506596441,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-3/load-prompts.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778507774324,
+      "type": "file"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778507780358,
+      "type": "file"
+    },
+    {
+      "path": "server/prompts/outil-2/system-prompt-v10.md",
+      "accessCount": 1,
+      "lastAccessed": 1778507948582,
       "type": "file"
     }
   ],
