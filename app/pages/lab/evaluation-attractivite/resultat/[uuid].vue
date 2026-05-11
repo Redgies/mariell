@@ -747,7 +747,7 @@ main { position: relative; z-index: 2; }
   -webkit-text-fill-color: transparent; color: transparent;
   padding-bottom: 0.06em;
 }
-.doc-meta { font-family: var(--font-grotesk); font-style: italic; font-weight: 800; font-size: 17px; color: rgba(255,255,255,0.65); }
+.doc-meta { font-family: var(--font-grotesk); font-style: italic; font-weight: 400; font-size: 17px; color: rgba(255,255,255,0.65); }
 .doc-divider { margin: 36px 0 44px; height: 1px; background: linear-gradient(90deg, transparent, rgba(94,231,231,0.45), rgba(232,94,255,0.35), transparent); }
 
 /* VERDICT */

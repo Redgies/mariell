@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /lab/plan-de-sourcing/resultat/
+Disallow: /lab/evaluation-attractivite/resultat/
+Disallow: /api/
+
+Sitemap: https://mariell.fr/sitemap.xml

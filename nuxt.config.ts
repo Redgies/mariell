@@ -63,7 +63,7 @@ export default defineNuxtConfig({
     },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-      calendlyUrl: process.env.NUXT_PUBLIC_CALENDLY_URL || '#',
+      calendlyUrl: process.env.NUXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/chez-mariell/30min',
     },
   },
 

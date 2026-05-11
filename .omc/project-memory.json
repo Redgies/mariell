@@ -205,8 +205,20 @@
     },
     {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
-      "accessCount": 13,
-      "lastAccessed": 1778506156934,
+      "accessCount": 14,
+      "lastAccessed": 1778512272590,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
+      "accessCount": 12,
+      "lastAccessed": 1778512042734,
+      "type": "file"
+    },
+    {
+      "path": "server/prompts/outil-3/system-prompt-v9.md",
+      "accessCount": 11,
+      "lastAccessed": 1778512066309,
       "type": "file"
     },
     {
@@ -222,9 +234,9 @@
       "type": "file"
     },
     {
-      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
-      "accessCount": 9,
-      "lastAccessed": 1778508883564,
+      "path": "nuxt.config.ts",
+      "accessCount": 6,
+      "lastAccessed": 1778512040221,
       "type": "file"
     },
     {
@@ -240,27 +252,21 @@
       "type": "file"
     },
     {
-      "path": "nuxt.config.ts",
-      "accessCount": 5,
-      "lastAccessed": 1778510236245,
-      "type": "file"
-    },
-    {
       "path": "server/utils/outil-2/load-prompts.ts",
       "accessCount": 5,
       "lastAccessed": 1778510239431,
       "type": "file"
     },
     {
-      "path": "server/prompts/outil-3/system-prompt-v9.md",
-      "accessCount": 4,
-      "lastAccessed": 1778507457269,
-      "type": "file"
-    },
-    {
       "path": "server/utils/outil-3/load-prompts.ts",
       "accessCount": 3,
       "lastAccessed": 1778510243229,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/anthropic.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778512270514,
       "type": "file"
     },
     {
@@ -339,6 +345,12 @@
       "path": "server/prompts/outil-2/system-prompt-v10.md",
       "accessCount": 1,
       "lastAccessed": 1778507948582,
+      "type": "file"
+    },
+    {
+      "path": "public/robots.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778511898567,
       "type": "file"
     }
   ],

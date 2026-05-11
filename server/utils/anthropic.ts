@@ -77,6 +77,12 @@ interface GenerateEvaluationOptions {
   temperature?: number
   /** Active la web search Anthropic (max N recherches). 0 = désactivé. */
   maxWebSearches?: number
+  /**
+   * Préremplit le début de la réponse de l'assistant. Le LLM continue depuis ce
+   * texte → forcer "{" garantit que la sortie commence par un JSON valide.
+   * Astuce Anthropic officielle pour structured output sans recours aux tools.
+   */
+  prefill?: string
 }
 
 interface GenerateEvaluationResult {
@@ -107,12 +113,19 @@ export async function generateEvaluationWithAnthropic(
     })
   }
 
+  const messages: Array<{ role: 'user' | 'assistant'; content: string }> = [
+    { role: 'user', content: opts.userPrompt },
+  ]
+  if (opts.prefill) {
+    messages.push({ role: 'assistant', content: opts.prefill })
+  }
+
   const stream = await getClient().messages.stream({
     model: ANTHROPIC_MODEL,
     max_tokens: opts.maxTokens ?? 16000,
     temperature: opts.temperature ?? 0.15,
     system: opts.systemBlocks as never,
-    messages: [{ role: 'user', content: opts.userPrompt }],
+    messages: messages as never,
     ...(tools.length > 0 ? { tools: tools as never } : {}),
   })
 
@@ -126,8 +139,12 @@ export async function generateEvaluationWithAnthropic(
   const finalMessage = await stream.finalMessage()
   const usage = finalMessage.usage ?? ({} as Record<string, number>)
 
+  // Le prefill n'est pas inclus dans la réponse du modèle — on le réinjecte
+  // au début pour que le parseur retrouve son JSON complet.
+  const finalContent = opts.prefill ? opts.prefill + fullContent : fullContent
+
   return {
-    content: fullContent,
+    content: finalContent,
     usage: {
       inputTokens: (usage as { input_tokens?: number }).input_tokens ?? 0,
       outputTokens: (usage as { output_tokens?: number }).output_tokens ?? 0,

@@ -139,6 +139,7 @@ export default defineEventHandler(async (event) => {
         maxTokens: 16000,
         temperature: 0.15,
         maxWebSearches: 3,
+        prefill: '{',
       })
     } catch (firstErr) {
       console.warn('[evaluation-attractivite] Anthropic first attempt failed, retrying…', firstErr)
