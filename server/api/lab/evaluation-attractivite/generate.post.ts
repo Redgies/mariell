@@ -20,7 +20,7 @@ import {
 } from '../../../utils/brevo'
 import { generateEvaluationWithAnthropic, hasAnthropic } from '../../../utils/anthropic'
 import { buildSystemBlocks } from '../../../utils/outil-3/build-system-blocks'
-import { buildUserPrompt } from '../../../utils/outil-3/build-user-prompt'
+import { buildEvaluationUserPrompt } from '../../../utils/outil-3/build-user-prompt'
 import { parseLlmResponse } from '../../../utils/outil-3/parse-llm-response'
 import { validateLlmOutput } from '../../../utils/outil-3/validate-output'
 import {
@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const systemBlocks = await buildSystemBlocks()
-    const userPrompt = buildUserPrompt(validated)
+    const userPrompt = buildEvaluationUserPrompt(validated)
 
     let llmResult: { content: string; usage: any }
     try {

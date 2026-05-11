@@ -1,7 +1,7 @@
 import type { FormulaireOutil3 } from '../../schemas/outil-3/formulaire'
 import { calculatePackagePosition } from './calculate-package-position'
 
-export function buildUserPrompt(data: FormulaireOutil3): string {
+export function buildEvaluationUserPrompt(data: FormulaireOutil3): string {
   const cycleLabel =
     data.type_cycle === 'Autre' && data.type_cycle_autre
       ? `${data.type_cycle} (${data.type_cycle_autre})`

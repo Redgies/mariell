@@ -702,8 +702,6 @@ async function onSubmit() {
 </template>
 
 <style scoped>
-@import '~/pages/lab/plan-de-sourcing/index.vue' screen and (min-width: 99999px); /* no-op safety */
-
 .page { position: relative; z-index: 1; padding: 64px 20px 96px; }
 @media (min-width: 768px) { .page { padding: 80px 40px 120px; } }
 .shell { width: 100%; max-width: 760px; margin: 0 auto; }
