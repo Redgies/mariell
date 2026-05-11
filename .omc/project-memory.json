@@ -247,8 +247,8 @@
     },
     {
       "path": "server/utils/outil-2/load-prompts.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778508511225,
+      "accessCount": 4,
+      "lastAccessed": 1778509545044,
       "type": "file"
     },
     {
@@ -288,6 +288,18 @@
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778509541613,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-3/load-prompts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778509549127,
+      "type": "file"
+    },
+    {
       "path": "app/pages/lab/index.vue",
       "accessCount": 1,
       "lastAccessed": 1778505608919,
@@ -321,18 +333,6 @@
       "path": "server/utils/outil-3/parse-llm-response.ts",
       "accessCount": 1,
       "lastAccessed": 1778506596441,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/outil-3/load-prompts.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778507774324,
-      "type": "file"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778507780358,
       "type": "file"
     },
     {

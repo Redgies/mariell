@@ -51,6 +51,14 @@ export default defineNuxtConfig({
     preset: 'vercel',
     // Outil 2 génère le plan via Claude Haiku — call serveur ~30s.
     // Vercel preset standard tolère jusqu'à 300s ; vercel-edge serait coupé à 25s.
+
+    // Server assets : embarque les fichiers .md des prompts dans le bundle de fonction
+    // Vercel. Sans ça, `readFile('server/prompts/...')` échoue avec ENOENT en prod
+    // car Nitro n'inclut pas par défaut les fichiers non-code de `server/`.
+    serverAssets: [
+      { baseName: 'prompts-outil-2', dir: 'server/prompts/outil-2' },
+      { baseName: 'prompts-outil-3', dir: 'server/prompts/outil-3' },
+    ],
   },
 
   app: {
