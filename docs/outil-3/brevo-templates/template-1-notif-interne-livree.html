@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Nouvelle évaluation d'attractivité</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f5f5f7; -webkit-font-smoothing: antialiased; }
+    table { border-collapse: collapse; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { color: #0d0d12; }
+
+    .wrap { width: 100%; background: #f5f5f7; padding: 32px 16px; }
+    .card {
+      width: 100%; max-width: 660px; margin: 0 auto;
+      background: #ffffff; border-radius: 14px; overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #0d0d12;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px -16px rgba(0,0,0,0.08);
+    }
+    .gradient-bar { height: 4px; background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%); }
+
+    .header { padding: 40px 40px 24px; }
+    .h1 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.18; letter-spacing: -0.02em; color: #0d0d12; margin: 0 0 6px; }
+    .h1-sub { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 14px; line-height: 1.5; color: #51515a; margin: 0; }
+
+    .verdict-pill {
+      display: inline-block;
+      margin: 14px 0 0;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+    .verdict-pill--lvl-1 { background: #fee5e8; color: #c81e30; border: 1px solid rgba(200,30,48,0.25); }
+    .verdict-pill--lvl-2 { background: #fff1e0; color: #b56812; border: 1px solid rgba(181,104,18,0.25); }
+    .verdict-pill--lvl-3 { background: #e3f2ff; color: #1d6fbf; border: 1px solid rgba(29,111,191,0.25); }
+    .verdict-pill--lvl-4 { background: #d8f5ec; color: #1a7c5a; border: 1px solid rgba(26,124,90,0.25); }
+    .verdict-pill--lvl-5 { background: #c4ecda; color: #145e44; border: 1px solid rgba(20,94,68,0.3); }
+
+    .section { padding: 0 40px; }
+    .section + .section { padding-top: 24px; }
+    .label {
+      font-family: ui-monospace, 'SF Mono', monospace;
+      font-size: 10.5px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #8a8a93; margin: 0 0 10px;
+    }
+    .row { font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.55; color: #0d0d12; margin: 0 0 6px; }
+    .row--muted { color: #51515a; font-size: 14px; }
+    .row strong { font-weight: 600; }
+    .row a { color: #0090a3; text-decoration: none; border-bottom: 1px solid rgba(0,144,163,0.25); }
+
+    .dim-grid {
+      display: table; width: 100%;
+      margin: 8px 0 4px;
+      border-collapse: collapse;
+    }
+    .dim-row { display: table-row; }
+    .dim-cell {
+      display: table-cell; padding: 10px 14px;
+      border: 1px solid #ececef;
+      font-family: 'Inter', sans-serif; font-size: 13.5px;
+    }
+    .dim-cell--label { color: #8a8a93; font-weight: 500; width: 35%; }
+    .dim-cell--value { font-weight: 600; color: #0d0d12; }
+
+    .brief {
+      margin-top: 12px; padding: 16px 18px;
+      background: #fafafb; border: 1px solid #ececef;
+      border-left: 2px solid #5ee7e7;
+      border-radius: 0 8px 8px 0;
+      font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.6;
+      color: #2a2a32; white-space: pre-wrap;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ececef 30%, #ececef 70%, transparent);
+      margin: 32px 40px 24px;
+    }
+
+    .cta-table { margin: 8px 0 0; }
+    .cta-cell { padding: 0 8px 0 0; }
+    .cta {
+      display: inline-block; padding: 11px 20px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px;
+      text-decoration: none;
+    }
+    .cta--primary { background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%); color: #000 !important; }
+    .cta--ghost { background: #fff; color: #0d0d12 !important; border: 1px solid #d6d6dc; }
+
+    .footer {
+      padding: 28px 40px 36px;
+      border-top: 1px solid #ececef;
+      margin-top: 24px;
+    }
+    .footer-line {
+      font-family: ui-monospace, monospace;
+      font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #8a8a93;
+      margin: 0 0 6px;
+    }
+    .footer-tag { font-family: 'Inter', sans-serif; font-weight: 800; font-style: italic; font-size: 13px; color: #5e5e66; margin: 0; }
+
+    @media only screen and (max-width: 540px) {
+      .header, .section, .footer { padding-left: 24px; padding-right: 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+      .h1 { font-size: 21px; }
+      .dim-cell { padding: 8px 12px; font-size: 12.5px; }
+    }
+  </style>
+</head>
+<body>
+  <table role="presentation" class="wrap" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center">
+        <table role="presentation" class="card" cellpadding="0" cellspacing="0" width="660">
+          <tr>
+            <td style="background-color: #1a1a1a; padding: 32px 24px; text-align: center;">
+              <img src="https://mariell-dusky.vercel.app/logo_site.png" alt="Mariell" height="40"
+                style="display: inline-block; height: 40px; width: auto; max-width: 180px;" />
+            </td>
+          </tr>
+          <tr><td class="gradient-bar">&nbsp;</td></tr>
+
+          <tr>
+            <td class="header">
+              <h1 class="h1">Nouvelle évaluation d'attractivité.</h1>
+              <p class="h1-sub">Reçue le {{ params.DATE_SOUMISSION }} · Évaluation générée et livrée au prospect.</p>
+              <span class="verdict-pill verdict-pill--lvl-{{ params.JAUGE_POSITION | default(0) | int }}">
+                {{ params.NIVEAU_ATTRACTIVITE }} · {{ params.JAUGE_POSITION }} / 10
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 01 — Identité</p>
+              <p class="row"><strong>{{ params.PRENOM }} {{ params.NOM }}</strong></p>
+              <p class="row"><a href="mailto:{{ params.EMAIL }}">{{ params.EMAIL }}</a></p>
+              <p class="row row--muted">{{ params.TELEPHONE }}</p>
+              <p class="row"><strong>{{ params.ENTREPRISE }}</strong></p>
+              {% if params.SITE_WEB and params.SITE_WEB != "Non fourni" %}
+              <p class="row"><a href="{{ params.SITE_WEB }}" target="_blank">{{ params.SITE_WEB }}</a></p>
+              {% endif %}
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 02 — Entreprise</p>
+              <p class="row"><strong>Secteur</strong> · {{ params.SECTEUR }}</p>
+              <p class="row"><strong>Localisation</strong> · {{ params.LOCALISATION }}</p>
+              <p class="row"><strong>Effectifs</strong> · {{ params.EFFECTIFS }}</p>
+              <p class="row"><strong>Équipe Sales</strong> · {{ params.EQUIPE_SALES }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 03 — Le poste</p>
+              <p class="row"><strong>Intitulé</strong> · {{ params.INTITULE_POSTE }}</p>
+              <p class="row"><strong>Séniorité</strong> · {{ params.SENIORITE }}</p>
+              <p class="row"><strong>Type de cycle</strong> · {{ params.TYPE_CYCLE }}</p>
+              <p class="row"><strong>Modalité</strong> · {{ params.MODALITE_TRAVAIL }}</p>
+              <p class="row"><strong>Fixe</strong> · {{ params.PACKAGE_FIXE }}</p>
+              <p class="row"><strong>Variable OTE</strong> · {{ params.PACKAGE_OTE }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 04 — Verdict LLM par dimension</p>
+              <div class="dim-grid">
+                <div class="dim-row">
+                  <div class="dim-cell dim-cell--label">Marque</div>
+                  <div class="dim-cell dim-cell--value">{{ params.DIMENSIONS_MARQUE }}</div>
+                </div>
+                <div class="dim-row">
+                  <div class="dim-cell dim-cell--label">Secteur</div>
+                  <div class="dim-cell dim-cell--value">{{ params.DIMENSIONS_SECTEUR }}</div>
+                </div>
+                <div class="dim-row">
+                  <div class="dim-cell dim-cell--label">Mission</div>
+                  <div class="dim-cell dim-cell--value">{{ params.DIMENSIONS_MISSION }}</div>
+                </div>
+                <div class="dim-row">
+                  <div class="dim-cell dim-cell--label">Package</div>
+                  <div class="dim-cell dim-cell--value">{{ params.DIMENSIONS_PACKAGE }}</div>
+                </div>
+              </div>
+              {% if params.BRIEF_FLOU == "Oui" %}
+              <p class="row row--muted" style="margin-top: 12px; font-size: 12.5px;">⚠ Brief flou détecté — précision limitée sur certaines dimensions.</p>
+              {% endif %}
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 05 — Description missions (extrait)</p>
+              <div class="brief">{{ params.DESCRIPTION_MISSIONS }}</div>
+            </td>
+          </tr>
+
+          <tr><td><div class="divider"></div></td></tr>
+
+          <tr>
+            <td class="section" style="padding-bottom: 12px;">
+              <p class="label">Évaluation + suivi Jarvi</p>
+              <table role="presentation" class="cta-table" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="cta-cell">
+                    <a href="{{ params.URL_RESULTAT }}" class="cta cta--primary" target="_blank" rel="noopener">Voir l'évaluation →</a>
+                  </td>
+                  <td class="cta-cell">
+                    <a href="{{ params.URL_JARVI }}" class="cta cta--ghost" target="_blank" rel="noopener">Voir dans Jarvi</a>
+                  </td>
+                </tr>
+              </table>
+              <p class="row row--muted" style="margin-top: 16px; font-size: 12px;">Réf : {{ params.EVAL_UUID }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="footer">
+              <p class="footer-line">Mariell · Cabinet de recrutement Sales</p>
+              <p class="footer-tag">Recruter n'est pas un pari.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

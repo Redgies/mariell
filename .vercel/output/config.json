@@ -1,0 +1,137 @@
+{
+  "version": 3,
+  "overrides": {},
+  "routes": [
+    {
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "src": "/_nuxt/builds/meta/(.*)"
+    },
+    {
+      "headers": {
+        "cache-control": "public, max-age=1, immutable"
+      },
+      "src": "/_nuxt/builds/(.*)"
+    },
+    {
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "src": "/_scripts/(.*)"
+    },
+    {
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "src": "/_nuxt/(.*)"
+    },
+    {
+      "src": "/_nuxt/builds/meta(.*)",
+      "headers": {
+        "cache-control": "public,max-age=31536000,immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/_nuxt/builds(.*)",
+      "headers": {
+        "cache-control": "public,max-age=31536000,immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/_scripts(.*)",
+      "headers": {
+        "cache-control": "public,max-age=31536000,immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/_nuxt(.*)",
+      "headers": {
+        "cache-control": "public,max-age=31536000,immutable"
+      },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "(?<__isr_route>/__nuxt_error)",
+      "dest": "/__fallback"
+    },
+    {
+      "src": "/politique-confidentialite",
+      "dest": "/politique-confidentialite"
+    },
+    {
+      "src": "/mentions-legales",
+      "dest": "/mentions-legales"
+    },
+    {
+      "src": "/lab/plan-de-sourcing",
+      "dest": "/lab/plan-de-sourcing"
+    },
+    {
+      "src": "/lab/guide-salaires-sales",
+      "dest": "/lab/guide-salaires-sales"
+    },
+    {
+      "src": "/lab/demande-stage-alternance/confirmation",
+      "dest": "/lab/demande-stage-alternance/confirmation"
+    },
+    {
+      "src": "/lab/demande-stage-alternance",
+      "dest": "/lab/demande-stage-alternance"
+    },
+    {
+      "src": "/lab/10-essentiels-recrutement-sales",
+      "dest": "/lab/10-essentiels-recrutement-sales"
+    },
+    {
+      "src": "/lab",
+      "dest": "/lab"
+    },
+    {
+      "src": "/api/lab/stage-alternance",
+      "dest": "/api/lab/stage-alternance"
+    },
+    {
+      "src": "/api/lab/plan-de-sourcing/generate",
+      "dest": "/api/lab/plan-de-sourcing/generate"
+    },
+    {
+      "src": "/api/lab/evaluation-attractivite/generate",
+      "dest": "/api/lab/evaluation-attractivite/generate"
+    },
+    {
+      "src": "/__nuxt_error",
+      "dest": "/__nuxt_error"
+    },
+    {
+      "src": "/",
+      "dest": "/index"
+    },
+    {
+      "src": "/lab/plan-de-sourcing/resultat/(?<uuid>[^/]+)",
+      "dest": "/lab/plan-de-sourcing/resultat/[uuid]"
+    },
+    {
+      "src": "/api/lab/plan-de-sourcing/(?<uuid>[^/]+)",
+      "dest": "/api/lab/plan-de-sourcing/[uuid]"
+    },
+    {
+      "src": "/api/lab/evaluation-attractivite/(?<uuid>[^/]+)",
+      "dest": "/api/lab/evaluation-attractivite/[uuid]"
+    },
+    {
+      "src": "/__nuxt_island/(?:.*)",
+      "dest": "/__nuxt_island/[...]"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/__fallback"
+    }
+  ]
+}

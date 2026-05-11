@@ -1,0 +1,492 @@
+import { nanoid } from 'nanoid'
+import { formulaireOutil3SchemaRefined, type FormulaireOutil3 } from '../../../schemas/outil-3/formulaire'
+import { llmOutputJsonSchemaRefined, type LlmOutputJson } from '../../../schemas/outil-3/llm-output-json'
+import { verifyTurnstile } from '../../../utils/turnstile'
+import { checkEvaluationAttractiviteRateLimit } from '../../../utils/ratelimit'
+import { getClientIp } from '../../../utils/request'
+import {
+  findCompanyByNameOrDomain,
+  upsertCompany,
+  createEvaluationAttractiviteProject,
+  jarviProjectUrl,
+  jarviCompanyUrl,
+} from '../../../utils/jarvi'
+import {
+  sendBrevoEvaluationNotifInterneLivree,
+  sendBrevoEvaluationNotifInterneDifferee,
+  sendBrevoEvaluationConfirmationProspect,
+  sendBrevoEvaluationSuiviProspect,
+  sendCriticalAlert,
+} from '../../../utils/brevo'
+import { generateEvaluationWithAnthropic, hasAnthropic } from '../../../utils/anthropic'
+import { buildSystemBlocks } from '../../../utils/outil-3/build-system-blocks'
+import { buildUserPrompt } from '../../../utils/outil-3/build-user-prompt'
+import { parseLlmResponse } from '../../../utils/outil-3/parse-llm-response'
+import { validateLlmOutput } from '../../../utils/outil-3/validate-output'
+import {
+  saveEvaluation,
+  saveDeferredEvaluation,
+  anonymizeInputs,
+} from '../../../utils/evaluation-storage'
+
+export default defineEventHandler(async (event) => {
+  const startTime = Date.now()
+
+  try {
+    // ============================================================
+    // PHASE 1 — Validations bloquantes
+    // ============================================================
+
+    const body = await readBody(event)
+    let validated: FormulaireOutil3
+    try {
+      validated = formulaireOutil3SchemaRefined.parse(body)
+    } catch (zodErr: any) {
+      const issues = zodErr?.issues || zodErr?.errors
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'VALIDATION_FAILED',
+        message: issues?.[0]?.message || 'Champs invalides.',
+        data: { issues },
+      })
+    }
+
+    const ip = getClientIp(event)
+
+    // Cloudflare Turnstile
+    const turnstileOk = await verifyTurnstile(validated.turnstile_token, ip)
+    if (!turnstileOk) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: 'TURNSTILE_FAILED',
+        message: 'Vérification de sécurité échouée. Merci de rafraîchir la page et réessayer.',
+      })
+    }
+
+    // ============================================================
+    // PHASE 2 — Rate limit (3/jour, 7/sem) → mode différé si dépassé
+    // ============================================================
+
+    const rateCheck = await checkEvaluationAttractiviteRateLimit(ip)
+    if (!rateCheck.allowed) {
+      console.warn('[evaluation-attractivite] rate limit hit, switching to deferred', rateCheck)
+      return await handleDeferredProcessing(validated, 'rate_limit')
+    }
+
+    // ============================================================
+    // PHASE 3 — Génération Anthropic avec retry
+    // ============================================================
+
+    if (!hasAnthropic()) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[evaluation-attractivite] ANTHROPIC_API_KEY missing — using stub in dev')
+        return buildStubResponse(validated)
+      }
+      console.error('[evaluation-attractivite] ANTHROPIC_API_KEY missing in production — switching to deferred')
+      return await handleDeferredProcessing(validated, 'api_failure')
+    }
+
+    const systemBlocks = await buildSystemBlocks()
+    const userPrompt = buildUserPrompt(validated)
+
+    let llmResult: { content: string; usage: any }
+    try {
+      llmResult = await generateEvaluationWithAnthropic({
+        systemBlocks,
+        userPrompt,
+        maxTokens: 16000,
+        temperature: 0.15,
+        maxWebSearches: 3,
+      })
+    } catch (firstErr) {
+      console.warn('[evaluation-attractivite] Anthropic first attempt failed, retrying…', firstErr)
+      try {
+        llmResult = await generateEvaluationWithAnthropic({
+          systemBlocks,
+          userPrompt,
+          maxTokens: 16000,
+          temperature: 0.15,
+          maxWebSearches: 3,
+        })
+      } catch (retryErr) {
+        console.error('[evaluation-attractivite] Anthropic retry failed', retryErr)
+        sendCriticalAlert('Anthropic API failed twice (Évaluation attractivité)', retryErr).catch(() => {})
+        return await handleDeferredProcessing(validated, 'api_failure')
+      }
+    }
+
+    if (!llmResult.content || llmResult.content.length < 200) {
+      console.error('[evaluation-attractivite] Anthropic returned suspiciously short content')
+      return await handleDeferredProcessing(validated, 'api_failure')
+    }
+
+    console.log('[evaluation-attractivite] cache stats', {
+      cache_creation_tokens: llmResult.usage.cacheCreationTokens,
+      cache_read_tokens: llmResult.usage.cacheReadTokens,
+      input_tokens: llmResult.usage.inputTokens,
+      output_tokens: llmResult.usage.outputTokens,
+    })
+
+    // ============================================================
+    // PHASE 4 — Parse hybride + validation JSON + filtre output
+    // ============================================================
+
+    const parsed = parseLlmResponse(llmResult.content)
+    let llmJson: LlmOutputJson | null = null
+    let safeMarkdown = ''
+    let degraded = false
+
+    if (!parsed.success) {
+      console.error('[evaluation-attractivite] Parse failed, fallback degraded', { error: parsed.error })
+      safeMarkdown = parsed.markdownFallback || llmResult.content
+      degraded = true
+    } else {
+      const jsonValidation = llmOutputJsonSchemaRefined.safeParse(parsed.data.json)
+      if (!jsonValidation.success) {
+        console.error('[evaluation-attractivite] JSON schema validation failed', jsonValidation.error)
+        safeMarkdown = parsed.data.markdown
+        degraded = true
+      } else {
+        llmJson = jsonValidation.data
+        safeMarkdown = parsed.data.markdown
+      }
+
+      // Couche 2 sécurité — filtre mots-clés interdits
+      const filterResult = validateLlmOutput(safeMarkdown)
+      if (!filterResult.safe) {
+        console.warn('[evaluation-attractivite] Output filter triggered', { matched: filterResult.matched })
+        safeMarkdown = filterResult.sanitized
+      }
+    }
+
+    // ============================================================
+    // PHASE 5 — Persistance KV (BLOQUANT)
+    // ============================================================
+
+    const uuid = nanoid(10)
+    try {
+      await saveEvaluation(uuid, {
+        uuid,
+        json: llmJson,
+        markdown: safeMarkdown,
+        degraded,
+        metadata: {
+          prenom: validated.prenom,
+          nom: validated.nom,
+          entreprise: validated.entreprise,
+          intitule_poste:
+            validated.intitule_poste === 'Autre' && validated.intitule_poste_precision_autre
+              ? validated.intitule_poste_precision_autre
+              : validated.intitule_poste,
+          createdAt: new Date().toISOString(),
+        },
+        inputs: anonymizeInputs(validated),
+      })
+    } catch (kvErr) {
+      console.error('[evaluation-attractivite] KV save failed', kvErr)
+      sendCriticalAlert('KV saveEvaluation failed', kvErr).catch(() => {})
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'INTERNAL_ERROR',
+        message: "Une erreur est survenue. Votre évaluation n'a pas pu être enregistrée.",
+      })
+    }
+
+    // ============================================================
+    // PHASE 6 — Side effects en parallèle
+    // ============================================================
+
+    const resultatUrl = `${getSiteUrl()}/lab/evaluation-attractivite/resultat/${uuid}`
+    const dateSoumission = formatDateFr(new Date())
+
+    const jarviSideEffect = (async () => {
+      let jarviUrl = ''
+      try {
+        const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
+        const existing = await findCompanyByNameOrDomain({
+          name: validated.entreprise,
+          emailDomain,
+          websiteUrl: validated.site_web || `https://${emailDomain}`,
+        })
+        const company = await upsertCompany(
+          {
+            existingCompany: existing,
+            name: validated.entreprise,
+            websiteUrl: validated.site_web || `https://${emailDomain}`,
+          },
+          { retry: true },
+        )
+        jarviUrl = jarviCompanyUrl(company.id)
+
+        const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
+        if (statusId) {
+          const project = await createEvaluationAttractiviteProject(
+            {
+              companyId: company.id,
+              name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
+              statusId,
+              description: buildProjectDescription(validated, uuid, llmJson),
+            },
+            { retry: true },
+          )
+          jarviUrl = jarviProjectUrl(project.id)
+        }
+      } catch (err) {
+        console.error('[evaluation-attractivite] Jarvi side effect failed', err)
+        sendCriticalAlert('Jarvi side effect failed (Évaluation attractivité)', err).catch(() => {})
+      }
+      return { jarviUrl }
+    })()
+
+    const { jarviUrl } = await jarviSideEffect
+
+    const emailResults = await Promise.allSettled([
+      sendBrevoEvaluationNotifInterneLivree({
+        input: validated,
+        uuid,
+        resultatUrl,
+        jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+        json: llmJson,
+        dateSoumission,
+      }),
+      sendBrevoEvaluationConfirmationProspect({
+        input: validated,
+        resultatUrl,
+        json: llmJson,
+      }),
+    ])
+
+    emailResults.forEach((result, idx) => {
+      if (result.status === 'rejected') {
+        const emailType = idx === 0 ? 'notif-interne-livrée' : 'confirmation-prospect'
+        console.error(`[evaluation-attractivite] Brevo ${emailType} failed`, result.reason)
+        sendCriticalAlert(`Brevo ${emailType} failed (Évaluation attractivité)`, result.reason).catch(() => {})
+      }
+    })
+
+    const duration = Date.now() - startTime
+    console.log(`[evaluation-attractivite] Evaluation generated in ${duration}ms — uuid: ${uuid}`)
+
+    return {
+      success: true,
+      deferred: false,
+      uuid,
+      json: llmJson,
+      markdown: safeMarkdown,
+      degraded,
+      redirectUrl: `/lab/evaluation-attractivite/resultat/${uuid}`,
+    }
+  } catch (err: any) {
+    if (err?.statusCode) throw err
+    console.error('[evaluation-attractivite] unexpected error', err)
+    sendCriticalAlert('Évaluation attractivité route unexpected error', err).catch(() => {})
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'INTERNAL_ERROR',
+      message: "Une erreur technique s'est produite. Merci de réessayer dans quelques minutes.",
+    })
+  }
+})
+
+async function handleDeferredProcessing(
+  input: FormulaireOutil3,
+  reason: 'rate_limit' | 'api_failure',
+) {
+  const deferredId = nanoid(10)
+  const dateSoumission = formatDateFr(new Date())
+  const raisonLibelle =
+    reason === 'rate_limit'
+      ? 'Rate limit atteint (3/jour ou 7/semaine par IP)'
+      : 'API Anthropic indisponible (2 tentatives échouées)'
+
+  try {
+    await saveDeferredEvaluation(deferredId, {
+      formData: input,
+      reason,
+      createdAt: new Date().toISOString(),
+    })
+  } catch (err) {
+    console.error('[evaluation-attractivite] saveDeferred failed (non-blocking)', err)
+  }
+
+  let jarviUrl = ''
+  try {
+    const emailDomain = (input.email.split('@')[1] || '').toLowerCase()
+    const existing = await findCompanyByNameOrDomain({
+      name: input.entreprise,
+      emailDomain,
+      websiteUrl: input.site_web || `https://${emailDomain}`,
+    })
+    const company = await upsertCompany(
+      {
+        existingCompany: existing,
+        name: input.entreprise,
+        websiteUrl: input.site_web || `https://${emailDomain}`,
+      },
+      { retry: true },
+    )
+    jarviUrl = jarviCompanyUrl(company.id)
+
+    const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
+    if (statusId) {
+      const tagPrefix = reason === 'rate_limit' ? 'Lab — Manuel - Rate limit' : 'Lab — Manuel - API'
+      const project = await createEvaluationAttractiviteProject(
+        {
+          companyId: company.id,
+          name: `${tagPrefix} — Évaluation — ${input.entreprise} — ${dateSoumission}`,
+          statusId,
+          description: buildProjectDescription(input, deferredId, null, reason),
+        },
+        { retry: true },
+      )
+      jarviUrl = jarviProjectUrl(project.id)
+    }
+  } catch (err) {
+    console.error('[evaluation-attractivite] Jarvi deferred side effect failed', err)
+    sendCriticalAlert('Jarvi deferred side effect failed (Évaluation attractivité)', err).catch(() => {})
+  }
+
+  await Promise.allSettled([
+    sendBrevoEvaluationNotifInterneDifferee({
+      input,
+      deferredId,
+      raisonDiffere: raisonLibelle,
+      jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+      dateSoumission,
+    }).catch((err) => {
+      console.error('[evaluation-attractivite] notif-interne-différée failed', err)
+      sendCriticalAlert('Brevo eval notif-interne-différée failed', err).catch(() => {})
+    }),
+    sendBrevoEvaluationSuiviProspect({ input }).catch((err) => {
+      console.error('[evaluation-attractivite] suivi-prospect failed', err)
+      sendCriticalAlert('Brevo eval suivi-prospect failed', err).catch(() => {})
+    }),
+  ])
+
+  return {
+    success: true,
+    deferred: true,
+    deferredId,
+    message: 'Votre évaluation sera traitée manuellement sous 24 à 48 heures ouvrées.',
+  }
+}
+
+function buildProjectDescription(
+  input: FormulaireOutil3,
+  refId: string,
+  json: LlmOutputJson | null,
+  deferredReason?: 'rate_limit' | 'api_failure',
+): string {
+  const intituleAffiche =
+    input.intitule_poste === 'Autre' && input.intitule_poste_precision_autre
+      ? `${input.intitule_poste} (${input.intitule_poste_precision_autre})`
+      : input.intitule_poste
+  const lines = [
+    `**Identité** : ${input.prenom} ${input.nom} · ${input.email} · ${input.telephone}`,
+    `**Entreprise** : ${input.entreprise}${input.site_web ? ` · ${input.site_web}` : ''}`,
+    `**Secteur** : ${input.secteur === 'Autre' && input.secteur_precision_autre ? input.secteur_precision_autre : input.secteur}`,
+    `**Localisation** : ${input.localisation}`,
+    `**Effectifs** : ${input.effectifs_entreprise}`,
+    `**Équipe Sales** : ${input.equipe_sales}`,
+    '',
+    `**Poste** : ${intituleAffiche}`,
+    `**Séniorité** : ${input.seniorite}`,
+    `**Cycle** : ${input.type_cycle === 'Autre' && input.type_cycle_autre ? input.type_cycle_autre : input.type_cycle}`,
+    `**Modalité de travail** : ${input.modalite_travail}`,
+    '',
+    `**Package** : ${input.package_fixe.toLocaleString('fr-FR')} € fixe / ${input.package_ote.toLocaleString('fr-FR')} € OTE`,
+    '',
+    `**Description missions** :`,
+    input.description_missions.slice(0, 1500),
+    input.description_missions.length > 1500 ? '…(tronqué)' : '',
+  ]
+
+  if (json) {
+    lines.push('', `**Verdict LLM** : ${json.niveau_attractivite} (${json.jauge_position}/10)`)
+    lines.push(
+      `**Dimensions** : marque=${json.dimensions.marque} · secteur=${json.dimensions.secteur} · mission=${json.dimensions.mission} · package=${json.dimensions.package}`,
+    )
+  }
+  if (deferredReason) lines.push('', `🛑 Demande différée (${deferredReason}). Réf : ${refId}`)
+  else lines.push('', `Réf évaluation : ${refId}`)
+
+  return lines.filter(Boolean).join('\n')
+}
+
+function formatDateFr(d: Date): string {
+  const fmt = new Intl.DateTimeFormat('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Paris',
+  })
+  return fmt.format(d).replace(',', ' à').replace(' h ', 'h')
+}
+
+function getSiteUrl(): string {
+  return (process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/+$/, '')
+}
+
+function buildStubResponse(input: FormulaireOutil3) {
+  const uuid = `dev-${nanoid(8)}`
+  const intituleAffiche =
+    input.intitule_poste === 'Autre' && input.intitule_poste_precision_autre
+      ? input.intitule_poste_precision_autre
+      : input.intitule_poste
+
+  const stubJson: LlmOutputJson = {
+    niveau_attractivite: 'Attractive / alignée',
+    niveau_index: 3,
+    jauge_position: 6,
+    score_interne: 2,
+    score_max: 9,
+    dimensions: {
+      marque: 'Reconnue',
+      secteur: 'Stable',
+      mission: 'Standard',
+      package: 'Aligné',
+    },
+    alertes: [],
+    brief_flou: false,
+  }
+
+  const stubMarkdown = `# Évaluation d'attractivité — ${intituleAffiche}
+
+*Préparée par Mariell pour ${input.entreprise}*
+
+---
+
+Bonjour ${input.prenom},
+
+**[STUB DEV — pas d'appel Anthropic réel]**
+
+Configure \`ANTHROPIC_API_KEY\` dans \`.env\` pour générer une vraie évaluation via Claude Haiku 4.5.
+
+## Lecture marque & secteur
+
+Contenu placeholder.
+
+## Lecture mission
+
+Contenu placeholder.
+
+## Lecture package
+
+Contenu placeholder.
+
+## Synthèse & leviers
+
+Contenu placeholder.`
+
+  return {
+    success: true,
+    deferred: false,
+    uuid,
+    json: stubJson,
+    markdown: stubMarkdown,
+    degraded: false,
+    redirectUrl: `/lab/evaluation-attractivite/resultat/${uuid}`,
+  }
+}

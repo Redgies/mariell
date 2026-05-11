@@ -1,6 +1,10 @@
 <script setup lang="ts">
 const route = useRoute()
-const isFocusedTool = computed(() => route.path.startsWith('/lab/demande-stage-alternance'))
+const isFocusedTool = computed(() =>
+  route.path.startsWith('/lab/demande-stage-alternance') ||
+  route.path.startsWith('/lab/plan-de-sourcing') ||
+  route.path.startsWith('/lab/evaluation-attractivite'),
+)
 </script>
 
 <template>

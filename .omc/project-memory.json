@@ -210,14 +210,20 @@
     },
     {
       "path": "nuxt.config.ts",
-      "accessCount": 6,
-      "lastAccessed": 1778175212634,
+      "accessCount": 7,
+      "lastAccessed": 1778269243040,
       "type": "file"
     },
     {
       "path": "app\\components\\PricingSection.vue",
       "accessCount": 5,
       "lastAccessed": 1777516711971,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 5,
+      "lastAccessed": 1778275098317,
       "type": "file"
     },
     {
@@ -242,6 +248,12 @@
       "path": "app\\components\\AppFooter.vue",
       "accessCount": 3,
       "lastAccessed": 1778150104514,
+      "type": "file"
+    },
+    {
+      "path": "shared/config/site.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778274340500,
       "type": "file"
     },
     {
@@ -278,12 +290,6 @@
       "path": "app\\composables\\useScrollReveal.ts",
       "accessCount": 2,
       "lastAccessed": 1778161982941,
-      "type": "file"
-    },
-    {
-      "path": "shared/config/site.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778169758203,
       "type": "file"
     },
     {
@@ -446,12 +452,6 @@
       "path": "app/components/LabCard.vue",
       "accessCount": 1,
       "lastAccessed": 1778168625722,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 1,
-      "lastAccessed": 1778168882816,
       "type": "file"
     }
   ],

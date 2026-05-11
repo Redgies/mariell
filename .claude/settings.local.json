@@ -39,7 +39,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm view *)",
       "Bash(npm ls *)",
-      "WebFetch(domain:api-docs.jarvi.tech)"
+      "WebFetch(domain:api-docs.jarvi.tech)",
+      "Bash(tee /tmp/mariell-build.log)"
     ]
   }
 }

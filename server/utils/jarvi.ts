@@ -345,6 +345,115 @@ export async function createProject(
 }
 
 // ============================================================
+// Outil 2 — Plan de sourcing LinkedIn
+// ============================================================
+
+interface FindRecentPlanSourcingProjectParams {
+  companyId: string
+  daysAgo?: number
+}
+
+/**
+ * Returns true if a "Plan de sourcing" Project was created on this Company
+ * within the last `daysAgo` days. NON-bloquant — used only to enrich the
+ * Jarvi tag (e.g. "Lab — Plan de sourcing — Doublon 30j") so the gérant
+ * can spot repeat submissions, but the prospect's submission goes through.
+ */
+export async function findRecentPlanSourcingProject(
+  params: FindRecentPlanSourcingProjectParams,
+): Promise<boolean> {
+  if (!hasJarvi()) return false
+
+  const fieldId = process.env.JARVI_FIELD_ID_TYPE_DEMANDE_LAB
+  if (!fieldId) return false
+
+  const daysAgo = params.daysAgo ?? 30
+  const sinceIso = new Date(Date.now() - daysAgo * 86_400_000).toISOString()
+
+  const where = {
+    companyId: { _eq: params.companyId },
+    createdAt: { _gte: sinceIso },
+  }
+
+  try {
+    const res = await fetch(
+      jarviUrl('/projects', { where: JSON.stringify(where), limit: '20' }),
+      { headers: jarviHeaders() },
+    )
+    if (!res.ok) return false
+    const data = (await res.json()) as { projects?: JarviProject[] }
+    if (!data.projects || data.projects.length === 0) return false
+
+    return data.projects.some((p) => {
+      const fv = p.fieldsValues
+      if (!Array.isArray(fv)) return false
+      return fv.some((v) => v.fieldId === fieldId && (v.value === 'Plan de sourcing' || v.title === 'Plan de sourcing'))
+    })
+  } catch (err) {
+    console.error('[jarvi] findRecentPlanSourcingProject threw', err)
+    return false
+  }
+}
+
+interface CreatePlanSourcingProjectParams {
+  companyId: string
+  name: string
+  statusId: string
+  description: string
+}
+
+/**
+ * Creates a Project on the Company with custom field
+ * "Type de demande Lab" = "Plan de sourcing".
+ * Wraps `createProject` with the outil 2 specific value.
+ */
+export async function createPlanSourcingProject(
+  params: CreatePlanSourcingProjectParams,
+  options: { retry?: boolean } = {},
+): Promise<{ id: string }> {
+  return createProject(
+    {
+      companyId: params.companyId,
+      name: params.name,
+      statusId: params.statusId,
+      description: params.description,
+      typeDemandeLabValue: 'Plan de sourcing',
+    },
+    options,
+  )
+}
+
+// ============================================================
+// Outil 3 — Évaluation d'attractivité
+// ============================================================
+
+interface CreateEvaluationAttractiviteProjectParams {
+  companyId: string
+  name: string
+  statusId: string
+  description: string
+}
+
+/**
+ * Creates a Project with custom field "Type de demande Lab" = "Évaluation attractivité".
+ */
+export async function createEvaluationAttractiviteProject(
+  params: CreateEvaluationAttractiviteProjectParams,
+  options: { retry?: boolean } = {},
+): Promise<{ id: string }> {
+  return createProject(
+    {
+      companyId: params.companyId,
+      name: params.name,
+      statusId: params.statusId,
+      description: params.description,
+      typeDemandeLabValue: 'Évaluation attractivité',
+    },
+    options,
+  )
+}
+
+// ============================================================
 // UI URL builders for email links
 // Modern Jarvi UI uses non-hash routing.
 // ============================================================

@@ -1,7 +1,7 @@
 {
   "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"C:\\\\Users\\\\Mathias\\\\.claude\\\\projects\\\\C--Users-Mathias-Documents-Work-Mariell\\\\memory\\\\MEMORY.md\"}",
-  "error": "File does not exist. Note: your current working directory is C:\\Users\\Mathias\\Documents\\Work\\Mariell.",
-  "timestamp": "2026-05-07T10:51:12.648Z",
+  "tool_input_preview": "{\"file_path\":\"/tmp/mariell-design-2/outil-n-2-plan-de-sourcing-linkedin/project/Plan de Sourcing LinkedIn.html\"}",
+  "error": "File content (25625 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-05-08T19:39:06.281Z",
   "retry_count": 1
 }

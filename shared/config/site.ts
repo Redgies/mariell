@@ -1,6 +1,5 @@
-// TODO: remplacer calendlyUrl par l'URL Calendly réelle (ex: "https://calendly.com/mariell/intro")
 export const siteConfig = {
-  calendlyUrl: '#',
+  calendlyUrl: 'https://calendly.com/chez-mariell/30min',
   ctaPrimary: 'Contact Mariell',
   ctaHero: 'Rencontrer Mariell',
   ctaPricing: 'Rencontre avec Mariell',

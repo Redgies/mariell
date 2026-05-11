@@ -43,7 +43,14 @@ export default defineNuxtConfig({
     },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      calendlyUrl: process.env.NUXT_PUBLIC_CALENDLY_URL || '#',
     },
+  },
+
+  nitro: {
+    preset: 'vercel',
+    // Outil 2 génère le plan via Claude Haiku — call serveur ~30s.
+    // Vercel preset standard tolère jusqu'à 300s ; vercel-edge serait coupé à 25s.
   },
 
   app: {

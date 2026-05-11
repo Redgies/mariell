@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Évaluation différée à traiter</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f5f5f7; -webkit-font-smoothing: antialiased; }
+    table { border-collapse: collapse; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { color: #0d0d12; }
+
+    .wrap { width: 100%; background: #f5f5f7; padding: 32px 16px; }
+    .card {
+      width: 100%; max-width: 660px; margin: 0 auto;
+      background: #ffffff; border-radius: 14px; overflow: hidden;
+      font-family: 'Inter', sans-serif; color: #0d0d12;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px -16px rgba(0,0,0,0.08);
+    }
+    .gradient-bar { height: 4px; background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%); }
+
+    .alert-banner {
+      margin: 24px 40px 0;
+      padding: 14px 18px;
+      background: #fff8e6; border-left: 4px solid #d97706;
+      border-radius: 4px;
+    }
+    .alert-banner-title { margin: 0 0 4px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: #92400e; }
+    .alert-banner-text { margin: 0; font-family: 'Inter', sans-serif; font-size: 13px; color: #92400e; }
+
+    .header { padding: 24px 40px 20px; }
+    .h1 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 23px; line-height: 1.2; letter-spacing: -0.02em; color: #0d0d12; margin: 0 0 6px; }
+    .h1-sub { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 13px; line-height: 1.5; color: #51515a; margin: 0; }
+
+    .section { padding: 0 40px; }
+    .section + .section { padding-top: 24px; }
+    .label { font-family: ui-monospace, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8a93; margin: 0 0 10px; }
+    .row { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.55; color: #0d0d12; margin: 0 0 6px; }
+    .row--muted { color: #51515a; font-size: 13.5px; }
+    .row strong { font-weight: 600; }
+    .row a { color: #0090a3; text-decoration: none; border-bottom: 1px solid rgba(0,144,163,0.25); }
+
+    .brief {
+      margin-top: 12px; padding: 16px 18px;
+      background: #fafafb; border: 1px solid #ececef;
+      border-left: 2px solid #5ee7e7;
+      border-radius: 0 8px 8px 0;
+      font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.6;
+      color: #2a2a32; white-space: pre-wrap;
+    }
+
+    .action-box {
+      margin: 32px 40px 0;
+      padding: 20px 22px;
+      background: #fafafb; border: 1px solid #ececef;
+      border-radius: 8px;
+    }
+    .action-box-title { margin: 0 0 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; color: #0d0d12; }
+    .action-box-text { margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.55; color: #2a2a32; }
+
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, #ececef 30%, #ececef 70%, transparent); margin: 28px 40px 24px; }
+
+    .footer { padding: 24px 40px 36px; border-top: 1px solid #ececef; margin-top: 24px; }
+    .footer-line { font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8a93; margin: 0 0 6px; }
+    .footer-tag { font-family: 'Inter', sans-serif; font-weight: 800; font-style: italic; font-size: 13px; color: #5e5e66; margin: 0; }
+
+    @media only screen and (max-width: 540px) {
+      .header, .section, .footer, .alert-banner, .action-box { padding-left: 24px; padding-right: 24px; }
+      .alert-banner, .action-box { margin-left: 24px; margin-right: 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <table role="presentation" class="wrap" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center">
+        <table role="presentation" class="card" cellpadding="0" cellspacing="0" width="660">
+          <tr>
+            <td style="background-color: #1a1a1a; padding: 32px 24px; text-align: center;">
+              <img src="https://mariell-dusky.vercel.app/logo_site.png" alt="Mariell" height="40"
+                style="display: inline-block; height: 40px; width: auto; max-width: 180px;" />
+            </td>
+          </tr>
+          <tr><td class="gradient-bar">&nbsp;</td></tr>
+
+          <tr>
+            <td>
+              <div class="alert-banner">
+                <p class="alert-banner-title">⚠ Demande différée — à traiter sous 24-48h ouvrées</p>
+                <p class="alert-banner-text">Raison : {{ params.RAISON_DIFFERE }}</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="header">
+              <h1 class="h1">Nouvelle évaluation d'attractivité.</h1>
+              <p class="h1-sub">Reçue le {{ params.DATE_SOUMISSION }} · Réf : {{ params.DEFERRED_ID }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 01 — Identité</p>
+              <p class="row"><strong>{{ params.PRENOM }} {{ params.NOM }}</strong></p>
+              <p class="row"><a href="mailto:{{ params.EMAIL }}">{{ params.EMAIL }}</a></p>
+              <p class="row row--muted">{{ params.TELEPHONE }}</p>
+              <p class="row"><strong>{{ params.ENTREPRISE }}</strong></p>
+              {% if params.SITE_WEB and params.SITE_WEB != "Non fourni" %}
+              <p class="row"><a href="{{ params.SITE_WEB }}" target="_blank">{{ params.SITE_WEB }}</a></p>
+              {% endif %}
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 02 — Entreprise</p>
+              <p class="row"><strong>Secteur</strong> · {{ params.SECTEUR }}</p>
+              <p class="row"><strong>Localisation</strong> · {{ params.LOCALISATION }}</p>
+              <p class="row"><strong>Effectifs</strong> · {{ params.EFFECTIFS }}</p>
+              <p class="row"><strong>Équipe Sales</strong> · {{ params.EQUIPE_SALES }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 03 — Le poste</p>
+              <p class="row"><strong>Intitulé</strong> · {{ params.INTITULE_POSTE }}</p>
+              <p class="row"><strong>Séniorité</strong> · {{ params.SENIORITE }}</p>
+              <p class="row"><strong>Type de cycle</strong> · {{ params.TYPE_CYCLE }}</p>
+              <p class="row"><strong>Modalité</strong> · {{ params.MODALITE_TRAVAIL }}</p>
+              <p class="row"><strong>Fixe</strong> · {{ params.PACKAGE_FIXE }}</p>
+              <p class="row"><strong>Variable OTE</strong> · {{ params.PACKAGE_OTE }}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="section">
+              <p class="label">— 04 — Description missions (extrait)</p>
+              <div class="brief">{{ params.DESCRIPTION_MISSIONS }}</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="action-box">
+                <p class="action-box-title">Action attendue</p>
+                <p class="action-box-text">Le prospect a été informé que son évaluation sera traitée manuellement sous 24-48h ouvrées. Générer une évaluation manuellement (ou via outil interne) puis la lui envoyer en réponse à son email.</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr><td><div class="divider"></div></td></tr>
+          <tr>
+            <td class="section">
+              <p class="label">Suivi Jarvi</p>
+              <p class="row"><a href="{{ params.URL_JARVI }}" target="_blank" rel="noopener">{{ params.URL_JARVI }}</a></p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="footer">
+              <p class="footer-line">Mariell · Cabinet de recrutement Sales</p>
+              <p class="footer-tag">Recruter n'est pas un pari.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
