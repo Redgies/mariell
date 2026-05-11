@@ -6,35 +6,31 @@ interface LoadedPrompts {
   f4: string
 }
 
-let cachedPrompts: LoadedPrompts | null = null
-
-/**
- * Charge les 5 fichiers prompts de l'outil 3 via le storage Nitro (déclaré en
- * `nitro.serverAssets` dans nuxt.config.ts → embarqué dans le bundle Vercel).
- *
- * Appelée par buildSystemBlocks(). Cache mémoire = un seul read par cold start.
- */
-export async function loadOutil3Prompts(): Promise<LoadedPrompts> {
-  if (cachedPrompts) return cachedPrompts
-
-  const storage = useStorage('assets:prompts-outil-3')
-
-  const [systemPromptV9, f1, f2, f3, f4] = await Promise.all([
-    storage.getItem<string>('system-prompt-v9.md'),
-    storage.getItem<string>('f1-boites-intouchables-v7.md'),
-    storage.getItem<string>('f2-grille-secteurs-v3.md'),
-    storage.getItem<string>('f3-typologie-missions-v5.md'),
-    storage.getItem<string>('f4-addendum-salaires-v5.md'),
-  ])
-
-  if (!systemPromptV9 || !f1 || !f2 || !f3 || !f4) {
-    throw new Error('Un ou plusieurs fichiers prompts outil-3 introuvables dans assets:prompts-outil-3')
-  }
-
-  cachedPrompts = { systemPromptV9, f1, f2, f3, f4 }
-  return cachedPrompts
+interface PromptsConfig {
+  outil3SystemV9?: string
+  outil3F1?: string
+  outil3F2?: string
+  outil3F3?: string
+  outil3F4?: string
 }
 
-export function clearOutil3PromptsCache(): void {
-  cachedPrompts = null
+/**
+ * Charge les 5 fichiers prompts de l'outil 3 depuis runtimeConfig (inlinés au build
+ * via nuxt.config.ts → garantis embarqués dans le bundle Vercel).
+ */
+export async function loadOutil3Prompts(): Promise<LoadedPrompts> {
+  const config = useRuntimeConfig()
+  const p = (config.prompts || {}) as PromptsConfig
+
+  const systemPromptV9 = p.outil3SystemV9
+  const f1 = p.outil3F1
+  const f2 = p.outil3F2
+  const f3 = p.outil3F3
+  const f4 = p.outil3F4
+
+  if (!systemPromptV9 || !f1 || !f2 || !f3 || !f4) {
+    throw new Error('Un ou plusieurs prompts outil 3 introuvables dans runtimeConfig — vérifie nuxt.config.ts')
+  }
+
+  return { systemPromptV9, f1, f2, f3, f4 }
 }

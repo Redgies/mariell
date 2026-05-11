@@ -1,4 +1,14 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+
+// Lecture des prompts au build (injection dans runtimeConfig).
+// Vercel ne copie pas les .md de server/prompts/ dans le bundle de fonction sans
+// configuration spécifique — inliner ici garantit que le contenu est embarqué.
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const readPrompt = (relPath: string) =>
+  readFileSync(resolve(__dirname, 'server/prompts', relPath), 'utf-8')
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-04-13',
@@ -41,6 +51,16 @@ export default defineNuxtConfig({
       // Auto-overridden by NUXT_TURNSTILE_SECRET_KEY at runtime.
       secretKey: '',
     },
+    // Prompts inlinés au build — utilisés par les loaders load-prompts.ts
+    // de chaque outil.
+    prompts: {
+      outil2V12: readPrompt('outil-2/system-prompt-v12.md'),
+      outil3SystemV9: readPrompt('outil-3/system-prompt-v9.md'),
+      outil3F1: readPrompt('outil-3/f1-boites-intouchables-v7.md'),
+      outil3F2: readPrompt('outil-3/f2-grille-secteurs-v3.md'),
+      outil3F3: readPrompt('outil-3/f3-typologie-missions-v5.md'),
+      outil3F4: readPrompt('outil-3/f4-addendum-salaires-v5.md'),
+    },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       calendlyUrl: process.env.NUXT_PUBLIC_CALENDLY_URL || '#',
@@ -51,14 +71,6 @@ export default defineNuxtConfig({
     preset: 'vercel',
     // Outil 2 génère le plan via Claude Haiku — call serveur ~30s.
     // Vercel preset standard tolère jusqu'à 300s ; vercel-edge serait coupé à 25s.
-
-    // Server assets : embarque les fichiers .md des prompts dans le bundle de fonction
-    // Vercel. Sans ça, `readFile('server/prompts/...')` échoue avec ENOENT en prod
-    // car Nitro n'inclut pas par défaut les fichiers non-code de `server/`.
-    serverAssets: [
-      { baseName: 'prompts-outil-2', dir: 'server/prompts/outil-2' },
-      { baseName: 'prompts-outil-3', dir: 'server/prompts/outil-3' },
-    ],
   },
 
   app: {

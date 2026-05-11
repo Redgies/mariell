@@ -240,15 +240,27 @@
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 5,
+      "lastAccessed": 1778510236245,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-2/load-prompts.ts",
+      "accessCount": 5,
+      "lastAccessed": 1778510239431,
+      "type": "file"
+    },
+    {
       "path": "server/prompts/outil-3/system-prompt-v9.md",
       "accessCount": 4,
       "lastAccessed": 1778507457269,
       "type": "file"
     },
     {
-      "path": "server/utils/outil-2/load-prompts.ts",
-      "accessCount": 4,
-      "lastAccessed": 1778509545044,
+      "path": "server/utils/outil-3/load-prompts.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778510243229,
       "type": "file"
     },
     {
@@ -285,18 +297,6 @@
       "path": "app/assets/css/main.css",
       "accessCount": 2,
       "lastAccessed": 1778507404085,
-      "type": "file"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778509541613,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/outil-3/load-prompts.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778509549127,
       "type": "file"
     },
     {
