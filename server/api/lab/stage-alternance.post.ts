@@ -9,6 +9,7 @@ import {
   hasActiveLabProject,
   upsertCompany,
   createProject,
+  upsertProfile,
   jarviProjectUrl,
   jarviCompanyUrl,
 } from '../../utils/jarvi'
@@ -125,10 +126,11 @@ export default defineEventHandler(async (event) => {
       sendCriticalAlert('Jarvi Company upsert failed (Stage/Alternance)', err).catch(() => {})
     }
 
+    let projectId: string | null = null
     if (companyId) {
       try {
-        const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-        if (!statusId) throw new Error('Missing JARVI_STATUS_ID_LAB_RECUE')
+        const statusId = process.env.JARVI_STATUS_ID_STAGE_ALTERNANCE
+        if (!statusId) throw new Error('Missing JARVI_STATUS_ID_STAGE_ALTERNANCE')
 
         const project = await createProject(
           {
@@ -140,10 +142,33 @@ export default defineEventHandler(async (event) => {
           },
           { retry: true },
         )
+        projectId = project.id
         projectUrl = jarviProjectUrl(project.id)
       } catch (err) {
         console.error('[stage-alternance] Project creation failed after retry', err)
         sendCriticalAlert('Jarvi Project creation failed (Stage/Alternance)', err).catch(() => {})
+      }
+    }
+
+    // Profile (contact) — rattaché à la company ET au projet créés.
+    // Jarvi auto-merge sur email existant → 1 seul profile mais N projets associés.
+    if (companyId) {
+      try {
+        await upsertProfile(
+          {
+            firstName: validated.prenom,
+            lastName: validated.nom,
+            email: validated.email,
+            phone: validated.telephone,
+            companyName: validated.entreprise,
+            companyId,
+            ...(projectId ? { projectId } : {}),
+          },
+          { retry: true },
+        )
+      } catch (err) {
+        console.error('[stage-alternance] Profile upsert failed after retry', err)
+        sendCriticalAlert('Jarvi Profile upsert failed (Stage/Alternance)', err).catch(() => {})
       }
     }
 
@@ -195,17 +220,27 @@ function getDisplayProfil(input: StageAlternanceInput): string {
 
 function buildProjectDescription(input: StageAlternanceInput): string {
   return [
+    '## Contact',
+    `${input.prenom} ${input.nom}`,
+    input.email,
+    input.telephone,
+    '',
+    '## Entreprise',
+    input.entreprise,
+    input.urlEntreprise,
+    '',
+    '## Besoin',
     `**Type de contrat** : ${input.typeContrat}`,
     `**Profil recherché** : ${getDisplayProfil(input)}`,
     `**Date de démarrage** : ${input.dateDemarrage}`,
     `**Localisation** : ${input.localisation}`,
     '',
-    '**Brief de la mission** :',
+    '## Brief de la mission',
     input.briefMission,
     '',
     '---',
-    `Soumis via Le Lab Mariell — ${formatDateFr(new Date())}`,
-    `Contact : ${input.prenom} ${input.nom} · ${input.email} · ${input.telephone}`,
+    `Source : Le Lab Mariell — Outil 1 (Demande Stage/Alternance)`,
+    `Soumis le ${formatDateFr(new Date())}`,
   ].join('\n')
 }
 

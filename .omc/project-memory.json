@@ -205,8 +205,14 @@
     },
     {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
+      "accessCount": 18,
+      "lastAccessed": 1778679195658,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
       "accessCount": 14,
-      "lastAccessed": 1778512272590,
+      "lastAccessed": 1778679137895,
       "type": "file"
     },
     {
@@ -219,12 +225,6 @@
       "path": "server/prompts/outil-3/system-prompt-v9.md",
       "accessCount": 11,
       "lastAccessed": 1778512066309,
-      "type": "file"
-    },
-    {
-      "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 10,
-      "lastAccessed": 1778507978672,
       "type": "file"
     },
     {
@@ -255,6 +255,12 @@
       "path": "server/utils/outil-2/load-prompts.ts",
       "accessCount": 5,
       "lastAccessed": 1778510239431,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/stage-alternance.post.ts",
+      "accessCount": 4,
+      "lastAccessed": 1778679067621,
       "type": "file"
     },
     {
@@ -318,6 +324,18 @@
       "type": "file"
     },
     {
+      "path": "server/utils/jarvi.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778679036176,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 2,
+      "lastAccessed": 1778679227866,
+      "type": "file"
+    },
+    {
       "path": "app/pages/lab/index.vue",
       "accessCount": 1,
       "lastAccessed": 1778505608919,
@@ -363,6 +381,24 @@
       "path": "public/robots.txt",
       "accessCount": 1,
       "lastAccessed": 1778511898567,
+      "type": "file"
+    },
+    {
+      "path": "server/schemas/stage-alternance.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778679044739,
+      "type": "file"
+    },
+    {
+      "path": "server/schemas/plan-de-sourcing.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778679075445,
+      "type": "file"
+    },
+    {
+      "path": "server/schemas/outil-3/formulaire.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778679143783,
       "type": "file"
     }
   ],

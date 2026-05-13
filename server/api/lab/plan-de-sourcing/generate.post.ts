@@ -9,6 +9,7 @@ import {
   upsertCompany,
   findRecentPlanSourcingProject,
   createPlanSourcingProject,
+  upsertProfile,
   jarviProjectUrl,
   jarviCompanyUrl,
 } from '../../../utils/jarvi'
@@ -216,59 +217,78 @@ export default defineEventHandler(async (event) => {
     const planUrl = `${getSiteUrl()}/lab/plan-de-sourcing/resultat/${uuid}`
     const dateSoumission = formatDateFr(new Date())
 
-    // Fire & forget Jarvi block — runs in parallel with emails, never blocks the response.
-    const jarviSideEffect = (async () => {
-      let jarviUrl = ''
-      let companyStatusLabel = 'Nouveau prospect'
-      try {
-        const existingCompany = await findCompanyByNameOrDomain({
-          name: validated.entreprise,
-          emailDomain,
-          websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
-        })
-        companyStatusLabel = resolveCompanyStatusLabel(existingCompany)
+    // Jarvi block : company → project → profile. Bloque sur l'attente pour
+    // que la notif interne ait l'URL Jarvi à inclure.
+    let jarviUrl = ''
+    let companyId: string | null = null
+    let projectId: string | null = null
+    try {
+      const existingCompany = await findCompanyByNameOrDomain({
+        name: validated.entreprise,
+        emailDomain,
+        websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
+      })
 
-        const company = await upsertCompany(
+      const company = await upsertCompany(
+        {
+          existingCompany,
+          name: validated.entreprise,
+          websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
+        },
+        { retry: true },
+      )
+      companyId = company.id
+      jarviUrl = jarviCompanyUrl(company.id)
+
+      const isRecentDuplicate = await findRecentPlanSourcingProject({
+        companyId: company.id,
+        daysAgo: 30,
+      })
+
+      const statusId = process.env.JARVI_STATUS_ID_PLAN_SOURCING
+      if (statusId) {
+        const projectName = isRecentDuplicate
+          ? `Lab — Plan de sourcing (DOUBLON 30j) — ${validated.entreprise} — ${dateSoumission}`
+          : `Lab — Plan de sourcing — ${validated.entreprise} — ${dateSoumission}`
+
+        const project = await createPlanSourcingProject(
           {
-            existingCompany,
-            name: validated.entreprise,
-            websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
+            companyId: company.id,
+            name: projectName,
+            statusId,
+            description: buildProjectDescription(validated, uuid, isRecentDuplicate),
           },
           { retry: true },
         )
-        jarviUrl = jarviCompanyUrl(company.id)
-
-        const isRecentDuplicate = await findRecentPlanSourcingProject({
-          companyId: company.id,
-          daysAgo: 30,
-        })
-
-        const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-        if (statusId) {
-          const projectName = isRecentDuplicate
-            ? `Lab — Plan de sourcing (DOUBLON 30j) — ${validated.entreprise} — ${dateSoumission}`
-            : `Lab — Plan de sourcing — ${validated.entreprise} — ${dateSoumission}`
-
-          const project = await createPlanSourcingProject(
-            {
-              companyId: company.id,
-              name: projectName,
-              statusId,
-              description: buildProjectDescription(validated, uuid, isRecentDuplicate),
-            },
-            { retry: true },
-          )
-          jarviUrl = jarviProjectUrl(project.id)
-        }
-      } catch (err) {
-        console.error('[plan-de-sourcing] Jarvi side effect failed', err)
-        sendCriticalAlert('Jarvi side effect failed (Plan de sourcing)', err).catch(() => {})
+        projectId = project.id
+        jarviUrl = jarviProjectUrl(project.id)
       }
-      return { jarviUrl, companyStatusLabel }
-    })()
+    } catch (err) {
+      console.error('[plan-de-sourcing] Jarvi company/project failed', err)
+      sendCriticalAlert('Jarvi company/project failed (Plan de sourcing)', err).catch(() => {})
+    }
 
-    // Wait for Jarvi (it provides the url for the internal email)
-    const { jarviUrl } = await jarviSideEffect
+    // Profile (contact) — créé même si project a échoué tant qu'on a la company.
+    // Jarvi auto-merge sur email existant.
+    if (companyId) {
+      try {
+        await upsertProfile(
+          {
+            firstName: validated.prenom,
+            lastName: validated.nom,
+            email: validated.email,
+            phone: validated.telephone,
+            companyName: validated.entreprise,
+            companyId,
+            ...(projectId ? { projectId } : {}),
+          },
+          { retry: true },
+        )
+      } catch (err) {
+        console.error('[plan-de-sourcing] Profile upsert failed', err)
+        sendCriticalAlert('Jarvi Profile upsert failed (Plan de sourcing)', err).catch(() => {})
+      }
+    }
 
     const emailResults = await Promise.allSettled([
       sendBrevoPlanSourcingNotifInterne({
@@ -324,6 +344,13 @@ export default defineEventHandler(async (event) => {
 // Mode différé — appelé si rate limit OU API Anthropic indisponible
 // ============================================================
 
+/**
+ * Mode différé : rate_limit ou api_failure.
+ *
+ * **AUCUN appel Jarvi** ici par design — le lead est récupéré uniquement via
+ * email interne. Le gérant traite la demande à la main et crée la fiche Jarvi
+ * lui-même s'il décide de poursuivre.
+ */
 async function handleDeferredProcessing(
   input: PlanDeSourcingInput,
   reason: 'rate_limit' | 'api_failure',
@@ -335,7 +362,7 @@ async function handleDeferredProcessing(
       ? 'Rate limit atteint (IP ou domaine email)'
       : 'API Anthropic indisponible (2 tentatives échouées)'
 
-  // KV save (best-effort — if it fails, the lead still gets through via emails)
+  // KV save (best-effort — pour audit)
   try {
     await saveDeferred(deferredId, {
       formData: input,
@@ -346,51 +373,13 @@ async function handleDeferredProcessing(
     console.error('[plan-de-sourcing] saveDeferred failed (non-blocking)', err)
   }
 
-  // Jarvi best-effort
-  let jarviUrl = ''
-  try {
-    const emailDomain = (input.email.split('@')[1] || '').toLowerCase()
-    const existing = await findCompanyByNameOrDomain({
-      name: input.entreprise,
-      emailDomain,
-      websiteUrl: input.siteEntreprise || `https://${emailDomain}`,
-    })
-    const company = await upsertCompany(
-      {
-        existingCompany: existing,
-        name: input.entreprise,
-        websiteUrl: input.siteEntreprise || `https://${emailDomain}`,
-      },
-      { retry: true },
-    )
-    jarviUrl = jarviCompanyUrl(company.id)
-
-    const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-    if (statusId) {
-      const tagPrefix = reason === 'rate_limit' ? 'Lab — Manuel - Rate limit' : 'Lab — Manuel - API'
-      const project = await createPlanSourcingProject(
-        {
-          companyId: company.id,
-          name: `${tagPrefix} — ${input.entreprise} — ${dateSoumission}`,
-          statusId,
-          description: buildProjectDescription(input, deferredId, false, reason),
-        },
-        { retry: true },
-      )
-      jarviUrl = jarviProjectUrl(project.id)
-    }
-  } catch (err) {
-    console.error('[plan-de-sourcing] Jarvi deferred side effect failed', err)
-    sendCriticalAlert('Jarvi deferred side effect failed', err).catch(() => {})
-  }
-
-  // 2 emails Brevo
+  // 2 emails Brevo. Pas de jarviUrl puisqu'aucun project n'est créé côté Jarvi.
   await Promise.allSettled([
     sendBrevoPlanSourcingDeferredInterne({
       input,
       deferredId,
       raisonDiffere: raisonLibelle,
-      jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+      jarviUrl: 'Aucun project Jarvi créé — à traiter manuellement',
       dateSoumission,
     }).catch((err) => {
       console.error('[plan-de-sourcing] deferred-interne email failed', err)
@@ -418,29 +407,55 @@ function buildProjectDescription(
   input: PlanDeSourcingInput,
   refId: string,
   isDuplicate = false,
-  deferredReason?: 'rate_limit' | 'api_failure',
 ): string {
   const variable = input.ote - input.fixe
   const ratio = input.ote > 0 ? Math.round((input.fixe / input.ote) * 100) : 100
-  const lines = [
-    `**Identité** : ${input.prenom} ${input.nom} · ${input.email} · ${input.telephone}`,
-    `**Entreprise** : ${input.entreprise}`,
+  const posteAffiche =
+    input.posteRecherche === 'Autre' ? input.posteRecherchePrecisionAutre || 'Autre' : input.posteRecherche
+  const secteurAffiche =
+    input.secteur === 'Autre' ? input.secteurPrecisionAutre || 'Autre' : input.secteur
+
+  const lines: string[] = [
+    '## Contact',
+    `${input.prenom} ${input.nom}`,
+    input.email,
+    input.telephone,
     '',
-    `**Poste recherché** : ${input.posteRecherche === 'Autre' ? input.posteRecherchePrecisionAutre || 'Autre' : input.posteRecherche}`,
+    '## Entreprise',
+    input.entreprise,
+  ]
+  if (input.siteEntreprise) lines.push(input.siteEntreprise)
+  lines.push(
+    '',
+    '## Le poste',
+    `**Intitulé** : ${posteAffiche}`,
     `**Séniorité** : ${input.seniorite}`,
     `**Objectif** : ${input.objectifPoste}`,
     `**Localisation** : ${input.localisation}${input.remotePossible ? ' (remote possible)' : ''}`,
+    `**Secteur** : ${secteurAffiche}`,
     '',
-    `**Secteur** : ${input.secteur === 'Autre' ? input.secteurPrecisionAutre || 'Autre' : input.secteur}`,
-    `**Package** : ${input.fixe.toLocaleString('fr-FR')} € fixe / ${input.ote.toLocaleString('fr-FR')} € OTE (variable ${variable.toLocaleString('fr-FR')} €, ratio ${ratio}% fixe)`,
-  ]
-  if (input.siteEntreprise) lines.push(`**Site** : ${input.siteEntreprise}`)
+    '## Package',
+    `**Fixe** : ${input.fixe.toLocaleString('fr-FR')} €`,
+    `**OTE** : ${input.ote.toLocaleString('fr-FR')} €`,
+    `**Variable** : ${variable.toLocaleString('fr-FR')} € (ratio ${ratio}% fixe)`,
+  )
   if (input.contenuFichePoste) {
-    lines.push('', `**Fiche de poste** :\n${input.contenuFichePoste.slice(0, 1500)}${input.contenuFichePoste.length > 1500 ? '\n…(tronqué)' : ''}`)
+    lines.push(
+      '',
+      '## Fiche de poste fournie',
+      input.contenuFichePoste.slice(0, 1500) +
+        (input.contenuFichePoste.length > 1500 ? '\n…(tronqué)' : ''),
+    )
   }
-  if (isDuplicate) lines.push('', '⚠️ Doublon 30j détecté — cette entreprise a déjà soumis un plan dans le mois.')
-  if (deferredReason) lines.push('', `🛑 Demande différée (raison : ${deferredReason}). Réf : ${refId}`)
-  else lines.push('', `Réf plan : ${refId}`)
+  if (isDuplicate) {
+    lines.push('', '⚠️ Doublon 30j détecté — cette entreprise a déjà soumis un plan dans le mois.')
+  }
+  lines.push(
+    '',
+    '---',
+    'Source : Le Lab Mariell — Outil 2 (Plan de sourcing LinkedIn)',
+    `Réf plan : ${refId}`,
+  )
   return lines.join('\n')
 }
 

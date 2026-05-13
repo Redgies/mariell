@@ -8,6 +8,7 @@ import {
   findCompanyByNameOrDomain,
   upsertCompany,
   createEvaluationAttractiviteProject,
+  upsertProfile,
   jarviProjectUrl,
   jarviCompanyUrl,
 } from '../../../utils/jarvi'
@@ -268,46 +269,67 @@ export default defineEventHandler(async (event) => {
     const resultatUrl = `${getSiteUrl()}/lab/evaluation-attractivite/resultat/${uuid}`
     const dateSoumission = formatDateFr(new Date())
 
-    const jarviSideEffect = (async () => {
-      let jarviUrl = ''
-      try {
-        const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
-        const existing = await findCompanyByNameOrDomain({
+    // Jarvi block : company → project → profile.
+    let jarviUrl = ''
+    let companyId: string | null = null
+    let projectId: string | null = null
+    try {
+      const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
+      const existing = await findCompanyByNameOrDomain({
+        name: validated.entreprise,
+        emailDomain,
+        websiteUrl: validated.site_web || `https://${emailDomain}`,
+      })
+      const company = await upsertCompany(
+        {
+          existingCompany: existing,
           name: validated.entreprise,
-          emailDomain,
           websiteUrl: validated.site_web || `https://${emailDomain}`,
-        })
-        const company = await upsertCompany(
+        },
+        { retry: true },
+      )
+      companyId = company.id
+      jarviUrl = jarviCompanyUrl(company.id)
+
+      const statusId = process.env.JARVI_STATUS_ID_EVALUATION_ATTRACTIVITE
+      if (statusId) {
+        const project = await createEvaluationAttractiviteProject(
           {
-            existingCompany: existing,
-            name: validated.entreprise,
-            websiteUrl: validated.site_web || `https://${emailDomain}`,
+            companyId: company.id,
+            name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
+            statusId,
+            description: buildProjectDescription(validated, uuid, llmJson),
           },
           { retry: true },
         )
-        jarviUrl = jarviCompanyUrl(company.id)
-
-        const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-        if (statusId) {
-          const project = await createEvaluationAttractiviteProject(
-            {
-              companyId: company.id,
-              name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
-              statusId,
-              description: buildProjectDescription(validated, uuid, llmJson),
-            },
-            { retry: true },
-          )
-          jarviUrl = jarviProjectUrl(project.id)
-        }
-      } catch (err) {
-        console.error('[evaluation-attractivite] Jarvi side effect failed', err)
-        sendCriticalAlert('Jarvi side effect failed (Évaluation attractivité)', err).catch(() => {})
+        projectId = project.id
+        jarviUrl = jarviProjectUrl(project.id)
       }
-      return { jarviUrl }
-    })()
+    } catch (err) {
+      console.error('[evaluation-attractivite] Jarvi company/project failed', err)
+      sendCriticalAlert('Jarvi company/project failed (Évaluation attractivité)', err).catch(() => {})
+    }
 
-    const { jarviUrl } = await jarviSideEffect
+    // Profile (contact) — auto-merge sur email existant côté Jarvi.
+    if (companyId) {
+      try {
+        await upsertProfile(
+          {
+            firstName: validated.prenom,
+            lastName: validated.nom,
+            email: validated.email,
+            phone: validated.telephone,
+            companyName: validated.entreprise,
+            companyId,
+            ...(projectId ? { projectId } : {}),
+          },
+          { retry: true },
+        )
+      } catch (err) {
+        console.error('[evaluation-attractivite] Profile upsert failed', err)
+        sendCriticalAlert('Jarvi Profile upsert failed (Évaluation attractivité)', err).catch(() => {})
+      }
+    }
 
     const emailResults = await Promise.allSettled([
       sendBrevoEvaluationNotifInterneLivree({
@@ -363,6 +385,13 @@ export default defineEventHandler(async (event) => {
   }
 })
 
+/**
+ * Mode différé : rate_limit ou api_failure.
+ *
+ * **AUCUN appel Jarvi** ici par design — le lead est récupéré uniquement via
+ * email interne. Le gérant traite la demande à la main et crée la fiche Jarvi
+ * lui-même s'il décide de poursuivre.
+ */
 async function handleDeferredProcessing(
   input: FormulaireOutil3,
   reason: 'rate_limit' | 'api_failure',
@@ -384,49 +413,12 @@ async function handleDeferredProcessing(
     console.error('[evaluation-attractivite] saveDeferred failed (non-blocking)', err)
   }
 
-  let jarviUrl = ''
-  try {
-    const emailDomain = (input.email.split('@')[1] || '').toLowerCase()
-    const existing = await findCompanyByNameOrDomain({
-      name: input.entreprise,
-      emailDomain,
-      websiteUrl: input.site_web || `https://${emailDomain}`,
-    })
-    const company = await upsertCompany(
-      {
-        existingCompany: existing,
-        name: input.entreprise,
-        websiteUrl: input.site_web || `https://${emailDomain}`,
-      },
-      { retry: true },
-    )
-    jarviUrl = jarviCompanyUrl(company.id)
-
-    const statusId = process.env.JARVI_STATUS_ID_LAB_RECUE
-    if (statusId) {
-      const tagPrefix = reason === 'rate_limit' ? 'Lab — Manuel - Rate limit' : 'Lab — Manuel - API'
-      const project = await createEvaluationAttractiviteProject(
-        {
-          companyId: company.id,
-          name: `${tagPrefix} — Évaluation — ${input.entreprise} — ${dateSoumission}`,
-          statusId,
-          description: buildProjectDescription(input, deferredId, null, reason),
-        },
-        { retry: true },
-      )
-      jarviUrl = jarviProjectUrl(project.id)
-    }
-  } catch (err) {
-    console.error('[evaluation-attractivite] Jarvi deferred side effect failed', err)
-    sendCriticalAlert('Jarvi deferred side effect failed (Évaluation attractivité)', err).catch(() => {})
-  }
-
   await Promise.allSettled([
     sendBrevoEvaluationNotifInterneDifferee({
       input,
       deferredId,
       raisonDiffere: raisonLibelle,
-      jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+      jarviUrl: 'Aucun project Jarvi créé — à traiter manuellement',
       dateSoumission,
     }).catch((err) => {
       console.error('[evaluation-attractivite] notif-interne-différée failed', err)
@@ -450,42 +442,67 @@ function buildProjectDescription(
   input: FormulaireOutil3,
   refId: string,
   json: LlmOutputJson | null,
-  deferredReason?: 'rate_limit' | 'api_failure',
 ): string {
   const intituleAffiche =
     input.intitule_poste === 'Autre' && input.intitule_poste_precision_autre
       ? `${input.intitule_poste} (${input.intitule_poste_precision_autre})`
       : input.intitule_poste
-  const lines = [
-    `**Identité** : ${input.prenom} ${input.nom} · ${input.email} · ${input.telephone}`,
-    `**Entreprise** : ${input.entreprise}${input.site_web ? ` · ${input.site_web}` : ''}`,
-    `**Secteur** : ${input.secteur === 'Autre' && input.secteur_precision_autre ? input.secteur_precision_autre : input.secteur}`,
+  const secteurAffiche =
+    input.secteur === 'Autre' && input.secteur_precision_autre
+      ? input.secteur_precision_autre
+      : input.secteur
+  const cycleAffiche =
+    input.type_cycle === 'Autre' && input.type_cycle_autre
+      ? input.type_cycle_autre
+      : input.type_cycle
+
+  const lines: string[] = [
+    '## Contact',
+    `${input.prenom} ${input.nom}`,
+    input.email,
+    input.telephone,
+    '',
+    '## Entreprise',
+    input.entreprise,
+  ]
+  if (input.site_web) lines.push(input.site_web)
+  lines.push(
+    `**Secteur** : ${secteurAffiche}`,
     `**Localisation** : ${input.localisation}`,
     `**Effectifs** : ${input.effectifs_entreprise}`,
     `**Équipe Sales** : ${input.equipe_sales}`,
     '',
-    `**Poste** : ${intituleAffiche}`,
+    '## Le poste',
+    `**Intitulé** : ${intituleAffiche}`,
     `**Séniorité** : ${input.seniorite}`,
-    `**Cycle** : ${input.type_cycle === 'Autre' && input.type_cycle_autre ? input.type_cycle_autre : input.type_cycle}`,
-    `**Modalité de travail** : ${input.modalite_travail}`,
+    `**Cycle** : ${cycleAffiche}`,
+    `**Modalité** : ${input.modalite_travail}`,
     '',
-    `**Package** : ${input.package_fixe.toLocaleString('fr-FR')} € fixe / ${input.package_ote.toLocaleString('fr-FR')} € OTE`,
+    '## Package',
+    `**Fixe** : ${input.package_fixe.toLocaleString('fr-FR')} €`,
+    `**OTE** : ${input.package_ote.toLocaleString('fr-FR')} €`,
     '',
-    `**Description missions** :`,
-    input.description_missions.slice(0, 1500),
-    input.description_missions.length > 1500 ? '…(tronqué)' : '',
-  ]
+    '## Description missions',
+    input.description_missions.slice(0, 1500) +
+      (input.description_missions.length > 1500 ? '\n…(tronqué)' : ''),
+  )
 
   if (json) {
-    lines.push('', `**Verdict LLM** : ${json.niveau_attractivite} (${json.jauge_position}/10)`)
     lines.push(
+      '',
+      '## Verdict LLM',
+      `**Niveau** : ${json.niveau_attractivite} (${json.jauge_position}/10)`,
       `**Dimensions** : marque=${json.dimensions.marque} · secteur=${json.dimensions.secteur} · mission=${json.dimensions.mission} · package=${json.dimensions.package}`,
     )
   }
-  if (deferredReason) lines.push('', `🛑 Demande différée (${deferredReason}). Réf : ${refId}`)
-  else lines.push('', `Réf évaluation : ${refId}`)
 
-  return lines.filter(Boolean).join('\n')
+  lines.push(
+    '',
+    '---',
+    "Source : Le Lab Mariell — Outil 3 (Évaluation d'attractivité)",
+    `Réf évaluation : ${refId}`,
+  )
+  return lines.join('\n')
 }
 
 function formatDateFr(d: Date): string {

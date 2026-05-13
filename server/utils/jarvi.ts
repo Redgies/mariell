@@ -454,6 +454,82 @@ export async function createEvaluationAttractiviteProject(
 }
 
 // ============================================================
+// Profile (contact) — créé après company + project sur chaque outil Lab
+// Auto-merge côté Jarvi sur email existant.
+// ============================================================
+
+interface UpsertProfileParams {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  companyName: string
+  companyId?: string
+  projectId?: string
+}
+
+/**
+ * POST /rest/v2/profiles.
+ *
+ * Jarvi auto-merge si l'email existe déjà (cf. doc API : id > externalId >
+ * email/LinkedIn). Donc envoyer 2 fois pour le même email = 1 seul Profile,
+ * mais avec plusieurs projets associés.
+ *
+ * Le champ `currentCompanyId` rattache le profil à la fiche Company.
+ * Le champ `projectId` le rattache au projet courant.
+ */
+export async function upsertProfile(
+  params: UpsertProfileParams,
+  options: { retry?: boolean } = {},
+): Promise<{ id: string }> {
+  if (!hasJarvi()) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[jarvi] stub mode — upsertProfile returns fake id')
+      return { id: 'stub-profile-' + Date.now() }
+    }
+    throw new Error('[jarvi] not configured in production')
+  }
+
+  const body: Record<string, unknown> = {
+    firstName: params.firstName,
+    lastName: params.lastName,
+    emailAddresses: params.email,
+    phoneNumbers: params.phone,
+    currentCompanyName: params.companyName,
+  }
+  if (params.companyId) body.currentCompanyId = params.companyId
+  if (params.projectId) body.projectId = params.projectId
+
+  const doRequest = async (): Promise<{ id: string }> => {
+    const res = await fetch(jarviUrl('/profiles'), {
+      method: 'POST',
+      headers: jarviHeaders(),
+      body: JSON.stringify(body),
+    })
+    if (!res.ok) {
+      const text = await res.text().catch(() => '')
+      throw new Error(`[jarvi] upsertProfile failed: ${res.status} ${text}`)
+    }
+    const json = (await res.json()) as { profileId?: string; message?: string }
+    if (!json.profileId) {
+      throw new Error(`[jarvi] upsertProfile: no profileId in response: ${JSON.stringify(json)}`)
+    }
+    return { id: json.profileId }
+  }
+
+  try {
+    return await doRequest()
+  } catch (err) {
+    if (options.retry) {
+      console.warn('[jarvi] upsertProfile retrying once', err)
+      await sleep(500)
+      return await doRequest()
+    }
+    throw err
+  }
+}
+
+// ============================================================
 // UI URL builders for email links
 // Modern Jarvi UI uses non-hash routing.
 // ============================================================
@@ -462,4 +538,7 @@ export function jarviProjectUrl(projectId: string): string {
 }
 export function jarviCompanyUrl(companyId: string): string {
   return `https://app.jarvi.tech/companies/${companyId}`
+}
+export function jarviProfileUrl(profileId: string): string {
+  return `https://app.jarvi.tech/profiles/${profileId}`
 }
