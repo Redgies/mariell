@@ -199,8 +199,8 @@
   "hotPaths": [
     {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
-      "accessCount": 20,
-      "lastAccessed": 1778681622939,
+      "accessCount": 21,
+      "lastAccessed": 1778682826273,
       "type": "file"
     },
     {
@@ -211,8 +211,8 @@
     },
     {
       "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 16,
-      "lastAccessed": 1778681617621,
+      "accessCount": 17,
+      "lastAccessed": 1778682823693,
       "type": "file"
     },
     {
@@ -234,21 +234,21 @@
       "type": "file"
     },
     {
-      "path": "nuxt.config.ts",
-      "accessCount": 6,
-      "lastAccessed": 1778512040221,
-      "type": "file"
-    },
-    {
       "path": "server/utils/jarvi.ts",
-      "accessCount": 6,
-      "lastAccessed": 1778681596379,
+      "accessCount": 9,
+      "lastAccessed": 1778682796035,
       "type": "file"
     },
     {
       "path": "server/api/lab/stage-alternance.post.ts",
+      "accessCount": 7,
+      "lastAccessed": 1778682820848,
+      "type": "file"
+    },
+    {
+      "path": "nuxt.config.ts",
       "accessCount": 6,
-      "lastAccessed": 1778681611362,
+      "lastAccessed": 1778512040221,
       "type": "file"
     },
     {

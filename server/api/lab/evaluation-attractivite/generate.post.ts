@@ -285,6 +285,7 @@ export default defineEventHandler(async (event) => {
           existingCompany: existing,
           name: validated.entreprise,
           websiteUrl: validated.site_web || `https://${emailDomain}`,
+          description: buildProjectDescription(validated, uuid, llmJson),
         },
         { retry: true },
       )

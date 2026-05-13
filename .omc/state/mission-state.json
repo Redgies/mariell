@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-13T14:14:05.272Z",
+  "updatedAt": "2026-05-13T14:34:00.024Z",
   "missions": [
     {
       "id": "session:f7993869-98d5-43e0-914b-eaed08d64c1d:none",
@@ -71,7 +71,7 @@
       "name": "none",
       "objective": "Session mission",
       "createdAt": "2026-05-13T13:05:16.542Z",
-      "updatedAt": "2026-05-13T14:14:05.272Z",
+      "updatedAt": "2026-05-13T14:34:00.024Z",
       "status": "done",
       "workerCount": 1,
       "taskCounts": {
@@ -91,7 +91,7 @@
           "currentStep": null,
           "latestUpdate": "completed",
           "completedSummary": null,
-          "updatedAt": "2026-05-13T14:14:05.272Z"
+          "updatedAt": "2026-05-13T14:34:00.024Z"
         }
       ],
       "timeline": [
@@ -206,6 +206,38 @@
           "agent": "document-specialist:acf878b",
           "detail": "completed",
           "sourceKey": "session-stop:a844e4b1a1b776a28"
+        },
+        {
+          "id": "session-stop:a29c267c284c1c230:2026-05-13T14:17:34.662Z",
+          "at": "2026-05-13T14:17:34.662Z",
+          "kind": "completion",
+          "agent": "document-specialist:acf878b",
+          "detail": "completed",
+          "sourceKey": "session-stop:a29c267c284c1c230"
+        },
+        {
+          "id": "session-stop:a34cd01f9d5e13a1f:2026-05-13T14:30:40.765Z",
+          "at": "2026-05-13T14:30:40.765Z",
+          "kind": "completion",
+          "agent": "document-specialist:acf878b",
+          "detail": "completed",
+          "sourceKey": "session-stop:a34cd01f9d5e13a1f"
+        },
+        {
+          "id": "session-stop:abbdf1ebcd518bc59:2026-05-13T14:30:58.083Z",
+          "at": "2026-05-13T14:30:58.083Z",
+          "kind": "completion",
+          "agent": "document-specialist:acf878b",
+          "detail": "completed",
+          "sourceKey": "session-stop:abbdf1ebcd518bc59"
+        },
+        {
+          "id": "session-stop:abdb0dd6123aa1f21:2026-05-13T14:34:00.024Z",
+          "at": "2026-05-13T14:34:00.024Z",
+          "kind": "completion",
+          "agent": "document-specialist:acf878b",
+          "detail": "completed",
+          "sourceKey": "session-stop:abdb0dd6123aa1f21"
         }
       ]
     }

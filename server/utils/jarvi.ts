@@ -100,36 +100,47 @@ export async function findCompanyByNameOrDomain(
   }
 
   const websiteDomain = extractDomain(params.websiteUrl)
-  const where = {
-    _or: [
-      { name: { _ilike: `%${params.name}%` } },
-      { website: { _ilike: `%${websiteDomain}%` } },
-      { linkedinUrl: { _ilike: `%${websiteDomain}%` } },
-      { website: { _ilike: `%${params.emailDomain}%` } },
-    ],
-  }
 
-  try {
-    const res = await fetch(
-      jarviUrl('/companies', { where: JSON.stringify(where), limit: '10' }),
-      { headers: jarviHeaders() },
-    )
-    if (!res.ok) {
-      console.warn('[jarvi] findCompany HTTP', res.status, await res.text().catch(() => ''))
-      return null
+  // Stratégie en cascade : on essaie d'abord la requête full _or, puis fallback
+  // sur des requêtes simples si Jarvi 500 (bug serveur observé sur _or avec
+  // plusieurs _ilike). Limite à 10 résultats par appel, max 3 appels.
+  const queries: Array<Record<string, unknown>> = [
+    {
+      _or: [
+        { name: { _ilike: `%${params.name}%` } },
+        { website: { _ilike: `%${websiteDomain}%` } },
+        { linkedinUrl: { _ilike: `%${websiteDomain}%` } },
+        { website: { _ilike: `%${params.emailDomain}%` } },
+      ],
+    },
+    { name: { _ilike: `%${params.name}%` } },
+    { website: { _ilike: `%${websiteDomain}%` } },
+  ]
+
+  for (const where of queries) {
+    try {
+      const res = await fetch(
+        jarviUrl('/companies', { where: JSON.stringify(where), limit: '10' }),
+        { headers: jarviHeaders() },
+      )
+      if (!res.ok) {
+        console.warn('[jarvi] findCompany HTTP', res.status, '— trying fallback query')
+        continue
+      }
+      const data = (await res.json()) as { companies?: JarviCompany[] }
+      if (!data.companies || data.companies.length === 0) continue
+
+      return [...data.companies].sort((a, b) => {
+        const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+        const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+        return tb - ta
+      })[0] ?? null
+    } catch (err) {
+      console.error('[jarvi] findCompany threw, trying fallback', err)
     }
-    const data = (await res.json()) as { companies?: JarviCompany[] }
-    if (!data.companies || data.companies.length === 0) return null
-
-    return [...data.companies].sort((a, b) => {
-      const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
-      const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
-      return tb - ta
-    })[0] ?? null
-  } catch (err) {
-    console.error('[jarvi] findCompany threw', err)
-    return null
   }
+
+  return null
 }
 
 /**
@@ -212,22 +223,29 @@ interface UpsertCompanyParams {
   existingCompany: JarviCompany | null
   name: string
   websiteUrl: string
+  /**
+   * Markdown libre stocké dans `Company.description` (Jarvi n'a pas de champ
+   * description sur les Projects). Overwrite la description existante si la
+   * company existe déjà.
+   */
+  description?: string
 }
 
 /**
- * Returns existing Company if found. Else creates one.
- * Jarvi POST /companies is upsert-by-name internally.
+ * Returns existing Company (mis à jour avec la nouvelle description si fournie)
+ * ou crée une nouvelle company.
  *
- * Note: POST /companies has NO `website` field. The URL goes into:
- *   - `linkedinUrl` if it's a LinkedIn URL
- *   - `description` (prefixed) otherwise — we keep the trace somewhere visible
+ * Note: POST /companies n'a PAS de champ `website`. L'URL part dans :
+ *   - `linkedinUrl` si c'est une URL LinkedIn
+ *   - dans la description (préfixée "Site web : ...") sinon
+ *
+ * Si on appelle avec `companyId` (depuis existingCompany.id), Jarvi met à jour
+ * la fiche existante. Permet d'overwrite la description avec le brief courant.
  */
 export async function upsertCompany(
   params: UpsertCompanyParams,
   options: { retry?: boolean } = {},
 ): Promise<JarviCompany> {
-  if (params.existingCompany) return params.existingCompany
-
   if (!hasJarvi()) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('[jarvi] stub mode — upsertCompany returns fake id')
@@ -237,10 +255,26 @@ export async function upsertCompany(
   }
 
   const body: Record<string, unknown> = { name: params.name }
-  if (isLinkedinUrl(params.websiteUrl)) {
-    body.linkedinUrl = params.websiteUrl
-  } else {
-    body.description = `Site web : ${params.websiteUrl}`
+
+  // Si company existante : on update via companyId.
+  if (params.existingCompany?.id) {
+    body.companyId = params.existingCompany.id
+  }
+
+  // LinkedIn URL → champ dédié. Site web autre → préfixé dans la description.
+  let descriptionParts: string[] = []
+  if (params.websiteUrl) {
+    if (isLinkedinUrl(params.websiteUrl)) {
+      body.linkedinUrl = params.websiteUrl
+    } else {
+      descriptionParts.push(`Site web : ${params.websiteUrl}`)
+    }
+  }
+  if (params.description) {
+    descriptionParts.push(params.description)
+  }
+  if (descriptionParts.length > 0) {
+    body.description = descriptionParts.join('\n\n')
   }
 
   const doRequest = async (): Promise<JarviCompany> => {
@@ -307,9 +341,11 @@ export async function createProject(
     name: params.name,
     statusId: params.statusId,
     companyId: params.companyId,
-    // Active la visibilité ATS — sans ça le projet peut tomber dans un statut
-    // par défaut "Urgent" / non catégorisé selon la config Jarvi.
+    // Visible dans l'ATS ET le CRM. Le profile (contact) attaché au project
+    // suit cette visibilité — sans `isMadeForSales: true`, le profile n'apparaît
+    // que dans /ats/profiles, jamais dans /crm/profiles.
     isMadeForRecruitment: true,
+    isMadeForSales: true,
     customFieldsValues: {
       [fieldId]: params.typeDemandeLabValue,
     },
