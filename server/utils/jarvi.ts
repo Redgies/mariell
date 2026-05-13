@@ -307,6 +307,9 @@ export async function createProject(
     name: params.name,
     statusId: params.statusId,
     companyId: params.companyId,
+    // Active la visibilité ATS — sans ça le projet peut tomber dans un statut
+    // par défaut "Urgent" / non catégorisé selon la config Jarvi.
+    isMadeForRecruitment: true,
     customFieldsValues: {
       [fieldId]: params.typeDemandeLabValue,
     },
@@ -466,6 +469,8 @@ interface UpsertProfileParams {
   companyName: string
   companyId?: string
   projectId?: string
+  /** UUID du statut Profile à appliquer (laisse vide pour le statut par défaut Jarvi) */
+  statusId?: string
 }
 
 /**
@@ -490,15 +495,24 @@ export async function upsertProfile(
     throw new Error('[jarvi] not configured in production')
   }
 
+  // Nettoyer le téléphone (Jarvi peut être strict sur les espaces).
+  const phoneClean = params.phone.replace(/\s+/g, ' ').trim()
+
+  // Si on a déjà l'UUID de la company, NE PAS envoyer currentCompanyName
+  // (évite que Jarvi tente un fuzzy-match en doublon de l'association directe).
   const body: Record<string, unknown> = {
     firstName: params.firstName,
     lastName: params.lastName,
     emailAddresses: params.email,
-    phoneNumbers: params.phone,
-    currentCompanyName: params.companyName,
+    phoneNumbers: phoneClean,
   }
-  if (params.companyId) body.currentCompanyId = params.companyId
+  if (params.companyId) {
+    body.currentCompanyId = params.companyId
+  } else {
+    body.currentCompanyName = params.companyName
+  }
   if (params.projectId) body.projectId = params.projectId
+  if (params.statusId) body.statusId = params.statusId
 
   const doRequest = async (): Promise<{ id: string }> => {
     const res = await fetch(jarviUrl('/profiles'), {
@@ -508,9 +522,15 @@ export async function upsertProfile(
     })
     if (!res.ok) {
       const text = await res.text().catch(() => '')
+      console.error('[jarvi] upsertProfile HTTP error', {
+        status: res.status,
+        body: text,
+        sentBody: body,
+      })
       throw new Error(`[jarvi] upsertProfile failed: ${res.status} ${text}`)
     }
-    const json = (await res.json()) as { profileId?: string; message?: string }
+    const json = (await res.json()) as { profileId?: string; taskId?: string; message?: string }
+    console.log('[jarvi] upsertProfile response', json)
     if (!json.profileId) {
       throw new Error(`[jarvi] upsertProfile: no profileId in response: ${JSON.stringify(json)}`)
     }

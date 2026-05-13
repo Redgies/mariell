@@ -245,7 +245,7 @@ export default defineEventHandler(async (event) => {
         daysAgo: 30,
       })
 
-      const statusId = process.env.JARVI_STATUS_ID_PLAN_SOURCING
+      const statusId = process.env.JARVI_PROJECT_STATUS_ID_PLAN_SOURCING
       if (statusId) {
         const projectName = isRecentDuplicate
           ? `Lab — Plan de sourcing (DOUBLON 30j) — ${validated.entreprise} — ${dateSoumission}`
@@ -272,6 +272,7 @@ export default defineEventHandler(async (event) => {
     // Jarvi auto-merge sur email existant.
     if (companyId) {
       try {
+        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_PLAN_SOURCING
         await upsertProfile(
           {
             firstName: validated.prenom,
@@ -281,6 +282,7 @@ export default defineEventHandler(async (event) => {
             companyName: validated.entreprise,
             companyId,
             ...(projectId ? { projectId } : {}),
+            ...(profileStatusId ? { statusId: profileStatusId } : {}),
           },
           { retry: true },
         )

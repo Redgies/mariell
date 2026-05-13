@@ -129,8 +129,8 @@ export default defineEventHandler(async (event) => {
     let projectId: string | null = null
     if (companyId) {
       try {
-        const statusId = process.env.JARVI_STATUS_ID_STAGE_ALTERNANCE
-        if (!statusId) throw new Error('Missing JARVI_STATUS_ID_STAGE_ALTERNANCE')
+        const statusId = process.env.JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE
+        if (!statusId) throw new Error('Missing JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE')
 
         const project = await createProject(
           {
@@ -154,6 +154,7 @@ export default defineEventHandler(async (event) => {
     // Jarvi auto-merge sur email existant → 1 seul profile mais N projets associés.
     if (companyId) {
       try {
+        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_STAGE_ALTERNANCE
         await upsertProfile(
           {
             firstName: validated.prenom,
@@ -163,6 +164,7 @@ export default defineEventHandler(async (event) => {
             companyName: validated.entreprise,
             companyId,
             ...(projectId ? { projectId } : {}),
+            ...(profileStatusId ? { statusId: profileStatusId } : {}),
           },
           { retry: true },
         )

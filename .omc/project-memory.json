@@ -198,21 +198,21 @@
   },
   "hotPaths": [
     {
+      "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
+      "accessCount": 20,
+      "lastAccessed": 1778681622939,
+      "type": "file"
+    },
+    {
       "path": "server/utils/prompts/plan-de-sourcing.ts",
       "accessCount": 18,
       "lastAccessed": 1778508513835,
       "type": "file"
     },
     {
-      "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
-      "accessCount": 18,
-      "lastAccessed": 1778679195658,
-      "type": "file"
-    },
-    {
       "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 14,
-      "lastAccessed": 1778679137895,
+      "accessCount": 16,
+      "lastAccessed": 1778681617621,
       "type": "file"
     },
     {
@@ -240,6 +240,18 @@
       "type": "file"
     },
     {
+      "path": "server/utils/jarvi.ts",
+      "accessCount": 6,
+      "lastAccessed": 1778681596379,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/stage-alternance.post.ts",
+      "accessCount": 6,
+      "lastAccessed": 1778681611362,
+      "type": "file"
+    },
+    {
       "path": "app/pages/lab/plan-de-sourcing/index.vue",
       "accessCount": 5,
       "lastAccessed": 1778508884603,
@@ -258,12 +270,6 @@
       "type": "file"
     },
     {
-      "path": "server/api/lab/stage-alternance.post.ts",
-      "accessCount": 4,
-      "lastAccessed": 1778679067621,
-      "type": "file"
-    },
-    {
       "path": "server/utils/outil-3/load-prompts.ts",
       "accessCount": 3,
       "lastAccessed": 1778510243229,
@@ -279,6 +285,12 @@
       "path": "server/utils/brevo.ts",
       "accessCount": 3,
       "lastAccessed": 1778514111500,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 3,
+      "lastAccessed": 1778681634109,
       "type": "file"
     },
     {
@@ -321,18 +333,6 @@
       "path": "docs/outil-3/brevo-templates/template-1-notif-interne-livree.html",
       "accessCount": 2,
       "lastAccessed": 1778514113337,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/jarvi.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778679036176,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 2,
-      "lastAccessed": 1778679227866,
       "type": "file"
     },
     {

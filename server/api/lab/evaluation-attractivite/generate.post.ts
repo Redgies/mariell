@@ -291,7 +291,7 @@ export default defineEventHandler(async (event) => {
       companyId = company.id
       jarviUrl = jarviCompanyUrl(company.id)
 
-      const statusId = process.env.JARVI_STATUS_ID_EVALUATION_ATTRACTIVITE
+      const statusId = process.env.JARVI_PROJECT_STATUS_ID_EVALUATION_ATTRACTIVITE
       if (statusId) {
         const project = await createEvaluationAttractiviteProject(
           {
@@ -313,6 +313,7 @@ export default defineEventHandler(async (event) => {
     // Profile (contact) — auto-merge sur email existant côté Jarvi.
     if (companyId) {
       try {
+        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_EVALUATION_ATTRACTIVITE
         await upsertProfile(
           {
             firstName: validated.prenom,
@@ -322,6 +323,7 @@ export default defineEventHandler(async (event) => {
             companyName: validated.entreprise,
             companyId,
             ...(projectId ? { projectId } : {}),
+            ...(profileStatusId ? { statusId: profileStatusId } : {}),
           },
           { retry: true },
         )
