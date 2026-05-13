@@ -366,6 +366,25 @@ export async function createProject(
   // est dans le custom field briefFieldId ci-dessus.
   if (params.description) body.description = params.description
 
+  // Log diagnostic — à retirer une fois le custom field brief opérationnel.
+  console.log('[jarvi] createProject — env vars présentes', {
+    JARVI_FIELD_ID_TYPE_DEMANDE_LAB: fieldId ? `${fieldId.slice(0, 8)}…` : 'MANQUANT',
+    JARVI_PROJECT_FIELD_ID_BRIEF: briefFieldId ? `${briefFieldId.slice(0, 8)}…` : 'MANQUANT',
+  })
+  console.log('[jarvi] createProject — body envoyé', {
+    name: body.name,
+    statusId: body.statusId,
+    companyId: body.companyId,
+    isMadeForSales: body.isMadeForSales,
+    isMadeForRecruitment: body.isMadeForRecruitment,
+    customFieldsValues: Object.entries(customFieldsValues).map(([uuid, val]) => ({
+      uuid: `${uuid.slice(0, 8)}…`,
+      valuePreview: typeof val === 'string' ? val.slice(0, 60) : val,
+      valueLength: typeof val === 'string' ? val.length : 0,
+    })),
+    descriptionLength: typeof body.description === 'string' ? body.description.length : 0,
+  })
+
   const doRequest = async (): Promise<{ id: string }> => {
     const res = await fetch(jarviUrl('/projects'), {
       method: 'POST',
@@ -376,7 +395,8 @@ export async function createProject(
       const text = await res.text().catch(() => '')
       throw new Error(`[jarvi] createProject failed: ${res.status} ${text}`)
     }
-    const json = (await res.json()) as { projectId?: string; message?: string }
+    const json = (await res.json()) as { projectId?: string; taskId?: string; message?: string }
+    console.log('[jarvi] createProject response', json)
     if (!json.projectId) {
       throw new Error(`[jarvi] createProject: no projectId in response: ${JSON.stringify(json)}`)
     }

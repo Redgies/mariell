@@ -222,15 +222,15 @@
       "type": "file"
     },
     {
-      "path": "server/prompts/outil-3/system-prompt-v9.md",
-      "accessCount": 11,
-      "lastAccessed": 1778512066309,
+      "path": "server/utils/jarvi.ts",
+      "accessCount": 12,
+      "lastAccessed": 1778686704547,
       "type": "file"
     },
     {
-      "path": "server/utils/jarvi.ts",
+      "path": "server/prompts/outil-3/system-prompt-v9.md",
       "accessCount": 11,
-      "lastAccessed": 1778683774179,
+      "lastAccessed": 1778512066309,
       "type": "file"
     },
     {
