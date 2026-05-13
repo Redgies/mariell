@@ -91,3 +91,11 @@
 {"t":0,"agent":"a34cd01","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"abbdf1e","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"abdb0dd","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"acda619","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a60a256","agent_type":"document-specialist","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"aaa5879","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a60a256","agent_type":"document-specialist","event":"agent_stop","success":true,"duration_ms":156040}
+{"t":0,"agent":"aa22d25","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a0a9227","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"aa2ed65","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a2d867e","agent_type":"unknown","event":"agent_stop","success":true}

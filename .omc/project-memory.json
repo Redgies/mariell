@@ -228,15 +228,15 @@
       "type": "file"
     },
     {
-      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
-      "accessCount": 10,
-      "lastAccessed": 1778508881601,
+      "path": "server/utils/jarvi.ts",
+      "accessCount": 11,
+      "lastAccessed": 1778683774179,
       "type": "file"
     },
     {
-      "path": "server/utils/jarvi.ts",
-      "accessCount": 9,
-      "lastAccessed": 1778682796035,
+      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
+      "accessCount": 10,
+      "lastAccessed": 1778508881601,
       "type": "file"
     },
     {
@@ -270,6 +270,12 @@
       "type": "file"
     },
     {
+      "path": ".env.example",
+      "accessCount": 4,
+      "lastAccessed": 1778683669882,
+      "type": "file"
+    },
+    {
       "path": "server/utils/outil-3/load-prompts.ts",
       "accessCount": 3,
       "lastAccessed": 1778510243229,
@@ -285,12 +291,6 @@
       "path": "server/utils/brevo.ts",
       "accessCount": 3,
       "lastAccessed": 1778514111500,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 3,
-      "lastAccessed": 1778681634109,
       "type": "file"
     },
     {

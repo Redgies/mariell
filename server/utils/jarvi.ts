@@ -337,21 +337,33 @@ export async function createProject(
   const fieldId = process.env.JARVI_FIELD_ID_TYPE_DEMANDE_LAB
   if (!fieldId) throw new Error('[jarvi] JARVI_FIELD_ID_TYPE_DEMANDE_LAB missing')
 
+  // Custom field "Brief" sur Project (richtext / long text) — Jarvi n'a pas de
+  // champ description natif sur Project, ce custom field reçoit le brief
+  // complet du formulaire.
+  const briefFieldId = process.env.JARVI_PROJECT_FIELD_ID_BRIEF
+
+  const customFieldsValues: Record<string, string> = {
+    [fieldId]: params.typeDemandeLabValue,
+  }
+  if (briefFieldId && params.description) {
+    customFieldsValues[briefFieldId] = params.description
+  }
+
   const body: Record<string, unknown> = {
     name: params.name,
     statusId: params.statusId,
     companyId: params.companyId,
-    // Visible dans l'ATS ET le CRM. Le profile (contact) attaché au project
-    // suit cette visibilité — sans `isMadeForSales: true`, le profile n'apparaît
-    // que dans /ats/profiles, jamais dans /crm/profiles.
-    isMadeForRecruitment: true,
+    // Visible UNIQUEMENT en CRM. Avec les deux flags à true, Jarvi semble
+    // forcer le routing vers ATS et le profile n'apparaît jamais dans
+    // /crm/profiles. Quand Mariell démarre le vrai recrutement sur un
+    // project, il flip `isMadeForRecruitment` à true côté UI Jarvi.
+    isMadeForRecruitment: false,
     isMadeForSales: true,
-    customFieldsValues: {
-      [fieldId]: params.typeDemandeLabValue,
-    },
+    customFieldsValues,
   }
-  // Description: Jarvi accepts a description but we found no formal schema for it
-  // on POST /projects. Pass through as a generic field — Jarvi will keep or ignore.
+  // Description: Jarvi ignore ce champ sur POST /projects (non documenté). On le
+  // garde pour compatibilité future au cas où Jarvi l'ajoute, mais le vrai brief
+  // est dans le custom field briefFieldId ci-dessus.
   if (params.description) body.description = params.description
 
   const doRequest = async (): Promise<{ id: string }> => {
