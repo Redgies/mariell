@@ -116,7 +116,6 @@ export default defineEventHandler(async (event) => {
           existingCompany,
           name: validated.entreprise,
           websiteUrl: validated.urlEntreprise,
-          description: buildProjectDescription(validated),
         },
         { retry: true },
       )

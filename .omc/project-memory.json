@@ -199,8 +199,8 @@
   "hotPaths": [
     {
       "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
-      "accessCount": 21,
-      "lastAccessed": 1778682826273,
+      "accessCount": 22,
+      "lastAccessed": 1778685102596,
       "type": "file"
     },
     {
@@ -211,8 +211,8 @@
     },
     {
       "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 17,
-      "lastAccessed": 1778682823693,
+      "accessCount": 18,
+      "lastAccessed": 1778685100724,
       "type": "file"
     },
     {
@@ -241,8 +241,8 @@
     },
     {
       "path": "server/api/lab/stage-alternance.post.ts",
-      "accessCount": 7,
-      "lastAccessed": 1778682820848,
+      "accessCount": 8,
+      "lastAccessed": 1778685098459,
       "type": "file"
     },
     {

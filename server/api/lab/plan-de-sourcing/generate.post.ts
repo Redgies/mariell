@@ -234,7 +234,6 @@ export default defineEventHandler(async (event) => {
           existingCompany,
           name: validated.entreprise,
           websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
-          description: buildProjectDescription(validated, uuid),
         },
         { retry: true },
       )
