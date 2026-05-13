@@ -94,7 +94,7 @@ server/
 │       ├── f1-boites-intouchables-v7.md  # ← copier depuis 01-prompts/
 │       ├── f2-grille-secteurs-v3.md      # ← copier depuis 01-prompts/
 │       ├── f3-typologie-missions-v5.md   # ← copier depuis 01-prompts/
-│       └── f4-addendum-salaires-v5.md    # ← copier depuis 01-prompts/
+│       └── f4-addendum-salaires-v6.md    # ← copier depuis 01-prompts/
 ├── utils/
 │   └── outil-3/
 │       ├── load-prompts.ts               # Charge les 5 fichiers en mémoire au boot

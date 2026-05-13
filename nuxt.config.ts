@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       outil3F1: readPrompt('outil-3/f1-boites-intouchables-v7.md'),
       outil3F2: readPrompt('outil-3/f2-grille-secteurs-v3.md'),
       outil3F3: readPrompt('outil-3/f3-typologie-missions-v5.md'),
-      outil3F4: readPrompt('outil-3/f4-addendum-salaires-v5.md'),
+      outil3F4: readPrompt('outil-3/f4-addendum-salaires-v6.md'),
     },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',

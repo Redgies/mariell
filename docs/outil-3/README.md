@@ -34,7 +34,7 @@ PACKAGE_FINAL_OUTIL_3/
 │   ├── f1-boites-intouchables-v7.md
 │   ├── f2-grille-secteurs-v3.md
 │   ├── f3-typologie-missions-v5.md
-│   └── f4-addendum-salaires-v5.md
+│   └── f4-addendum-salaires-v6.md
 │
 ├── 02-spec-technique/                           # Spec d'implémentation Nitro complète
 │   └── spec-technique-route-nitro-v4.md
@@ -92,7 +92,7 @@ Si tu veux juste tester rapidement le LLM avant de coder quoi que ce soit, va di
 | F1 Boîtes intouchables | V7 | `01-prompts/f1-boites-intouchables-v7.md` |
 | F2 Grille secteurs | V3 | `01-prompts/f2-grille-secteurs-v3.md` |
 | F3 Typologie missions | V5 | `01-prompts/f3-typologie-missions-v5.md` |
-| F4 Addendum salaires | V5 | `01-prompts/f4-addendum-salaires-v5.md` |
+| F4 Addendum salaires | V5 | `01-prompts/f4-addendum-salaires-v6.md` |
 | Spec technique route Nitro | V4 | `02-spec-technique/spec-technique-route-nitro-v4.md` |
 | Templates Brevo | V4 | `04-templates-emails/templates-brevo-v4.md` |
 

@@ -79,7 +79,7 @@
       f1-boites-intouchables-v7.md          # F1 V7 — Référentiel entreprises
       f2-grille-secteurs-v3.md              # F2 V3 — Grille secteurs
       f3-typologie-missions-v5.md           # F3 V5 — Typologie missions (7 dimensions)
-      f4-addendum-salaires-v5.md            # F4 V5 — Addendum salaires (avec table de positionnement chiffré)
+      f4-addendum-salaires-v6.md            # F4 V5 — Addendum salaires (avec table de positionnement chiffré)
   /utils
     /outil-3
       load-prompts.ts                       # NOUVEAU V4 — Chargement des 5 fichiers prompts en mémoire au boot
@@ -789,7 +789,7 @@ export async function loadPrompts(): Promise<LoadedPrompts> {
     readFile(join(promptsDir, 'f1-boites-intouchables-v7.md'), 'utf-8'),
     readFile(join(promptsDir, 'f2-grille-secteurs-v3.md'), 'utf-8'),
     readFile(join(promptsDir, 'f3-typologie-missions-v5.md'), 'utf-8'),
-    readFile(join(promptsDir, 'f4-addendum-salaires-v5.md'), 'utf-8'),
+    readFile(join(promptsDir, 'f4-addendum-salaires-v6.md'), 'utf-8'),
   ]);
   
   cachedPrompts = { systemPromptV8, f1, f2, f3, f4 };
