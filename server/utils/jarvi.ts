@@ -367,9 +367,15 @@ export async function createProject(
   if (params.description) body.description = params.description
 
   const doRequest = async (): Promise<{ id: string }> => {
+    const sentHeaders = jarviHeaders()
+    console.log('[jarvi] createProject — headers que NOUS envoyons explicitement:', {
+      ...sentHeaders,
+      'X-API-KEY': sentHeaders['X-API-KEY']?.slice(0, 8) + '…',
+    })
+
     const res = await fetch(jarviUrl('/projects'), {
       method: 'POST',
-      headers: jarviHeaders(),
+      headers: sentHeaders,
       body: JSON.stringify(body),
     })
     if (!res.ok) {
