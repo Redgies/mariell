@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1778504139369,
+  "lastScanned": 1779106038901,
   "projectRoot": "/Users/mathiasriotor/Documents/Work/mariell",
   "techStack": {
     "languages": [
@@ -74,7 +74,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 3,
-      "lastAccessed": 1778504139360,
+      "lastAccessed": 1779106038876,
       "keyFiles": [
         "AGENTS.md",
         "app.vue"
@@ -84,14 +84,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 1,
-      "lastAccessed": 1778504139361,
+      "lastAccessed": 1779106038876,
       "keyFiles": []
     },
     "public": {
       "path": "public",
       "purpose": "Public files",
-      "fileCount": 15,
-      "lastAccessed": 1778504139361,
+      "fileCount": 16,
+      "lastAccessed": 1779106038878,
       "keyFiles": [
         "AGENTS.md",
         "favicon.svg",
@@ -104,14 +104,14 @@
       "path": "server",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1778504139364,
+      "lastAccessed": 1779106038890,
       "keyFiles": []
     },
     "shared": {
       "path": "shared",
       "purpose": null,
-      "fileCount": 1,
-      "lastAccessed": 1778504139364,
+      "fileCount": 2,
+      "lastAccessed": 1779106038891,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -120,7 +120,7 @@
       "path": "app/assets",
       "purpose": "Static assets",
       "fileCount": 1,
-      "lastAccessed": 1778504139364,
+      "lastAccessed": 1779106038892,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -129,7 +129,7 @@
       "path": "app/components",
       "purpose": "UI components",
       "fileCount": 19,
-      "lastAccessed": 1778504139364,
+      "lastAccessed": 1779106038893,
       "keyFiles": [
         "AGENTS.md",
         "AppFooter.vue",
@@ -140,7 +140,7 @@
       "path": "app/pages",
       "purpose": "Page components",
       "fileCount": 4,
-      "lastAccessed": 1778504139364,
+      "lastAccessed": 1779106038895,
       "keyFiles": [
         "AGENTS.md",
         "index.vue",
@@ -151,7 +151,7 @@
       "path": "app/utils",
       "purpose": "Utility functions",
       "fileCount": 2,
-      "lastAccessed": 1778504139364,
+      "lastAccessed": 1779106038897,
       "keyFiles": [
         "AGENTS.md",
         "silhouettes.ts"
@@ -161,14 +161,14 @@
       "path": "server/api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1778504139365,
+      "lastAccessed": 1779106038899,
       "keyFiles": []
     },
     "server/schemas": {
       "path": "server/schemas",
       "purpose": "Schema definitions",
       "fileCount": 2,
-      "lastAccessed": 1778504139365,
+      "lastAccessed": 1779106038899,
       "keyFiles": [
         "plan-de-sourcing.ts",
         "stage-alternance.ts"
@@ -178,7 +178,7 @@
       "path": "server/utils",
       "purpose": "Utility functions",
       "fileCount": 9,
-      "lastAccessed": 1778504139365,
+      "lastAccessed": 1779106038899,
       "keyFiles": [
         "anthropic.ts",
         "brevo.ts",
@@ -189,7 +189,7 @@
       "path": "shared/config",
       "purpose": "Configuration files",
       "fileCount": 2,
-      "lastAccessed": 1778504139365,
+      "lastAccessed": 1779106038900,
       "keyFiles": [
         "AGENTS.md",
         "site.ts"
@@ -198,207 +198,21 @@
   },
   "hotPaths": [
     {
-      "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
-      "accessCount": 22,
-      "lastAccessed": 1778685102596,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/prompts/plan-de-sourcing.ts",
-      "accessCount": 18,
-      "lastAccessed": 1778508513835,
-      "type": "file"
-    },
-    {
-      "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
-      "accessCount": 18,
-      "lastAccessed": 1778685100724,
-      "type": "file"
-    },
-    {
       "path": "server/utils/jarvi.ts",
-      "accessCount": 15,
-      "lastAccessed": 1778689290222,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
-      "accessCount": 12,
-      "lastAccessed": 1778512042734,
-      "type": "file"
-    },
-    {
-      "path": "server/prompts/outil-3/system-prompt-v9.md",
-      "accessCount": 11,
-      "lastAccessed": 1778512066309,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
-      "accessCount": 10,
-      "lastAccessed": 1778508881601,
+      "accessCount": 4,
+      "lastAccessed": 1779107290285,
       "type": "file"
     },
     {
       "path": "server/api/lab/stage-alternance.post.ts",
-      "accessCount": 9,
-      "lastAccessed": 1778689294082,
-      "type": "file"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 6,
-      "lastAccessed": 1778512040221,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/plan-de-sourcing/index.vue",
-      "accessCount": 5,
-      "lastAccessed": 1778508884603,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/evaluation-attractivite/index.vue",
-      "accessCount": 5,
-      "lastAccessed": 1778508886165,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/outil-2/load-prompts.ts",
-      "accessCount": 5,
-      "lastAccessed": 1778510239431,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 4,
-      "lastAccessed": 1778683669882,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/outil-3/load-prompts.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778510243229,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/anthropic.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778512270514,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/brevo.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778514111500,
-      "type": "file"
-    },
-    {
-      "path": "shared/config/site.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778505653121,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/plan-storage.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778506050935,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/evaluation-storage.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778506054020,
-      "type": "file"
-    },
-    {
-      "path": "app/composables/usePlanSourcing.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778506185047,
-      "type": "file"
-    },
-    {
-      "path": "app/composables/useEvaluationAttractivite.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778506188072,
-      "type": "file"
-    },
-    {
-      "path": "app/assets/css/main.css",
-      "accessCount": 2,
-      "lastAccessed": 1778507404085,
-      "type": "file"
-    },
-    {
-      "path": "docs/outil-3/brevo-templates/template-1-notif-interne-livree.html",
-      "accessCount": 2,
-      "lastAccessed": 1778514113337,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/index.vue",
       "accessCount": 1,
-      "lastAccessed": 1778505608919,
+      "lastAccessed": 1779107083799,
       "type": "file"
     },
     {
-      "path": "app/components/LabSection.vue",
+      "path": ".env",
       "accessCount": 1,
-      "lastAccessed": 1778505609161,
-      "type": "file"
-    },
-    {
-      "path": "app/components/AppNavbar.vue",
-      "accessCount": 1,
-      "lastAccessed": 1778505628082,
-      "type": "file"
-    },
-    {
-      "path": "server/api/lab/plan-de-sourcing/status/[uuid].get.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778506114451,
-      "type": "file"
-    },
-    {
-      "path": "server/api/lab/evaluation-attractivite/status/[uuid].get.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778506164492,
-      "type": "file"
-    },
-    {
-      "path": "server/utils/outil-3/parse-llm-response.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778506596441,
-      "type": "file"
-    },
-    {
-      "path": "server/prompts/outil-2/system-prompt-v10.md",
-      "accessCount": 1,
-      "lastAccessed": 1778507948582,
-      "type": "file"
-    },
-    {
-      "path": "public/robots.txt",
-      "accessCount": 1,
-      "lastAccessed": 1778511898567,
-      "type": "file"
-    },
-    {
-      "path": "server/schemas/stage-alternance.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778679044739,
-      "type": "file"
-    },
-    {
-      "path": "server/schemas/plan-de-sourcing.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778679075445,
-      "type": "file"
-    },
-    {
-      "path": "server/schemas/outil-3/formulaire.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778679143783,
+      "lastAccessed": 1779107091396,
       "type": "file"
     }
   ],

@@ -20,16 +20,6 @@ import {
 } from '../../utils/brevo'
 
 export default defineEventHandler(async (event) => {
-  // Log diagnostic : tous les headers reçus par notre backend (le client browser
-  // a envoyé certains, Vercel en a injecté d'autres). Permet de voir si Vercel
-  // forwarde X-Forwarded-For / X-Vercel-IP-* qui pourraient leak vers Jarvi.
-  const headersReceived: Record<string, string> = {}
-  for (const [k, v] of Object.entries(event.node.req.headers)) {
-    if (typeof v === 'string') headersReceived[k] = v
-    else if (Array.isArray(v)) headersReceived[k] = v.join(', ')
-  }
-  console.log('[stage-alternance] Headers reçus par Vercel:', headersReceived)
-
   try {
     // ============================================================
     // PHASE 1 — Validations bloquantes

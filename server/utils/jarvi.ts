@@ -345,9 +345,6 @@ export async function createProject(
   const customFieldsValues: Record<string, string> = {
     [fieldId]: params.typeDemandeLabValue,
   }
-  if (briefFieldId && params.description) {
-    customFieldsValues[briefFieldId] = params.description
-  }
 
   const body: Record<string, unknown> = {
     name: params.name,
@@ -361,21 +358,16 @@ export async function createProject(
     isMadeForSales: true,
     customFieldsValues,
   }
-  // Description: Jarvi ignore ce champ sur POST /projects (non documenté). On le
-  // garde pour compatibilité future au cas où Jarvi l'ajoute, mais le vrai brief
-  // est dans le custom field briefFieldId ci-dessus.
-  if (params.description) body.description = params.description
+  // Custom field "Brief" : passé au top-level du body avec l'UUID comme clé
+  // (format Jarvi pour les custom fields long-text), pas dans customFieldsValues.
+  if (briefFieldId && params.description) {
+    body[briefFieldId] = params.description
+  }
 
   const doRequest = async (): Promise<{ id: string }> => {
-    const sentHeaders = jarviHeaders()
-    console.log('[jarvi] createProject — headers que NOUS envoyons explicitement:', {
-      ...sentHeaders,
-      'X-API-KEY': sentHeaders['X-API-KEY']?.slice(0, 8) + '…',
-    })
-
     const res = await fetch(jarviUrl('/projects'), {
       method: 'POST',
-      headers: sentHeaders,
+      headers: jarviHeaders(),
       body: JSON.stringify(body),
     })
     if (!res.ok) {
@@ -554,11 +546,16 @@ export async function upsertProfile(
 
   // Si on a déjà l'UUID de la company, NE PAS envoyer currentCompanyName
   // (évite que Jarvi tente un fuzzy-match en doublon de l'association directe).
+  // isTalent/isContact : champs non documentés côté POST mais acceptés (confirmé
+  // par dev Jarvi). On force isContact=true / isTalent=false pour que les
+  // profils Lab apparaissent dans /crm/profiles et pas dans l'ATS.
   const body: Record<string, unknown> = {
     firstName: params.firstName,
     lastName: params.lastName,
     emailAddresses: params.email,
     phoneNumbers: phoneClean,
+    isTalent: false,
+    isContact: true,
   }
   if (params.companyId) {
     body.currentCompanyId = params.companyId
