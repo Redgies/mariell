@@ -151,11 +151,16 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Profile (contact) — rattaché à la company ET au projet créés.
-    // Jarvi auto-merge sur email existant → 1 seul profile mais N projets associés.
+    // Profile (contact) — rattaché uniquement à la company (cf. note ci-dessous
+    // sur la non-association au project pour éviter le talent shadow).
+    // Jarvi auto-merge sur email existant → 1 seul profile mais N companies/projects associés.
     if (companyId) {
       try {
         const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_STAGE_ALTERNANCE
+        // Outil 1 = project recrutement (ATS). On NE PASSE PAS projectId ici :
+        // Jarvi spawne sinon une fiche talent shadow malgré isTalent=false.
+        // Le contact reste rattaché à la company via currentCompanyId, et le
+        // project est accessible via Company → Projects côté UI Jarvi.
         await upsertProfile(
           {
             firstName: validated.prenom,
@@ -164,7 +169,6 @@ export default defineEventHandler(async (event) => {
             phone: validated.telephone,
             companyName: validated.entreprise,
             companyId,
-            ...(projectId ? { projectId } : {}),
             ...(profileStatusId ? { statusId: profileStatusId } : {}),
           },
           { retry: true },
