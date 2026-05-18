@@ -313,6 +313,13 @@ interface CreateProjectParams {
   description: string
   /** Label of the multi-choice value, e.g. "Stage/Alternance" */
   typeDemandeLabValue: string
+  /**
+   * Si true : project créé côté ATS (recrutement). Sinon : opportunité (sales).
+   * Par défaut false (= sales) — utilisé pour outils 2 et 3.
+   * Outil 1 (Stage/Alternance) passe true pour que le project apparaisse
+   * directement dans le pipeline de recrutement Jarvi.
+   */
+  isRecruitment?: boolean
 }
 
 /**
@@ -350,12 +357,12 @@ export async function createProject(
     name: params.name,
     statusId: params.statusId,
     companyId: params.companyId,
-    // Visible UNIQUEMENT en CRM. Avec les deux flags à true, Jarvi semble
-    // forcer le routing vers ATS et le profile n'apparaît jamais dans
-    // /crm/profiles. Quand Mariell démarre le vrai recrutement sur un
-    // project, il flip `isMadeForRecruitment` à true côté UI Jarvi.
-    isMadeForRecruitment: false,
-    isMadeForSales: true,
+    // isRecruitment=true → project envoyé côté ATS (outil 1 Stage/Alternance).
+    // isRecruitment=false (défaut) → opportunité sales (outils 2, 3).
+    // Le profile reste visible dans /crm/profiles grâce à isContact=true forcé
+    // dans upsertProfile, indépendamment de ce flag.
+    isMadeForRecruitment: params.isRecruitment === true,
+    isMadeForSales: params.isRecruitment !== true,
     customFieldsValues,
   }
   // Custom field "Brief" : passé au top-level du body avec l'UUID comme clé

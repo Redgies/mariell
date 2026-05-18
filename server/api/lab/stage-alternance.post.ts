@@ -139,6 +139,7 @@ export default defineEventHandler(async (event) => {
             statusId,
             typeDemandeLabValue: 'Stage/Alternance',
             description: buildProjectDescription(validated),
+            isRecruitment: true,
           },
           { retry: true },
         )
