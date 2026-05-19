@@ -601,8 +601,6 @@ Reprends EXACTEMENT le wording suivant, sans modification, sans paraphrase :
 
 ---
 *On peut en parler. C'est ici.*
-
-**[CTA Calendly]**
 ---
 
 Ce paragraphe doit être le tout dernier élément de l'output. Aucune phrase de signature après.

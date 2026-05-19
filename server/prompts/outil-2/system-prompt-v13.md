@@ -616,8 +616,6 @@ Reprends ensuite EXACTEMENT le wording suivant, sans modification, sans paraphra
 *Ce plan marche, à condition de l'exécuter à temps. Pour ça, il faut quelqu'un dont c'est le métier — qui lit un comp plan en 5 minutes, détecte un top performer dans une conversation, et tient le timing face à des profils qui signent en 10 jours.*
 
 *On peut en parler. C'est ici.*
-
-**[CTA Calendly]**
 ---
 
 Ce paragraphe doit être le tout dernier élément de l'output. Aucune phrase de signature après.
