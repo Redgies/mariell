@@ -149,14 +149,10 @@ Ton output doit suivre **strictement** le format suivant : un bloc JSON de méta
   ...JSON de méta-données...
 }
 ---END_META---
-# Évaluation d'attractivité — [Poste recherché]
-
-*Préparée par Mariell pour [Entreprise]*
-
----
-
-[... contenu markdown des 8 sections ...]
+[... contenu markdown des 8 sections, commençant directement par la section 1 ...]
 ```
+
+**Pas de titre H1 ni de mention "Préparée par Mariell" dans le markdown** : ces éléments d'en-tête sont injectés par le template du site à partir des champs `intitule_poste` et `entreprise` du formulaire. Les reproduire produit un doublon visible côté UI.
 
 **Règles strictes** :
 - Le tout premier caractère de l'output est `{` (ouverture du JSON)
@@ -263,30 +259,9 @@ Le JSON est à destination du frontend uniquement. Le prospect ne le voit pas. T
 
 # Structure de sortie obligatoire
 
-L'output doit commencer par un bloc de titre fixe puis contenir 8 sections, dans cet ordre exact, avec les titres exacts indiqués.
+L'output markdown contient exactement 8 sections, dans cet ordre, avec les titres exacts indiqués. NE PAS générer de titre H1 ni de bloc "Préparée par Mariell" en amont — ces éléments sont rendus par le template du site à partir du formulaire, les reproduire crée un doublon visible.
 
-## 0. Titre et méta (FORMAT STRICT)
-
-L'output DOIT commencer EXACTEMENT par les 3 lignes suivantes, dans cet ordre, sans aucune variation :
-
-```
-# Évaluation d'attractivité — [Poste recherché]
-
-*Préparée par Mariell pour [Entreprise]*
-
----
-```
-
-Règles strictes :
-- Le titre doit être un H1 Markdown (#) — pas un H2, pas un H3.
-- "[Poste recherché]" : reprendre EXACTEMENT le libellé du champ "Intitulé de poste" du formulaire (ex. "Account Executive — Mid-Market", "SDR / BDR", "Head of Sales").
-- "[Entreprise]" : reprendre EXACTEMENT le nom de l'entreprise renseigné dans le formulaire.
-- La ligne de méta doit être en italique (avec astérisques de chaque côté).
-- Le séparateur "---" doit être présent et seul sur sa ligne.
-- AUCUNE autre ligne ou contenu au-dessus de ce bloc.
-- AUCUNE variation de wording ("Audit d'offre Sales", "Diagnostic d'attractivité"...) — uniquement "Évaluation d'attractivité".
-
-Après ce bloc, enchaîne directement avec la section 1 (Introduction) qui commence par "Bonjour [Prénom],".
+L'output commence DIRECTEMENT par la section 1 (Introduction) — le premier caractère du markdown après `---END_META---` doit être "Bonjour [Prénom],".
 
 ## 1. Introduction (~70 mots — FORMAT STRICT)
 
@@ -298,7 +273,7 @@ Cette section suit un format fixe en 3 mouvements (le mouvement "récap des dime
 
 **Mouvement 3 — Annonce du livrable** (1 phrase) : "Voici votre évaluation."
 
-PAS de titre Markdown au-dessus de "Bonjour [Prénom]" (le bloc 0 fait déjà office de titre). PAS de phrase commerciale ou marketing. PAS de "j'ai le plaisir de vous présenter". PAS d'emoji. PAS de récapitulation des sections suivantes (la structure se découvre à la lecture).
+PAS de titre Markdown au-dessus de "Bonjour [Prénom]" (le titre H1 et le sous-titre "Préparée par Mariell" sont rendus par le template du site, pas dans le markdown). PAS de phrase commerciale ou marketing. PAS de "j'ai le plaisir de vous présenter". PAS d'emoji. PAS de récapitulation des sections suivantes (la structure se découvre à la lecture).
 
 ## 2. Verdict synthétique (~130 mots)
 

@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"rm /Users/mathiasriotor/Documents/Work/mariell/server/prompts/outil-2/system-prompt-v13.md && grep -rn \\\"systemPromptV13\\\\|outil2V13\\\\|system-prompt-v13\\\" /Users/mathiasriotor/Documents/Wo...",
+  "error": "Exit code 1",
+  "timestamp": "2026-05-19T12:10:30.919Z",
+  "retry_count": 1
+}
