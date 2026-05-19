@@ -190,8 +190,10 @@ function validateField(key: FieldKey): string | null {
     }
     case 'packageOte': {
       const n = stripNumber(form.packageOte)
-      if (n === null) return 'Champ obligatoire (saisir 0 si pas de variable).'
-      if (n < 0 || n > 500000) return "L'OTE doit être entre 0 € et 500 000 €."
+      if (n === null) return 'Champ obligatoire.'
+      if (n < 0 || n > 800000) return "L'OTE doit être entre 0 € et 800 000 €."
+      const f = stripNumber(form.packageFixe)
+      if (f !== null && n < f) return "L'OTE doit être supérieur ou égal au fixe."
       return null
     }
     case 'rgpd': return form.rgpd ? null : 'Vous devez accepter la politique de confidentialité.'
@@ -619,17 +621,17 @@ async function onSubmit() {
                   <span class="field__error">{{ errors.packageFixe || 'Le fixe doit être entre 15 000 € et 500 000 €' }}</span>
                 </div>
                 <div class="field" :class="{ 'field--error': errors.packageOte }">
-                  <label class="field__label" for="packageOte">Variable on-target (€) <span class="req">*</span></label>
+                  <label class="field__label" for="packageOte">OTE total cible (€) <span class="req">*</span></label>
                   <div class="num-wrap">
                     <input id="packageOte" v-model="form.packageOte" class="ctrl" type="text" inputmode="numeric"
-                           placeholder="30000"
+                           placeholder="100000"
                            @blur="onBlur('packageOte')" @input="clearError('packageOte')" />
                     <span class="num-wrap__suffix">€</span>
                   </div>
-                  <span class="field__error">{{ errors.packageOte || "Saisir 0 si pas de variable" }}</span>
+                  <span class="field__error">{{ errors.packageOte || "L'OTE doit être entre 0 € et 800 000 €" }}</span>
                 </div>
                 <p class="field__hint grid__full" style="margin-top: 4px;">
-                  Variable cible à 100% d'atteinte des objectifs. Saisir 0 si pas de variable.
+                  OTE = Fixe + Variable cible à 100% d'atteinte des objectifs.
                 </p>
               </div>
             </div>
