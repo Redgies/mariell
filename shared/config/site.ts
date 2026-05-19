@@ -128,5 +128,5 @@ export const processSteps = [
 export const pricingBadges = [
   '94% Success rate',
   "Garantie période d'essai",
-  '100% Chasse sur-mesure',
+  '100% Chasse sur mesure',
 ]

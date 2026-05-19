@@ -8,7 +8,7 @@ interface SideBadge {
 
 const sideBadges: SideBadge[] = [
   { value: '94%', label: 'Success rate' },
-  { value: '100%', label: 'Chasse sur-mesure' },
+  { value: '100%', label: 'Chasse sur mesure' },
   { label: "Garantie période d'essai" },
 ]
 </script>
@@ -55,7 +55,7 @@ const sideBadges: SideBadge[] = [
             class="mt-4 text-[16px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            Devis sur-mesure pour les recrutements multiples, et les profils freelance.
+            Devis sur mesure pour les recrutements multiples, et les profils freelance.
           </p>
 
           <div
