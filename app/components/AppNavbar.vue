@@ -70,7 +70,7 @@ watch(isMobileMenuOpen, (open) => {
         class="font-serif-jp text-2xl tracking-tight text-white transition-colors hover:text-white/90 md:text-[1.75rem]"
         @click="onLinkClick(resolveHref('#accueil'))"
       >
-        <img src="/logo_site.png" alt="Mariell" class="h-11 w-auto" />
+        <img src="/logo-animated.svg" alt="Mariell" class="h-11 w-auto" />
       </a>
 
       <!-- Desktop nav -->

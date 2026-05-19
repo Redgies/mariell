@@ -249,7 +249,7 @@ async function onRetry() {
     <header v-if="state !== 'plan'" class="load-header">
       <div class="inner">
         <NuxtLink to="/" class="brand" aria-label="Mariell">
-          <img src="/logo_site.png" alt="Mariell" />
+          <img src="/logo.svg" alt="Mariell" />
         </NuxtLink>
         <span class="divider" aria-hidden="true" />
         <div class="meta">
@@ -265,7 +265,7 @@ async function onRetry() {
       <div class="inner">
         <div class="left">
           <NuxtLink to="/" class="brand" aria-label="Mariell">
-            <img src="/logo_site.png" alt="Mariell" />
+            <img src="/logo.svg" alt="Mariell" />
           </NuxtLink>
           <span class="divider" aria-hidden="true" />
           <div class="plan-meta">
@@ -669,6 +669,14 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  /* Anti-coupure italique : étend la zone de gradient pour que les glyphes
+     inclinés (ex. intitulé de poste dynamique) ne soient pas tronqués par
+     background-clip:text. */
+  display: inline-block;
+  padding-left: 0.08em;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 
 .step-stack {
@@ -730,6 +738,9 @@ main { position: relative; z-index: 2; }
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
   display: inline-block;
+  /* padding-left ajouté en plus du -right : protège les intitulés de poste
+     dynamiques qui peuvent commencer par une italique (ex. "_AE Senior_…"). */
+  padding-left: 0.08em;
   padding-right: 0.12em;
   padding-bottom: 0.18em;
   margin-bottom: -0.18em;

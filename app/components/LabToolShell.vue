@@ -14,7 +14,7 @@
     <nav class="top-nav">
       <div class="top-nav-inner">
         <NuxtLink to="/" class="top-nav-logo" aria-label="Mariell">
-          <img src="/logo_site.png" alt="Mariell" />
+          <img src="/logo.svg" alt="Mariell" />
         </NuxtLink>
         <NuxtLink to="/lab" class="top-nav-back">
           <svg

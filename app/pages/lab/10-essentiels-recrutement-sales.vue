@@ -85,7 +85,7 @@ const essentiels: Essentiel[] = [
   },
   {
     num: '09',
-    concept: 'VP Sales, Head of Sales, CRO',
+    concept: 'VP/Head of Sales, CRO',
     punch: 'commencez par votre réseau. Toujours.',
     body:
       "Pour les postes hautement stratégiques — VP Sales, Head of Sales, CRO — la chasse formelle ne doit jamais être votre premier réflexe. Commencez systématiquement par votre réseau et celui de vos investisseurs, advisors, board members, ex-collègues. Pourquoi&nbsp;? À ce niveau, le fit pèse autant que la compétence sur le papier, et la confiance se construit difficilement avec un inconnu — surtout quand les résultats ne se mesurent pas avant 12 à 18 mois. La chasse reste la meilleure option si le pool réseau est insuffisant — et oui, ces profils se chassent, ils ne candidatent pas. Mais elle ne doit jamais être votre premier réflexe.",
@@ -458,6 +458,11 @@ const essentiels: Essentiel[] = [
   opacity: 0.92;
   padding-top: 6px;
   user-select: none;
+  /* tabular-nums : chiffres à largeur fixe → "01" et "10" (qui contiennent le
+     "1" très étroit en proportionnel) occupent la même largeur que "02"–"09",
+     donc le gap visuel entre le numéro et le contenu reste constant. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 .essentiel__num sup {
   font-family: var(--font-mono);

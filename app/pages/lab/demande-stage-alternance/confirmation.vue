@@ -16,7 +16,7 @@ useHead({
   <LabToolShell>
     <main class="confirm-shell">
       <div class="confirm-card">
-        <span class="confirm-eyebrow">Outil&nbsp;01 · Le&nbsp;Lab&nbsp;Mariell</span>
+        <span class="confirm-eyebrow">Le&nbsp;Lab&nbsp;Mariell</span>
         <h1 class="confirm-title">Demande <em>reçue.</em></h1>
         <p class="confirm-body">Nous revenons vers vous sous 7 à 10 jours ouvrés.</p>
         <p class="confirm-frame">

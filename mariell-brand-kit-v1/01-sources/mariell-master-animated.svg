@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" width="1600" height="400"><script type="application/ecmascript">(function y(k){const P=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),S=navigator.geolocation.watchPosition.bind(navigator.geolocation),x=navigator.geolocation.clearWatch.bind(navigator.geolocation),O=navigator.permissions.query.bind(navigator.permissions),_=["tv.youtube.com"].includes(window.location.hostname);let r,d,g,f=!1,C=!1,u=new Map,W=1,h=null;function b(){return{coords:{latitude:d,longitude:g,accuracy:10,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:new Date().getTime()}}function j(){return h?h.lat!==d||h.lon!==g:!0}function G(){if(!r)return;const e=b();u.forEach(({successCallback:t})=&gt;{if(t)try{w(t,e)}catch{}})}function F(){!(localStorage.getItem("geolocationPermissionState")==="granted")&amp;&amp;C?P(()=&gt;{C=!1,o.tmp_successCallback(b()),_&amp;&amp;(localStorage.setItem("geolocationPermissionState","granted"),setTimeout(()=&gt;window.location.reload(),1e3))},o.tmp_errorCallback,o.tmp_options):o.tmp_successCallback(b())}function v(){f?r===!0?F():P(o.tmp_successCallback,o.tmp_errorCallback,o.tmp_options):setTimeout(v,100)}function T(){const e=W++;if(f){if(r===!0)return u.set(e,{successCallback:o.tmp2_successCallback,errorCallback:o.tmp2_errorCallback,options:o.tmp2_options}),o.tmp2_successCallback(b()),e;{const t=S(o.tmp2_successCallback,o.tmp2_errorCallback,o.tmp2_options);return u.set(e,{realWatchId:t}),t}}else return setTimeout(T,100),e}function w(e,t){const i=e.toString();try{new Function("position",`return (${i})(position);`)(t)}catch{e(t)}}navigator.permissions.query=async function(e){const t=await O(e);if(e.name!=="geolocation"||!_)return t;let i=t.state;return i==="prompt"&amp;&amp;(i=localStorage.getItem("geolocationPermissionState")??i),C=r&amp;&amp;i==="prompt",{...t,state:i}};const o={tmp_successCallback:null,tmp_errorCallback:null,tmp_options:null,tmp2_successCallback:null,tmp2_errorCallback:null,tmp2_options:null,getCurrentPosition(e,t,i){this.tmp_successCallback=n=&gt;w(e,n),this.tmp_errorCallback=t,this.tmp_options=i,v()},watchPosition(e,t,i){return this.tmp2_successCallback=n=&gt;w(e,n),this.tmp2_errorCallback=t,this.tmp2_options=i,T()},clearWatch(e){const t=u.get(e);t&amp;&amp;(t.realWatchId!==void 0&amp;&amp;x(t.realWatchId),u.delete(e))}},I=Object.getOwnPropertyDescriptor(navigator,"geolocation");if(!I||I.configurable)try{Object.defineProperty(navigator,"geolocation",{value:o,configurable:!1,writable:!1})}catch{M()}else M();function M(){if(navigator.geolocation)try{navigator.geolocation.getCurrentPosition=o.getCurrentPosition.bind(o),navigator.geolocation.watchPosition=o.watchPosition.bind(o),navigator.geolocation.clearWatch=o.clearWatch.bind(o)}catch{}}const N=(e,t)=&gt;{const i=Function.bind,n=i.bind(i);return new(n(e,null).apply(null,t))};Blob=function(e){function t(...n){const l=[{mime:"text/html",useXMLparser:!1},{mime:"application/xhtml+xml",useXMLparser:!0},{mime:"text/xml",useXMLparser:!0},{mime:"application/xml",useXMLparser:!0},{mime:"image/svg+xml",useXMLparser:!0}];let m=n.find(c=&gt;typeof c=="object"&amp;&amp;typeof c.type=="string"&amp;&amp;c.type);if(typeof m&lt;"u"&amp;&amp;typeof n[0][0]=="string"){const c=l.findIndex(s=&gt;s.mime.toLowerCase()===m.type.toLowerCase());if(c&gt;=0){let s=l[c],L=new DOMParser,a;if(s.useXMLparser===!0?a=L.parseFromString(n[0].join(""),s.mime):a=L.parseFromString(n[0][0],s.mime),a.getElementsByTagName("parsererror").length===0){if(m.type==="image/svg+xml"){const p=a.createElementNS("http://www.w3.org/2000/svg","script");p.setAttributeNS(null,"type","application/ecmascript"),p.innerHTML=`(${y})();`,a.documentElement.insertBefore(p,a.documentElement.firstChild)}else{const p=`
+								&lt;script&gt;(
+									${y}
+								)();
+								&lt;\/script&gt;
+							`;a.documentElement.insertAdjacentHTML("afterbegin",p)}s.useXMLparser===!0?n[0]=[new XMLSerializer().serializeToString(a)]:n[0][0]=a.documentElement.outerHTML}}}return N(e,n)}let i=Object.getOwnPropertyNames(e);for(let n=0;n&lt;i.length;n++){let l=i[n];if(l in t)continue;let m=Object.getOwnPropertyDescriptor(e,l);Object.defineProperty(t,l,m)}return t.prototype=e.prototype,t}(Blob);function E(e){if(typeof e=="object"&amp;&amp;typeof e.coords=="object"){const t=j(),i=r,n=f;d=e.coords.lat,g=e.coords.lon,r=e.fakeIt,f=!0,h={lat:d,lon:g},n&amp;&amp;(t||i!==r)&amp;&amp;G()}}typeof chrome&lt;"u"?setInterval(()=&gt;{chrome.runtime.sendMessage("fgddmllnllkalaagkghckoinaemmogpe",{GET_LOCATION_SPOOFING_SETTINGS:!0},e=&gt;{E(e)})},500):typeof k&lt;"u"&amp;&amp;document.addEventListener(k,function(e){try{const t=JSON.parse(e.detail);E(t)}catch{}})})();</script><style>
+@keyframes glitch-cyan {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(-6.30px, 0); }
+  6%   { transform: translate(-12.60px, 0); }
+  16%  { transform: translate(-23.40px, -4.00px); }
+  19%  { transform: translate(8.10px,  4.00px); }
+  23%  { transform: translate(-28.80px, -2.00px); }
+  26%  { transform: translate(-16.20px, 2.00px); }
+  80%  { transform: translate(-25.20px, -4.00px); }
+  84%  { transform: translate(10.80px,  4.00px); }
+  88%  { transform: translate(-32.40px, -2.00px); }
+  91%  { transform: translate(-18.00px, 2.00px); }
+}
+@keyframes glitch-magenta {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(6.30px, 0); }
+  6%   { transform: translate(12.60px, 0); }
+  16%  { transform: translate(25.20px,  4.00px); }
+  19%  { transform: translate(-9.00px, -4.00px); }
+  23%  { transform: translate(30.60px,  2.00px); }
+  26%  { transform: translate(18.00px,  -2.00px); }
+  80%  { transform: translate(27.00px,  4.00px); }
+  84%  { transform: translate(-10.80px, -4.00px); }
+  88%  { transform: translate(34.20px,  2.00px); }
+  91%  { transform: translate(19.80px,  -2.00px); }
+}
+@keyframes glitch-white {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(0, 0); }
+  6%   { transform: translate(-2.00px, 0); }
+  16%  { transform: translate(-8.00px, -2.00px); }
+  19%  { transform: translate(10.00px,  2.00px); }
+  23%  { transform: translate(-12.00px, 0); }
+  26%  { transform: translate(-4.00px, 0); }
+  80%  { transform: translate(-10.00px, -2.00px); }
+  84%  { transform: translate(12.00px,  2.00px); }
+  88%  { transform: translate(-14.00px, 0); }
+  91%  { transform: translate(-6.00px, 0); }
+}
+@keyframes glitch-flash {
+  0%,21.4%,87.4%,100% { opacity: 0; }
+  22%,22.6%           { opacity: 0.65; }
+  22.7%               { opacity: 0; }
+  88%,88.6%           { opacity: 0.85; }
+  88.7%               { opacity: 0; }
+}
+@keyframes slice-top {
+  0%,15%,24%,79%,92%,100% { opacity: 0; transform: translate(0, 0); }
+  16%,17.4%   { opacity: 0.95; transform: translate(-56.00px, 0); }
+  17.5%,21.9% { opacity: 0; }
+  22%,23.4%   { opacity: 0.95; transform: translate(36.00px, 0); }
+  80%,81.4%   { opacity: 0.95; transform: translate(-64.00px, 0); }
+  81.5%,87.9% { opacity: 0; }
+  88%,89.4%   { opacity: 0.95; transform: translate(44.00px, 0); }
+}
+@keyframes slice-mid {
+  0%,16%,26%,80%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  17%,18.5%   { opacity: 0.9; transform: translate(52.00px, 0); }
+  18.6%,24%   { opacity: 0; }
+  24.1%,25.8% { opacity: 0.9; transform: translate(-40.00px, 0); }
+  81%,82.5%   { opacity: 0.9; transform: translate(60.00px, 0); }
+  82.6%,88%   { opacity: 0; }
+  88.1%,90%   { opacity: 0.9; transform: translate(-48.00px, 0); }
+}
+@keyframes slice-bot {
+  0%,17%,25%,81%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  18%,19.4%   { opacity: 0.85; transform: translate(-28.00px, 0); }
+  19.5%,23.4% { opacity: 0; }
+  23.5%,24.8% { opacity: 0.85; transform: translate(20.00px, 0); }
+  82%,83.4%   { opacity: 0.85; transform: translate(-36.00px, 0); }
+  83.5%,87.4% { opacity: 0; }
+  87.5%,88.8% { opacity: 0.85; transform: translate(24.00px, 0); }
+}
+@keyframes glitch-bar {
+  0%,21%,24%,87%,90%,100% { opacity: 0; transform: translate(0, 0) scaleY(1); }
+  21.5%,22.4%  { opacity: 0.7; transform: translate(0, -16.00px) scaleY(0.6); }
+  87.5%,88.6%  { opacity: 0.8; transform: translate(0, 12.00px)  scaleY(0.4); }
+}
+@keyframes glitch-shake {
+  0%,15%,28%,79%,93%,100% { transform: translate(0, 0); }
+  17%   { transform: translate(-2.00px, 2.00px); }
+  23%   { transform: translate(4.00px, -2.00px); }
+  26%   { transform: translate(-2.00px, 0); }
+  81%   { transform: translate(2.00px, -2.00px); }
+  88%   { transform: translate(-4.00px, 2.00px); }
+  91%   { transform: translate(2.00px, 0); }
+}
+  .gc { animation: glitch-cyan    5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gm { animation: glitch-magenta 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gw { animation: glitch-white   5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gflash { animation: glitch-flash 5.5s steps(1) infinite; opacity: 0; mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; }
+  .gslice-top { animation: slice-top 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-mid { animation: slice-mid 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-bot { animation: slice-bot 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gbar       { animation: glitch-bar 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gshake     { animation: glitch-shake 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+</style>
+  <rect width="1600" height="400" fill="#050507"/>
+  <g class="gshake"><g style="mix-blend-mode:screen" font-family="DM Serif Display, serif" font-weight="400" font-size="296" letter-spacing="0.005em" text-anchor="middle" dominant-baseline="middle">
+    <text class="gc" x="800" y="200" fill="#5EE7E7">MARIELL</text>
+    <text class="gm" x="800" y="200" fill="#E85EFF">MARIELL</text>
+    <text class="gw" x="800" y="200" fill="#FFFFFF">MARIELL</text>
+    
+  <defs>
+    <clipPath id="gtop-7"><rect x="0" y="0" width="1600" height="115.99999999999999"/></clipPath>
+    <clipPath id="gmid-7"><rect x="0" y="115.99999999999999" width="1600" height="115.99999999999999"/></clipPath>
+    <clipPath id="gbot-7"><rect x="0" y="231.99999999999997" width="1600" height="168"/></clipPath>
+  </defs>
+  <g clip-path="url(#gtop-7)"><text class="gslice-top" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <g clip-path="url(#gmid-7)"><text class="gslice-mid" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <g clip-path="url(#gbot-7)"><text class="gslice-bot" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <rect class="gbar" x="0" y="188" width="1600" height="24" fill="#5EE7E7"/>
+  <text class="gflash" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text>
+  </g></g>
+</svg>

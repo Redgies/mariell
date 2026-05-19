@@ -275,7 +275,7 @@ async function onRetry() {
     <header v-if="state !== 'result'" class="load-header">
       <div class="inner">
         <NuxtLink to="/" class="brand" aria-label="Mariell">
-          <img src="/logo_site.png" alt="Mariell" />
+          <img src="/logo.svg" alt="Mariell" />
         </NuxtLink>
         <span class="divider" aria-hidden="true" />
         <div class="meta">
@@ -291,7 +291,7 @@ async function onRetry() {
       <div class="inner">
         <div class="left">
           <NuxtLink to="/" class="brand" aria-label="Mariell">
-            <img src="/logo_site.png" alt="Mariell" />
+            <img src="/logo.svg" alt="Mariell" />
           </NuxtLink>
           <span class="divider" aria-hidden="true" />
           <div class="plan-meta">
@@ -364,7 +364,7 @@ async function onRetry() {
             </div>
           </div>
 
-          <span class="eyebrow-cyan">Le Lab Mariell · Outil n°3</span>
+          <span class="eyebrow-cyan">Le Lab Mariell</span>
           <h1>Votre évaluation d'attractivité, <em>en cours.</em></h1>
 
           <div class="step-stack" role="status" aria-live="polite">
@@ -381,7 +381,7 @@ async function onRetry() {
       <section v-else-if="state === 'result'" class="state-result">
         <div class="read">
           <div class="doc-eyebrow">
-            <span class="eyebrow-cyan">Outil n°3 · Le Lab Mariell</span>
+            <span class="eyebrow-cyan">Le Lab Mariell</span>
           </div>
           <h1 class="doc-h1">
             Évaluation d'attractivité <em v-if="evalMetadata?.intitule_poste">— {{ evalMetadata.intitule_poste }}.</em>
@@ -745,7 +745,14 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
-  padding-bottom: 0.06em;
+  /* Anti-coupure italique : étend la zone de gradient pour que les intitulés
+     de poste dynamiques (ex. "Account Executive") ne soient pas tronqués au
+     "e" final par background-clip:text. */
+  display: inline-block;
+  padding-left: 0.08em;
+  padding-right: 0.14em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.09em;
 }
 .doc-meta { font-family: var(--font-grotesk); font-style: italic; font-weight: 400; font-size: 17px; color: rgba(255,255,255,0.65); }
 .doc-divider { margin: 36px 0 44px; height: 1px; background: linear-gradient(90deg, transparent, rgba(94,231,231,0.45), rgba(232,94,255,0.35), transparent); }

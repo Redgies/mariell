@@ -353,7 +353,7 @@ async function onSubmit() {
         <!-- ============= PAGE HEADER ============= -->
         <section class="header">
           <div class="header__eyebrow">
-            <span class="eyebrow-cyan">Outil n°2 · Le Lab Mariell</span>
+            <span class="eyebrow-cyan">Le Lab Mariell</span>
           </div>
           <h1 class="header__title">
             Plan de sourcing LinkedIn <em>personnalisé.</em>

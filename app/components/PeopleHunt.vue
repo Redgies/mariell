@@ -515,6 +515,9 @@ onBeforeUnmount(() => {
 }
 .ph-kicker em {
   font-style: italic;
+  /* padding-right pour que le "s" italique de "rares" ne soit pas coupé par
+     background-clip:text. */
+  padding-right: 0.15em;
   background: linear-gradient(135deg, #5EE7E7 0%, #8B5CF6 50%, #E85EFF 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -667,6 +670,10 @@ onBeforeUnmount(() => {
   font-size: 22px;
   font-weight: 500;
   letter-spacing: -0.01em;
+  /* Padding horizontal + background-origin: content-box → la zone du dégradé
+     s'étend au-delà du glyph box pour que le "t" italique de "Market" ne soit
+     pas tronqué par background-clip:text. */
+  padding: 0 0.18em;
   background: linear-gradient(135deg, #5EE7E7 0%, #8B5CF6 50%, #E85EFF 100%);
   -webkit-background-clip: text;
   background-clip: text;

@@ -8,7 +8,7 @@ const year = new Date().getFullYear()
       <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-[2fr_1fr_1fr] md:gap-12">
         <div>
           <a href="#accueil">
-            <img src="/logo_site.png" alt="Mariell" class="block h-9 w-auto" />
+            <img src="/logo.svg" alt="Mariell" class="block h-9 w-auto" />
           </a>
           <p
             class="mt-4 max-w-md text-[0.9rem] leading-[1.6] text-white/55"

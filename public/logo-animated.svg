@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" width="1600" height="400"><style>
+@keyframes glitch-cyan {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(-6.30px, 0); }
+  6%   { transform: translate(-12.60px, 0); }
+  16%  { transform: translate(-23.40px, -4.00px); }
+  19%  { transform: translate(8.10px,  4.00px); }
+  23%  { transform: translate(-28.80px, -2.00px); }
+  26%  { transform: translate(-16.20px, 2.00px); }
+  80%  { transform: translate(-25.20px, -4.00px); }
+  84%  { transform: translate(10.80px,  4.00px); }
+  88%  { transform: translate(-32.40px, -2.00px); }
+  91%  { transform: translate(-18.00px, 2.00px); }
+}
+@keyframes glitch-magenta {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(6.30px, 0); }
+  6%   { transform: translate(12.60px, 0); }
+  16%  { transform: translate(25.20px,  4.00px); }
+  19%  { transform: translate(-9.00px, -4.00px); }
+  23%  { transform: translate(30.60px,  2.00px); }
+  26%  { transform: translate(18.00px,  -2.00px); }
+  80%  { transform: translate(27.00px,  4.00px); }
+  84%  { transform: translate(-10.80px, -4.00px); }
+  88%  { transform: translate(34.20px,  2.00px); }
+  91%  { transform: translate(19.80px,  -2.00px); }
+}
+@keyframes glitch-white {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(0, 0); }
+  6%   { transform: translate(-2.00px, 0); }
+  16%  { transform: translate(-8.00px, -2.00px); }
+  19%  { transform: translate(10.00px,  2.00px); }
+  23%  { transform: translate(-12.00px, 0); }
+  26%  { transform: translate(-4.00px, 0); }
+  80%  { transform: translate(-10.00px, -2.00px); }
+  84%  { transform: translate(12.00px,  2.00px); }
+  88%  { transform: translate(-14.00px, 0); }
+  91%  { transform: translate(-6.00px, 0); }
+}
+@keyframes glitch-flash {
+  0%,21.4%,87.4%,100% { opacity: 0; }
+  22%,22.6%           { opacity: 0.65; }
+  22.7%               { opacity: 0; }
+  88%,88.6%           { opacity: 0.85; }
+  88.7%               { opacity: 0; }
+}
+@keyframes slice-top {
+  0%,15%,24%,79%,92%,100% { opacity: 0; transform: translate(0, 0); }
+  16%,17.4%   { opacity: 0.95; transform: translate(-56.00px, 0); }
+  17.5%,21.9% { opacity: 0; }
+  22%,23.4%   { opacity: 0.95; transform: translate(36.00px, 0); }
+  80%,81.4%   { opacity: 0.95; transform: translate(-64.00px, 0); }
+  81.5%,87.9% { opacity: 0; }
+  88%,89.4%   { opacity: 0.95; transform: translate(44.00px, 0); }
+}
+@keyframes slice-mid {
+  0%,16%,26%,80%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  17%,18.5%   { opacity: 0.9; transform: translate(52.00px, 0); }
+  18.6%,24%   { opacity: 0; }
+  24.1%,25.8% { opacity: 0.9; transform: translate(-40.00px, 0); }
+  81%,82.5%   { opacity: 0.9; transform: translate(60.00px, 0); }
+  82.6%,88%   { opacity: 0; }
+  88.1%,90%   { opacity: 0.9; transform: translate(-48.00px, 0); }
+}
+@keyframes slice-bot {
+  0%,17%,25%,81%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  18%,19.4%   { opacity: 0.85; transform: translate(-28.00px, 0); }
+  19.5%,23.4% { opacity: 0; }
+  23.5%,24.8% { opacity: 0.85; transform: translate(20.00px, 0); }
+  82%,83.4%   { opacity: 0.85; transform: translate(-36.00px, 0); }
+  83.5%,87.4% { opacity: 0; }
+  87.5%,88.8% { opacity: 0.85; transform: translate(24.00px, 0); }
+}
+@keyframes glitch-bar {
+  0%,21%,24%,87%,90%,100% { opacity: 0; transform: translate(0, 0) scaleY(1); }
+  21.5%,22.4%  { opacity: 0.7; transform: translate(0, -16.00px) scaleY(0.6); }
+  87.5%,88.6%  { opacity: 0.8; transform: translate(0, 12.00px)  scaleY(0.4); }
+}
+@keyframes glitch-shake {
+  0%,15%,28%,79%,93%,100% { transform: translate(0, 0); }
+  17%   { transform: translate(-2.00px, 2.00px); }
+  23%   { transform: translate(4.00px, -2.00px); }
+  26%   { transform: translate(-2.00px, 0); }
+  81%   { transform: translate(2.00px, -2.00px); }
+  88%   { transform: translate(-4.00px, 2.00px); }
+  91%   { transform: translate(2.00px, 0); }
+}
+  .gc { animation: glitch-cyan    5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gm { animation: glitch-magenta 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gw { animation: glitch-white   5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gflash { animation: glitch-flash 5.5s steps(1) infinite; opacity: 0; mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; }
+  .gslice-top { animation: slice-top 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-mid { animation: slice-mid 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-bot { animation: slice-bot 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gbar       { animation: glitch-bar 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gshake     { animation: glitch-shake 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+</style>
+  <g class="gshake"><g style="mix-blend-mode:screen" font-family="DM Serif Display, serif" font-weight="400" font-size="296" letter-spacing="0.005em" text-anchor="middle" dominant-baseline="middle">
+    <text class="gc" x="800" y="200" fill="#5EE7E7">MARIELL</text>
+    <text class="gm" x="800" y="200" fill="#E85EFF">MARIELL</text>
+    <text class="gw" x="800" y="200" fill="#FFFFFF">MARIELL</text>
+
+  <defs>
+    <clipPath id="gtop-8"><rect x="0" y="0" width="1600" height="115.99999999999999"/></clipPath>
+    <clipPath id="gmid-8"><rect x="0" y="115.99999999999999" width="1600" height="115.99999999999999"/></clipPath>
+    <clipPath id="gbot-8"><rect x="0" y="231.99999999999997" width="1600" height="168"/></clipPath>
+  </defs>
+  <g clip-path="url(#gtop-8)"><text class="gslice-top" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <g clip-path="url(#gmid-8)"><text class="gslice-mid" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <g clip-path="url(#gbot-8)"><text class="gslice-bot" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text></g>
+  <rect class="gbar" x="0" y="188" width="1600" height="24" fill="#5EE7E7"/>
+  <text class="gflash" x="800" y="200" text-anchor="middle" dominant-baseline="middle" font-size="296" fill="#ffffff">MARIELL</text>
+  </g></g>
+</svg>

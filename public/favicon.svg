@@ -1,10 +1,113 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><style>
+@keyframes glitch-cyan {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(-8.06px, 0); }
+  6%   { transform: translate(-16.13px, 0); }
+  16%  { transform: translate(-29.95px, -5.12px); }
+  19%  { transform: translate(10.37px,  5.12px); }
+  23%  { transform: translate(-36.86px, -2.56px); }
+  26%  { transform: translate(-20.74px, 2.56px); }
+  80%  { transform: translate(-32.26px, -5.12px); }
+  84%  { transform: translate(13.82px,  5.12px); }
+  88%  { transform: translate(-41.47px, -2.56px); }
+  91%  { transform: translate(-23.04px, 2.56px); }
+}
+@keyframes glitch-magenta {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(8.06px, 0); }
+  6%   { transform: translate(16.13px, 0); }
+  16%  { transform: translate(32.26px,  5.12px); }
+  19%  { transform: translate(-11.52px, -5.12px); }
+  23%  { transform: translate(39.17px,  2.56px); }
+  26%  { transform: translate(23.04px,  -2.56px); }
+  80%  { transform: translate(34.56px,  5.12px); }
+  84%  { transform: translate(-13.82px, -5.12px); }
+  88%  { transform: translate(43.78px,  2.56px); }
+  91%  { transform: translate(25.34px,  -2.56px); }
+}
+@keyframes glitch-white {
+  0%,5%,8%,14%,28%,76%,94%,100% { transform: translate(0, 0); }
+  6%   { transform: translate(-2.56px, 0); }
+  16%  { transform: translate(-10.24px, -2.56px); }
+  19%  { transform: translate(12.80px,  2.56px); }
+  23%  { transform: translate(-15.36px, 0); }
+  26%  { transform: translate(-5.12px, 0); }
+  80%  { transform: translate(-12.80px, -2.56px); }
+  84%  { transform: translate(15.36px,  2.56px); }
+  88%  { transform: translate(-17.92px, 0); }
+  91%  { transform: translate(-7.68px, 0); }
+}
+@keyframes glitch-flash {
+  0%,21.4%,87.4%,100% { opacity: 0; }
+  22%,22.6%           { opacity: 0.65; }
+  22.7%               { opacity: 0; }
+  88%,88.6%           { opacity: 0.85; }
+  88.7%               { opacity: 0; }
+}
+@keyframes slice-top {
+  0%,15%,24%,79%,92%,100% { opacity: 0; transform: translate(0, 0); }
+  16%,17.4%   { opacity: 0.95; transform: translate(-71.68px, 0); }
+  17.5%,21.9% { opacity: 0; }
+  22%,23.4%   { opacity: 0.95; transform: translate(46.08px, 0); }
+  80%,81.4%   { opacity: 0.95; transform: translate(-81.92px, 0); }
+  81.5%,87.9% { opacity: 0; }
+  88%,89.4%   { opacity: 0.95; transform: translate(56.32px, 0); }
+}
+@keyframes slice-mid {
+  0%,16%,26%,80%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  17%,18.5%   { opacity: 0.9; transform: translate(66.56px, 0); }
+  18.6%,24%   { opacity: 0; }
+  24.1%,25.8% { opacity: 0.9; transform: translate(-51.20px, 0); }
+  81%,82.5%   { opacity: 0.9; transform: translate(76.80px, 0); }
+  82.6%,88%   { opacity: 0; }
+  88.1%,90%   { opacity: 0.9; transform: translate(-61.44px, 0); }
+}
+@keyframes slice-bot {
+  0%,17%,25%,81%,93%,100% { opacity: 0; transform: translate(0, 0); }
+  18%,19.4%   { opacity: 0.85; transform: translate(-35.84px, 0); }
+  19.5%,23.4% { opacity: 0; }
+  23.5%,24.8% { opacity: 0.85; transform: translate(25.60px, 0); }
+  82%,83.4%   { opacity: 0.85; transform: translate(-46.08px, 0); }
+  83.5%,87.4% { opacity: 0; }
+  87.5%,88.8% { opacity: 0.85; transform: translate(30.72px, 0); }
+}
+@keyframes glitch-bar {
+  0%,21%,24%,87%,90%,100% { opacity: 0; transform: translate(0, 0) scaleY(1); }
+  21.5%,22.4%  { opacity: 0.7; transform: translate(0, -20.48px) scaleY(0.6); }
+  87.5%,88.6%  { opacity: 0.8; transform: translate(0, 15.36px)  scaleY(0.4); }
+}
+@keyframes glitch-shake {
+  0%,15%,28%,79%,93%,100% { transform: translate(0, 0); }
+  17%   { transform: translate(-2.56px, 2.56px); }
+  23%   { transform: translate(5.12px, -2.56px); }
+  26%   { transform: translate(-2.56px, 0); }
+  81%   { transform: translate(2.56px, -2.56px); }
+  88%   { transform: translate(-5.12px, 2.56px); }
+  91%   { transform: translate(2.56px, 0); }
+}
+  .gc { animation: glitch-cyan    5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gm { animation: glitch-magenta 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gw { animation: glitch-white   5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+  .gflash { animation: glitch-flash 5.5s steps(1) infinite; opacity: 0; mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; }
+  .gslice-top { animation: slice-top 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-mid { animation: slice-mid 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gslice-bot { animation: slice-bot 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gbar       { animation: glitch-bar 5.5s steps(1) infinite; mix-blend-mode: screen; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .gshake     { animation: glitch-shake 5.5s cubic-bezier(.22,1,.36,1) infinite; transform-box: fill-box; transform-origin: center; }
+</style>
+  <rect width="512" height="512" fill="#050507"/>
+  <g class="gshake"><g style="mix-blend-mode:screen" font-family="DM Serif Display, serif" font-weight="400" font-size="368.64" text-anchor="middle" dominant-baseline="central">
+    <text class="gc" x="256" y="256" fill="#5EE7E7">M</text>
+    <text class="gm" x="256" y="256" fill="#E85EFF">M</text>
+    <text class="gw" x="256" y="256" fill="#FFFFFF">M</text>
+
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00ffff"/>
-      <stop offset="100%" stop-color="#ff00ff"/>
-    </linearGradient>
+    <clipPath id="gtop-10"><rect x="0" y="0" width="512" height="148.48"/></clipPath>
+    <clipPath id="gmid-10"><rect x="0" y="148.48" width="512" height="148.48"/></clipPath>
+    <clipPath id="gbot-10"><rect x="0" y="296.96" width="512" height="215.04"/></clipPath>
   </defs>
-  <rect width="32" height="32" rx="6" fill="#000"/>
-  <text x="16" y="21" text-anchor="middle" font-family="serif" font-weight="500" font-size="14" fill="url(#g)">M</text>
+  <g clip-path="url(#gtop-10)"><text class="gslice-top" x="256" y="256" text-anchor="middle" dominant-baseline="middle" font-size="368.64" fill="#ffffff">M</text></g>
+  <g clip-path="url(#gmid-10)"><text class="gslice-mid" x="256" y="256" text-anchor="middle" dominant-baseline="middle" font-size="368.64" fill="#ffffff">M</text></g>
+  <g clip-path="url(#gbot-10)"><text class="gslice-bot" x="256" y="256" text-anchor="middle" dominant-baseline="middle" font-size="368.64" fill="#ffffff">M</text></g>
+  <rect class="gbar" x="0" y="240.64" width="512" height="30.72" fill="#5EE7E7"/>
+  <text class="gflash" x="256" y="256" text-anchor="middle" dominant-baseline="middle" font-size="368.64" fill="#ffffff">M</text>
+  </g></g>
 </svg>

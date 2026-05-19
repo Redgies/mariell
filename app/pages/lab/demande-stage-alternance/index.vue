@@ -331,7 +331,7 @@ async function onSubmit() {
 
         <!-- Page header -->
         <header class="page-header">
-          <span class="eyebrow-tool">Outil&nbsp;01 · Le&nbsp;Lab&nbsp;Mariell</span>
+          <span class="eyebrow-tool">Le&nbsp;Lab&nbsp;Mariell</span>
           <h1 class="page-title">Stagiaire ou alternant Sales : <em>on s'en charge.</em></h1>
           <p class="page-subtitle">
             Vous nous décrivez votre besoin, nous activons notre vivier et vous présentons les profils pertinents.

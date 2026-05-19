@@ -355,7 +355,7 @@ async function onSubmit() {
 
         <section class="header">
           <div class="header__eyebrow">
-            <span class="eyebrow-cyan">Outil n°3 · Le Lab Mariell</span>
+            <span class="eyebrow-cyan">Le Lab Mariell</span>
           </div>
           <h1 class="header__title">
             Évaluation <em>d'attractivité.</em>

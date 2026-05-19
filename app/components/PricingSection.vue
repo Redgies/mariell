@@ -19,8 +19,8 @@ const sideBadges: SideBadge[] = [
       <div class="reveal mb-12 max-w-2xl">
         <span class="eyebrow-cyan">Pricing</span>
         <h2 class="mt-5 headline-section text-white" data-split>
-          <span class="gradient-text italic">Simple.</span><br />
-          Transparent.
+          Simple.<br />
+          <span class="gradient-text italic" style="padding-left: 0.08em; padding-right: 0.12em;">Transparent.</span>
         </h2>
       </div>
 
@@ -31,7 +31,7 @@ const sideBadges: SideBadge[] = [
             class="text-[16px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            <strong class="font-medium text-white">Chez Mariell, on ne se cache pas. Pas de prix à la tête, pas de bullshit.</strong>
+            <strong class="font-medium text-white">Chez Mariell, on ne se cache pas.</strong>
           </p>
 
           <div

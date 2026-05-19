@@ -36,7 +36,7 @@ const chronoSteps = [
           <span class="eyebrow-cyan">Méthodologie</span>
           <h2 class="mt-5 headline-section text-white" data-split>
             Sur-mesure,<br />
-            <span class="gradient-text italic">jamais standard.</span>
+            <span class="gradient-text italic" style="padding-left: 0.12em; padding-right: 0.1em;">jamais standard.</span>
           </h2>
         </div>
         <div class="reveal md:col-span-5 md:col-start-8 md:self-end">
@@ -44,7 +44,8 @@ const chronoSteps = [
             class="text-[17px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"
           >
-            Chaque recherche est différente, les conditions varient. La finalité reste identique&nbsp;: recruter le meilleur profil.
+            Chaque recherche est différente, les conditions varient.<br />
+            La finalité reste identique&nbsp;: recruter le meilleur profil.
           </p>
           <p
             class="mt-4 text-[17px] leading-[1.7] text-white/90"

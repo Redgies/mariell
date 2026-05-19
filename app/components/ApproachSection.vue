@@ -21,6 +21,8 @@
       </div>
     </div>
 
-    <PeopleHunt />
+    <div id="approche-animation" class="scroll-mt-24">
+      <PeopleHunt />
+    </div>
   </section>
 </template>

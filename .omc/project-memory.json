@@ -204,15 +204,189 @@
       "type": "file"
     },
     {
+      "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
+      "accessCount": 7,
+      "lastAccessed": 1779154062124,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
+      "accessCount": 7,
+      "lastAccessed": 1779154067075,
+      "type": "file"
+    },
+    {
       "path": "server/api/lab/stage-alternance.post.ts",
       "accessCount": 5,
       "lastAccessed": 1779111610574,
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 5,
+      "lastAccessed": 1779154016249,
+      "type": "file"
+    },
+    {
+      "path": "app/assets/css/main.css",
+      "accessCount": 4,
+      "lastAccessed": 1779153511882,
+      "type": "file"
+    },
+    {
+      "path": "app/components/HeroSection.vue",
+      "accessCount": 3,
+      "lastAccessed": 1779133495870,
+      "type": "file"
+    },
+    {
+      "path": "app/components/PeopleHunt.vue",
+      "accessCount": 3,
+      "lastAccessed": 1779136833989,
+      "type": "file"
+    },
+    {
+      "path": "app/components/ProcessSteps.vue",
+      "accessCount": 3,
+      "lastAccessed": 1779136851796,
+      "type": "file"
+    },
+    {
+      "path": "app/components/PricingSection.vue",
+      "accessCount": 3,
+      "lastAccessed": 1779136869225,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/10-essentiels-recrutement-sales.vue",
+      "accessCount": 3,
+      "lastAccessed": 1779152665838,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779133480826,
+      "type": "file"
+    },
+    {
+      "path": "shared/config/site.ts",
+      "accessCount": 2,
+      "lastAccessed": 1779133484510,
+      "type": "file"
+    },
+    {
+      "path": "app/components/ApproachSection.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779133502114,
+      "type": "file"
+    },
+    {
+      "path": "app/components/VideoSection.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779133534794,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779152496156,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/demande-stage-alternance/index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779152834328,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/demande-stage-alternance/confirmation.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779152841235,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/plan-de-sourcing/index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779153118454,
+      "type": "file"
+    },
+    {
+      "path": "app/pages/lab/evaluation-attractivite/index.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779153417265,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/evaluation-attractivite/generate.post.ts",
+      "accessCount": 2,
+      "lastAccessed": 1779153560705,
+      "type": "file"
+    },
+    {
+      "path": "app/components/AppNavbar.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779154021313,
+      "type": "file"
+    },
+    {
+      "path": "app/components/AppFooter.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779154044120,
+      "type": "file"
+    },
+    {
+      "path": "app/components/LabToolShell.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779154054835,
+      "type": "file"
+    },
+    {
+      "path": "public/logo.svg",
+      "accessCount": 2,
+      "lastAccessed": 1779154287405,
+      "type": "file"
+    },
+    {
+      "path": "public/logo-animated.svg",
+      "accessCount": 2,
+      "lastAccessed": 1779154323286,
+      "type": "file"
+    },
+    {
+      "path": "public/favicon.svg",
+      "accessCount": 2,
+      "lastAccessed": 1779154359662,
+      "type": "file"
+    },
+    {
       "path": ".env",
       "accessCount": 1,
       "lastAccessed": 1779107091396,
+      "type": "file"
+    },
+    {
+      "path": "app/components/ClientsMarquee.vue",
+      "accessCount": 1,
+      "lastAccessed": 1779133433343,
+      "type": "file"
+    },
+    {
+      "path": "app/components/GradientBlobs.vue",
+      "accessCount": 1,
+      "lastAccessed": 1779153472169,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/evaluation-attractivite/[uuid].get.ts",
+      "accessCount": 1,
+      "lastAccessed": 1779153540726,
+      "type": "file"
+    },
+    {
+      "path": "mariell-brand-kit-v1/README.txt",
+      "accessCount": 1,
+      "lastAccessed": 1779153966889,
       "type": "file"
     }
   ],

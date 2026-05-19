@@ -111,9 +111,9 @@ onMounted(async () => {
 <template>
   <main class="relative">
     <HeroSection />
+    <ClientsMarquee />
     <VideoSection />
     <ApproachSection />
-    <ClientsMarquee />
     <BenefitsGrid />
     <ProcessSteps />
     <PricingSection />

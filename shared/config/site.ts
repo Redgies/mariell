@@ -16,7 +16,7 @@ export interface NavLink {
 export const navLinks: NavLink[] = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Who is Mariell ?', href: '#who' },
-  { label: 'Process', href: '#process' },
+  { label: 'Process', href: '#process-section' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Le Lab Mariell', href: '/lab', hasDropdown: true, badge: true },
 ]

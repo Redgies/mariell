@@ -43,8 +43,8 @@ const heroStats: HeroStat[] = [
           class="reveal mt-5 max-w-xl space-y-1.5 text-[15px] leading-[1.6] text-white/65"
           style="font-family: var(--font-grotesk); font-weight: 300;"
         >
-          <p><em class="font-medium not-italic text-white">Des Sales qui chassent d'autres Sales.</em></p>
-          <p>On ne vend pas de rêve, mais une réalité&nbsp;: les Tops Profils sont rares.</p>
+          <p><em class="font-medium not-italic text-white">Des top Sales qui chassent d'autres top Sales.</em></p>
+          <p>On ne vend pas de rêve, mais une réalité&nbsp;: les top profils sont rares.</p>
           <p>Ils ne viendront pas à vous d'eux-mêmes.</p>
           <p>Notre mission&nbsp;: vous présenter ces profils, <em class="font-medium not-italic text-white">uniquement ces profils</em>.</p>
           <p>Les meilleures entreprises recrutent les meilleurs Sales, pourquoi pas vous&nbsp;?</p>
@@ -61,7 +61,7 @@ const heroStats: HeroStat[] = [
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </a>
-          <a href="#approche" class="btn-ghost">Voir la méthode</a>
+          <a href="#approche-animation" class="btn-ghost">Voir la méthode</a>
         </div>
       </div>
 

@@ -118,7 +118,7 @@ const guides: LabResource[] = [
       <div class="lab-section__head">
         <div id="sec-outils" class="reveal lab-section__label">Outils interactifs</div>
         <p class="reveal lab-section__intro">
-          Trois outils calibrés sur votre contexte précis. Pas un template, pas un score générique : un livrable construit pour votre recrutement, votre marché, votre stade.
+          Trois outils calibrés sur votre contexte précis. Pas un template, pas un score générique : un livrable construit pour votre recrutement, votre marché, et vos enjeux.
         </p>
       </div>
 
