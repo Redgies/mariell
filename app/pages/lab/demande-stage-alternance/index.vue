@@ -805,7 +805,10 @@ async function onSubmit() {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  padding-bottom: 0.06em;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.06em;
 }
 
 .page-subtitle {

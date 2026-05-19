@@ -716,7 +716,10 @@ async function onSubmit() {
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
-  padding-bottom: 0.06em;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.06em;
 }
 .header__sub {
   font-size: 17px; line-height: 1.6;
@@ -1075,6 +1078,8 @@ select.ctrl[data-empty="true"] { color: rgba(255,255,255,0.32); }
   background: linear-gradient(135deg, #5ee7e7 0%, #e85eff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.08em;
 }
 
 .form-foot {

@@ -887,6 +887,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 .final-cta p {
   color: rgba(255,255,255,0.65);
@@ -948,6 +952,12 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  /* Italique en gradient : sans inline-block + padding-right, le glyphe final
+     (ex. "traitée") est tronqué par background-clip:text. */
+  display: inline-block;
+  padding-right: 0.14em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 .err-stage p {
   font-size: 16px; line-height: 1.65;

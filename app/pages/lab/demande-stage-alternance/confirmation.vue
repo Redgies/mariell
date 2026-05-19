@@ -94,6 +94,12 @@ useHead({
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  /* Italique en gradient : sans inline-block + padding-right, le "e" final
+     (ex. "reçue.") est tronqué par background-clip:text. */
+  display: inline-block;
+  padding-right: 0.14em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 
 .confirm-body {

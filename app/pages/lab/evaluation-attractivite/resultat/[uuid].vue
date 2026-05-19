@@ -700,6 +700,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 .step-stack { position: relative; height: 28px; width: 100%; max-width: 580px; margin: 0 auto; overflow: hidden; }
 .step {
@@ -931,6 +935,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.12em;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
 }
 .final-cta p { color: rgba(255,255,255,0.65); font-size: 16px; line-height: 1.65; max-width: 520px; margin: 0 auto 26px; }
 .cta-gradient-lg {
@@ -996,6 +1004,12 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  /* Italique en gradient : sans inline-block + padding-right, le glyphe final
+     (ex. "traitée") est tronqué par background-clip:text. */
+  display: inline-block;
+  padding-right: 0.14em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 .err-stage > p { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,0.65); margin: 0 0 32px; max-width: 520px; }
 .err-stage > p .email { color: #5ee7e7; font-family: ui-monospace, monospace; font-size: 14px; }
@@ -1037,6 +1051,10 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+  padding-right: 0.1em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.04em;
 }
 
 /* Print */

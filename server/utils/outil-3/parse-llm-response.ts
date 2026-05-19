@@ -32,7 +32,14 @@ export function parseLlmResponse(rawContent: string): ParseResult {
   }
 
   let jsonPart = rawContent.substring(0, delimiterIndex).trim()
-  const markdownPart = rawContent.substring(delimiterIndex + DELIMITER.length).trim()
+  // Strip un éventuel H1 initial : le titre est déjà rendu en dur dans le
+  // template Vue (resultat/[uuid].vue ligne ~386) à partir de
+  // metadata.intitule_poste. Sans ce strip on aurait un doublon en bas du bloc
+  // verdict. Robuste même si le LLM ignore l'instruction côté prompt.
+  const markdownPart = rawContent
+    .substring(delimiterIndex + DELIMITER.length)
+    .trim()
+    .replace(/^#\s+[^\n]*\n+/, '')
 
   // Nettoie le JSON des éventuels backticks markdown
   jsonPart = jsonPart.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim()
@@ -45,14 +52,6 @@ export function parseLlmResponse(rawContent: string): ParseResult {
       success: false,
       error: `JSON invalide : ${err.message}`,
       markdownFallback: markdownPart,
-    }
-  }
-
-  if (!markdownPart.startsWith("# Évaluation d'attractivité")) {
-    // On accepte quand même mais on signale (le LLM a peut-être varié le titre)
-    return {
-      success: true,
-      data: { json: parsedJson, markdown: markdownPart },
     }
   }
 
