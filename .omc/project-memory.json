@@ -198,6 +198,18 @@
   },
   "hotPaths": [
     {
+      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
+      "accessCount": 8,
+      "lastAccessed": 1779158134655,
+      "type": "file"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "accessCount": 8,
+      "lastAccessed": 1779158581286,
+      "type": "file"
+    },
+    {
       "path": "server/utils/jarvi.ts",
       "accessCount": 7,
       "lastAccessed": 1779109401063,
@@ -207,18 +219,6 @@
       "path": "app/pages/lab/plan-de-sourcing/resultat/[uuid].vue",
       "accessCount": 7,
       "lastAccessed": 1779154062124,
-      "type": "file"
-    },
-    {
-      "path": "app/pages/lab/evaluation-attractivite/resultat/[uuid].vue",
-      "accessCount": 7,
-      "lastAccessed": 1779154067075,
-      "type": "file"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 7,
-      "lastAccessed": 1779157072294,
       "type": "file"
     },
     {
@@ -273,6 +273,12 @@
       "path": "app/pages/lab/10-essentiels-recrutement-sales.vue",
       "accessCount": 3,
       "lastAccessed": 1779152665838,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-3/load-prompts.ts",
+      "accessCount": 3,
+      "lastAccessed": 1779158589541,
       "type": "file"
     },
     {
@@ -366,12 +372,6 @@
       "type": "file"
     },
     {
-      "path": "server/utils/outil-3/load-prompts.ts",
-      "accessCount": 2,
-      "lastAccessed": 1779157089805,
-      "type": "file"
-    },
-    {
       "path": "server/utils/prompts/plan-de-sourcing.ts",
       "accessCount": 2,
       "lastAccessed": 1779157098538,
@@ -405,6 +405,24 @@
       "path": "mariell-brand-kit-v1/README.txt",
       "accessCount": 1,
       "lastAccessed": 1779153966889,
+      "type": "file"
+    },
+    {
+      "path": "server/prompts/outil-3/system-prompt-v10.md",
+      "accessCount": 1,
+      "lastAccessed": 1779158171418,
+      "type": "file"
+    },
+    {
+      "path": "server/api/lab/plan-de-sourcing/generate.post.ts",
+      "accessCount": 1,
+      "lastAccessed": 1779158426089,
+      "type": "file"
+    },
+    {
+      "path": "server/prompts/outil-2/system-prompt-v13.md",
+      "accessCount": 1,
+      "lastAccessed": 1779158441859,
       "type": "file"
     }
   ],

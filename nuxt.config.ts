@@ -55,7 +55,7 @@ export default defineNuxtConfig({
     // de chaque outil.
     prompts: {
       outil2V13: readPrompt('outil-2/system-prompt-v13.md'),
-      outil3SystemV10: readPrompt('outil-3/system-prompt-v10.md'),
+      outil3SystemV11: readPrompt('outil-3/system-prompt-v11.md'),
       outil3F1: readPrompt('outil-3/f1-boites-intouchables-v7.md'),
       outil3F2: readPrompt('outil-3/f2-grille-secteurs-v3.md'),
       outil3F3: readPrompt('outil-3/f3-typologie-missions-v5.md'),
