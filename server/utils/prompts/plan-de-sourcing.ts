@@ -2,15 +2,15 @@ import type { PlanDeSourcingInput } from '../../schemas/plan-de-sourcing'
 import { loadOutil2Prompts } from '../outil-2/load-prompts'
 
 /**
- * V12 system prompt — source de vérité : `server/prompts/outil-2/system-prompt-v12.md`.
+ * V13 system prompt — source de vérité : `server/prompts/outil-2/system-prompt-v13.md`.
  * Calibré pour `claude-haiku-4-5`, max_tokens 12000, temperature 0.2.
  *
  * Pour modifier le prompt : éditer le fichier .md directement, sans toucher au .ts.
- * Toute évolution doit être un bump de version (system-prompt-v13.md, v14…).
+ * Toute évolution doit être un bump de version (system-prompt-v14.md, v15…).
  */
 export async function getSystemPrompt(): Promise<string> {
-  const { systemPromptV12 } = await loadOutil2Prompts()
-  return systemPromptV12
+  const { systemPromptV13 } = await loadOutil2Prompts()
+  return systemPromptV13
 }
 
 /**

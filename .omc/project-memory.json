@@ -216,6 +216,12 @@
       "type": "file"
     },
     {
+      "path": "nuxt.config.ts",
+      "accessCount": 7,
+      "lastAccessed": 1779157072294,
+      "type": "file"
+    },
+    {
       "path": "app/pages/lab/evaluation-attractivite/index.vue",
       "accessCount": 6,
       "lastAccessed": 1779155956741,
@@ -225,12 +231,6 @@
       "path": "server/api/lab/stage-alternance.post.ts",
       "accessCount": 5,
       "lastAccessed": 1779111610574,
-      "type": "file"
-    },
-    {
-      "path": "nuxt.config.ts",
-      "accessCount": 5,
-      "lastAccessed": 1779154016249,
       "type": "file"
     },
     {
@@ -357,6 +357,24 @@
       "path": "public/favicon.svg",
       "accessCount": 2,
       "lastAccessed": 1779154359662,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-2/load-prompts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1779157081350,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/outil-3/load-prompts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1779157089805,
+      "type": "file"
+    },
+    {
+      "path": "server/utils/prompts/plan-de-sourcing.ts",
+      "accessCount": 2,
+      "lastAccessed": 1779157098538,
       "type": "file"
     },
     {
