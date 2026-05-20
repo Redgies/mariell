@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const benefitsAsym = [
   {
-    title: '60+ Tops Profils qui drivent la croissance.',
+    title: '60+ Top profils qui drivent la croissance.',
     paragraphs: [
       'Du SDR au Head of Sales. Des performances mesurables, un impact vérifié.',
       '<strong>Un investissement qui devient anecdotique. 94% de succès.</strong>',

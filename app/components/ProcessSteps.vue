@@ -30,16 +30,20 @@ const chronoSteps = [
 <template>
   <section id="process-section" class="relative px-5 py-12 md:px-10 md:py-16 lg:px-16">
     <div class="mx-auto max-w-7xl">
-      <!-- Editorial header — split 5 / 5 across 12 cols -->
-      <div class="mb-14 grid grid-cols-1 gap-8 md:grid-cols-12">
-        <div class="reveal md:col-span-5">
+      <!-- Editorial header — title (7) + right text (5), bottoms aligned -->
+      <div class="mb-14 grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end">
+        <div class="reveal md:col-span-7">
           <span class="eyebrow-cyan">Méthodologie</span>
-          <h2 class="mt-5 headline-section text-white" data-split>
-            Sur-mesure,<br />
-            <span class="gradient-text italic" style="padding-left: 0.12em; padding-right: 0.1em;">jamais standard.</span>
+          <h2
+            class="mt-5 headline-section text-white md:whitespace-nowrap"
+            data-split
+            style="font-size: clamp(32px, 3.9vw, 52px); padding-right: 0.12em;"
+          >
+            Sur-mesure,
+            <span class="gradient-text italic" style="padding-left: 0.14em; padding-right: 0.22em;">jamais standard.</span>
           </h2>
         </div>
-        <div class="reveal md:col-span-5 md:col-start-8 md:self-end">
+        <div class="reveal md:col-span-5 md:col-start-8">
           <p
             class="text-[17px] leading-[1.7] text-white/65"
             style="font-family: var(--font-grotesk); font-weight: 300;"

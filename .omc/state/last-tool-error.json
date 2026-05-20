@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"rtk find \\\"/Users/mathiasriotor/Documents/Work/mariell/server/utils/prompts\\\" -name \\\"*.ts\\\" 2>/dev/null ; echo \\\"---\\\" ; ls \\\"/Users/mathiasriotor/Documents/Work/mariell/server/utils/prom...",
-  "error": "Exit code 1\n/Users/mathiasriotor/Documents/Work/mariell/server/utils/prompts/plan-de-sourcing.ts\n---",
-  "timestamp": "2026-05-19T12:53:56.712Z",
-  "retry_count": 1
-}

@@ -285,7 +285,7 @@ const fiches: Fiche[] = [
       "Track record de levée significatif (avoir scalé une équipe pendant Série B/C) → floor <strong>+30-40%</strong> vs un VP \"classique\".",
       "Les VP Sales qui changent tous les 18 mois sont systématiquement discountés par le marché : la stabilité prime à ce niveau.",
     ],
-    piege: "Recruter un VP Sales \"ex-grand groupe\" pour structurer une scale-up de 50 personnes. Les méthodes ne se transposent pas. Vous brûlez 200k pour découvrir en 6 mois que la culture ne match pas.",
+    piege: "Recruter un VP Sales \"ex-grand groupe\" pour structurer une scale-up de 50 personnes. Les méthodes ne se transposent pas. Vous brûlez 200k pour découvrir en 6 mois que la culture ne matche pas.",
   },
 ]
 </script>
@@ -576,7 +576,7 @@ const fiches: Fiche[] = [
         </div>
         <div class="world-card">
           <p class="world-card__title"><em>MONDE 2</em>Conseil IT / ESN / Ingénierie</p>
-          <p>Modèle plus traditionnel, <strong>OTE 5-15% en-dessous du SaaS</strong>, mais plus de stabilité, package "voiture/téléphone" encore présent, equity rare.</p>
+          <p>Modèle plus traditionnel, <strong>OTE 5-15% en dessous du SaaS</strong>, mais plus de stabilité, package "voiture/téléphone" encore présent, equity rare.</p>
         </div>
         <div class="world-card">
           <p class="world-card__title"><em>MONDE 3</em>Industrie / B2B classique</p>

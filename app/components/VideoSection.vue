@@ -29,7 +29,7 @@
           style="font-family: var(--font-grotesk); font-weight: 300;"
         >
           <p>
-            Mariell est né d'un constat simple&nbsp;: Le market des profils Sales est, aujourd'hui, hyper hétérogène. Les profils vraiment performants sont minoritaires, et les entreprises peinent à les identifier et les recruter <em class="not-italic text-white/85">in fine</em>.
+            Mariell est né d'un constat simple&nbsp;: le market des profils Sales est, aujourd'hui, hyper hétérogène. Les profils vraiment performants sont minoritaires, et les entreprises peinent à les identifier et les recruter <em class="not-italic text-white/85">in fine</em>.
           </p>
           <p>
             Ces profils sont quasiment toujours en poste, ils ne postulent pas à une annonce. La chasse est le seul moyen de les approcher. Ils sont souvent très sollicités, puis noyés dans un pipe de candidats. Ce qui complexifie encore le recrutement de ces profils.
