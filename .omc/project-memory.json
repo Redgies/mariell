@@ -207,15 +207,15 @@
   },
   "hotPaths": [
     {
-      "path": "app/pages/lab/guide-salaires-sales.vue",
-      "accessCount": 4,
-      "lastAccessed": 1779292452824,
+      "path": "app/components/ProcessSteps.vue",
+      "accessCount": 5,
+      "lastAccessed": 1779326147248,
       "type": "file"
     },
     {
-      "path": "app/components/ProcessSteps.vue",
+      "path": "app/pages/lab/guide-salaires-sales.vue",
       "accessCount": 4,
-      "lastAccessed": 1779325275671,
+      "lastAccessed": 1779292452824,
       "type": "file"
     },
     {

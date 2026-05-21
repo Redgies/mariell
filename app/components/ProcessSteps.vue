@@ -36,7 +36,7 @@ const chronoSteps = [
           <span class="eyebrow-cyan">Méthodologie</span>
           <h2 class="mt-5 headline-section text-white" data-split>
             Sur-mesure,<br />
-            <span class="gradient-text italic" style="padding-left: 0.12em; padding-right: 0.22em;">jamais standard.</span>
+            <span class="gradient-text italic whitespace-nowrap" style="padding-left: 0.12em; padding-right: 0.22em;">jamais standard.</span>
           </h2>
         </div>
         <div class="reveal md:col-span-5 md:col-start-8">
