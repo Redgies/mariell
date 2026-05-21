@@ -214,8 +214,8 @@
     },
     {
       "path": "app/components/ProcessSteps.vue",
-      "accessCount": 2,
-      "lastAccessed": 1779291628347,
+      "accessCount": 4,
+      "lastAccessed": 1779325275671,
       "type": "file"
     },
     {
@@ -237,6 +237,12 @@
       "type": "file"
     },
     {
+      "path": "app/components/PricingSection.vue",
+      "accessCount": 2,
+      "lastAccessed": 1779325364458,
+      "type": "file"
+    },
+    {
       "path": "app/assets/css/main.css",
       "accessCount": 1,
       "lastAccessed": 1779291373507,
@@ -246,6 +252,24 @@
       "path": "app/components/ApproachSection.vue",
       "accessCount": 1,
       "lastAccessed": 1779291587990,
+      "type": "file"
+    },
+    {
+      "path": "public/favicon.png",
+      "accessCount": 1,
+      "lastAccessed": 1779325392131,
+      "type": "file"
+    },
+    {
+      "path": "public/apple-touch-icon.png",
+      "accessCount": 1,
+      "lastAccessed": 1779325623740,
+      "type": "file"
+    },
+    {
+      "path": "public/android-chrome-192x192.png",
+      "accessCount": 1,
+      "lastAccessed": 1779325629046,
       "type": "file"
     }
   ],

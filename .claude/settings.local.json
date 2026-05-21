@@ -45,7 +45,13 @@
       "Bash(claude mcp *)",
       "Bash(rtk proxy *)",
       "Bash(lsof -ti:3000)",
-      "mcp__chrome-devtools__new_page"
+      "mcp__chrome-devtools__new_page",
+      "Bash(magick favicon.ico[0] /tmp/ico-16.png)",
+      "Bash(magick favicon.ico[1] /tmp/ico-32.png)",
+      "Bash(magick 'favicon.ico[0]' /tmp/ico-16.png)",
+      "Bash(magick 'favicon.ico[1]' /tmp/ico-32.png)",
+      "Bash(magick 'favicon.ico[1]' /tmp/ico-32-new.png)",
+      "Bash(magick 'favicon.ico[0]' /tmp/ico-16-new.png)"
     ]
   }
 }

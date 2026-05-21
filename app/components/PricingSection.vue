@@ -20,7 +20,7 @@ const sideBadges: SideBadge[] = [
         <span class="eyebrow-cyan">Pricing</span>
         <h2 class="mt-5 headline-section text-white" data-split>
           Simple.<br />
-          <span class="gradient-text italic" style="padding-left: 0.08em; padding-right: 0.12em;">Transparent.</span>
+          <span class="gradient-text italic">Transparent.</span>
         </h2>
       </div>
 
