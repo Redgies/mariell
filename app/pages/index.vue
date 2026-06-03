@@ -118,7 +118,6 @@ onMounted(async () => {
     <ProcessSteps />
     <PricingSection />
     <LabSection />
-    <TestimonialsCarousel />
     <FinalCta />
   </main>
 </template>
