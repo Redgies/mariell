@@ -43,6 +43,75 @@ const friseSteps = [
     align: 'right' as const,
   },
 ]
+
+const friseTrack = ref<HTMLElement | null>(null)
+const friseFill = ref<HTMLElement | null>(null)
+
+// Animated suivi frieze — ported faithfully from the Claude Design export:
+// a chromatic-less filling spine sweeps left→right (easeInOutQuad), lighting the
+// step dots and staggering the text reveal. Plays once on scroll into view.
+onMounted(() => {
+  const track = friseTrack.value
+  const fill = friseFill.value
+  if (!track || !fill) return
+
+  const steps = Array.from(track.querySelectorAll<HTMLElement>('.fs-step'))
+  const texts = Array.from(track.querySelectorAll<HTMLElement>('.fs-text'))
+
+  const centers = () => {
+    const tb = track.getBoundingClientRect()
+    return steps.map((b) => {
+      const r = b.getBoundingClientRect()
+      return r.left - tb.left + r.width / 2
+    })
+  }
+  const xs = centers()
+  const span = xs.length ? xs[xs.length - 1] - xs[0] : 0
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isMobile = window.matchMedia('(max-width: 760px)').matches
+
+  const showFinal = () => {
+    if (span > 0) fill.style.width = `${span}px`
+    steps.forEach((d) => { d.style.background = 'var(--ink-900)'; d.style.borderColor = 'var(--ink-900)' })
+    texts.forEach((t) => { t.style.opacity = '1'; t.style.transform = 'none' })
+  }
+
+  // Mobile stacks the frieze (rail/dots hidden) and reduced-motion skips the
+  // animation — in both cases just reveal the content (parity).
+  if (reduce || isMobile || span <= 0) { showFinal(); return }
+
+  let played = false
+  const run = () => {
+    if (played) return
+    played = true
+    const ats = xs.map((x) => (x - xs[0]) / span)
+    const DUR = 3300
+    let start: number | null = null
+    const frame = (t: number) => {
+      if (start == null) start = t
+      const tt = Math.min(1, (t - start) / DUR)
+      const e = tt < 0.5 ? 2 * tt * tt : 1 - Math.pow(-2 * tt + 2, 2) / 2
+      fill.style.width = `${e * span}px`
+      for (let i = 0; i < ats.length; i++) {
+        const r = Math.max(0, Math.min(1, (e - ats[i] * 0.82) * 8))
+        steps[i].style.background = r > 0.5 ? 'var(--ink-900)' : 'var(--paper-100)'
+        steps[i].style.borderColor = r > 0.5 ? 'var(--ink-900)' : 'rgba(11,13,16,0.28)'
+        texts[i].style.opacity = (0.1 + r * 0.9).toFixed(3)
+        texts[i].style.transform = `translateY(${((1 - r) * 12).toFixed(2)}px)`
+      }
+      if (tt < 1) requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) { run(); io.disconnect() }
+    })
+  }, { threshold: 0.35 })
+  io.observe(track)
+})
 </script>
 
 <template>
@@ -104,19 +173,32 @@ const friseSteps = [
       <section class="section-pad section--paper" style="padding-bottom:24px;">
         <div class="container">
           <div class="eyebrow-m" style="margin-bottom:14px;">Notre suivi · de la signature à la performance</div>
-          <div class="frise-grid">
+          <div ref="friseTrack" class="fs-track">
+            <div class="fs-rail" aria-hidden="true" />
+            <div ref="friseFill" class="fs-fill" aria-hidden="true" />
             <div
-              v-for="step in friseSteps"
-              :key="step.num"
-              class="frise-item"
-              :class="`frise-item--${step.align}`"
-            >
-              <div class="frise-item__num">{{ step.num }}</div>
-              <div class="frise-item__tag">{{ step.tag }}</div>
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <div class="frise-item__title" v-html="step.title" />
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <p class="frise-item__body" v-html="step.body" />
+              v-for="(step, i) in friseSteps"
+              :key="`dot-${step.num}`"
+              class="fs-step"
+              :class="`fs-step--${step.align}`"
+              :data-i="i"
+              aria-hidden="true"
+            />
+            <div class="fs-grid">
+              <div
+                v-for="(step, i) in friseSteps"
+                :key="`txt-${step.num}`"
+                class="fs-text"
+                :class="`fs-text--${step.align}`"
+                :data-i="i"
+              >
+                <div class="fs-num">{{ step.num }}</div>
+                <div class="fs-tag">{{ step.tag }}</div>
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div class="fs-title" v-html="step.title" />
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <p class="fs-body" v-html="step.body" />
+              </div>
             </div>
           </div>
         </div>
@@ -176,14 +258,55 @@ const friseSteps = [
   color: rgba(244, 239, 227, 0.82);
 }
 
-.frise-grid {
+.fs-track {
+  position: relative;
+  max-width: 860px;
+}
+.fs-rail {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 7px;
+  height: 1px;
+  background: rgba(11, 13, 16, 0.14);
+}
+.fs-fill {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  height: 3px;
+  width: 0;
+  background: var(--ink-900);
+}
+.fs-step {
+  position: absolute;
+  top: 7px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--paper-100);
+  border: 1.5px solid rgba(11, 13, 16, 0.28);
+  transition: background 200ms linear, border-color 200ms linear;
+}
+.fs-step--left { left: 6px; transform: translate(-5px, -5px); }
+.fs-step--center { left: 50%; transform: translate(-5px, -5px); }
+.fs-step--right { right: 6px; transform: translate(5px, -5px); }
+
+.fs-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  padding-top: 24px;
+  padding-top: 42px;
 }
+.fs-text {
+  opacity: 0.1;
+  transform: translateY(12px);
+  transition: opacity 160ms linear, transform 160ms linear;
+}
+.fs-text--center { text-align: center; }
+.fs-text--right { text-align: right; }
 
-.frise-item__num {
+.fs-num {
   font-family: var(--font-display);
   font-size: 46px;
   font-weight: 500;
@@ -191,8 +314,7 @@ const friseSteps = [
   line-height: 1;
   color: var(--fg-on-paper-1);
 }
-
-.frise-item__tag {
+.fs-tag {
   margin-top: 16px;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -200,8 +322,7 @@ const friseSteps = [
   text-transform: uppercase;
   color: var(--fg-on-paper-3);
 }
-
-.frise-item__title {
+.fs-title {
   margin-top: 10px;
   font-family: var(--font-display);
   font-size: 28px;
@@ -210,31 +331,15 @@ const friseSteps = [
   line-height: 1.08;
   color: var(--fg-on-paper-1);
 }
-
-.frise-item__body {
+.fs-body {
   margin-top: 12px;
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--fg-on-paper-2);
   max-width: 300px;
 }
-
-.frise-item--center {
-  text-align: center;
-}
-
-.frise-item--center .frise-item__body {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.frise-item--right {
-  text-align: right;
-}
-
-.frise-item--right .frise-item__body {
-  margin-left: auto;
-}
+.fs-text--center .fs-body { margin-left: auto; margin-right: auto; }
+.fs-text--right .fs-body { margin-left: auto; }
 
 @media (max-width: 900px) {
   .perf-jalons {
@@ -242,20 +347,23 @@ const friseSteps = [
     gap: 16px;
   }
 
-  .frise-grid {
+  /* Stack the frieze on mobile: hide the horizontal rail/dots, reveal the text. */
+  .fs-rail,
+  .fs-fill,
+  .fs-step { display: none; }
+
+  .fs-grid {
     grid-template-columns: 1fr;
     gap: 28px;
+    padding-top: 0;
   }
-
-  /* Reset alignment: on single-column the centre/right alignment
-     looks odd — left-align everything for readability. */
-  .frise-item--center,
-  .frise-item--right {
+  .fs-text {
+    opacity: 1;
+    transform: none;
     text-align: left;
   }
-
-  .frise-item--center .frise-item__body,
-  .frise-item--right .frise-item__body {
+  .fs-text--center .fs-body,
+  .fs-text--right .fs-body {
     margin-left: 0;
     margin-right: 0;
     max-width: none;
@@ -267,12 +375,7 @@ const friseSteps = [
     padding: 20px 18px;
   }
 
-  .frise-item__num {
-    font-size: 34px;
-  }
-
-  .frise-item__title {
-    font-size: 22px;
-  }
+  .fs-num { font-size: 34px; }
+  .fs-title { font-size: 22px; }
 }
 </style>
