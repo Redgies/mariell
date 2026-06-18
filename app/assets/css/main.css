@@ -74,6 +74,21 @@ html {
   border-radius: 2px;
 }
 
+/* ---- Page transition (light + clean: short fade + 4px lift) -------------- */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.page-enter-from { opacity: 0; transform: translateY(4px); }
+.page-leave-to   { opacity: 0; transform: translateY(-4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active { transition: none; }
+  .page-enter-from,
+  .page-leave-to { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {

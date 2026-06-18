@@ -87,6 +87,8 @@ export default defineNuxtConfig({
   },
 
   app: {
+    // Transition de page légère (fade + micro translate), voir .page-* dans main.css.
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       title: 'Mariell — Recrutement Sales Premium',
       htmlAttrs: { lang: 'fr' },
