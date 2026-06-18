@@ -132,10 +132,11 @@
   .crowd {
     position: absolute; inset: 0;
     transform-origin: 50% 62%;
-    transition: transform 500ms var(--ease-in-out);
+    transition: transform 500ms var(--ease-in-out), opacity 800ms var(--ease-out);
     will-change: transform;
     opacity: 0;
-    animation: crowdReveal 4000ms var(--ease-out) 500ms forwards;
+    /* Reveal is gated on real video readiness (see trailing script) so all
+       silhouettes appear together instead of popping in as each buffers. */
   }
   .ph-debug-tag {
     position: absolute;
@@ -1465,6 +1466,31 @@ window.addEventListener('message', (e)=>{
   if (d.type === '__deactivate_edit_mode') twEl.classList.remove('on');
 });
 window.parent && window.parent.postMessage({ type:'__edit_mode_available' }, '*');
+</script>
+<script>
+/* People Hunt — reveal the crowd only once every silhouette video has its first
+   frame ready, so they all appear together (no progressive pop-in on first load).
+   Safety timeout guarantees the scene is never left hidden. */
+(function () {
+  var crowd = document.querySelector('.crowd');
+  var vids = window.STOCK_VIDEOS || [];
+  if (!crowd) return;
+  var done = false;
+  var reveal = function () { if (done) return; done = true; crowd.style.opacity = '1'; };
+  if (!vids.length) { reveal(); return; }
+  var pending = vids.length;
+  var fin = function () { if (--pending <= 0) reveal(); };
+  vids.forEach(function (item) {
+    var v = document.createElement('video');
+    v.muted = true; v.preload = 'auto';
+    var once = false;
+    var go = function () { if (once) return; once = true; fin(); };
+    v.addEventListener('loadeddata', go, { once: true });
+    v.addEventListener('error', go, { once: true });
+    v.src = item.src; v.load();
+  });
+  setTimeout(reveal, 2500);
+})();
 </script>
 </body>
 </html>

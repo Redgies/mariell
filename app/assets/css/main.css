@@ -74,19 +74,20 @@ html {
   border-radius: 2px;
 }
 
-/* ---- Page transition (light + clean: short fade + 4px lift) -------------- */
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+/* ---- Page transition: fade through black (covers nav + open menu) -------- */
+.page-fade {
+  position: fixed;
+  inset: 0;
+  background: var(--ink-900);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 220ms var(--ease-out);
 }
-.page-enter-from { opacity: 0; transform: translateY(4px); }
-.page-leave-to   { opacity: 0; transform: translateY(-4px); }
+.page-fade.is-on { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-enter-active,
-  .page-leave-active { transition: none; }
-  .page-enter-from,
-  .page-leave-to { opacity: 1; transform: none; }
+  .page-fade { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

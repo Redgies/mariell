@@ -87,8 +87,8 @@ export default defineNuxtConfig({
   },
 
   app: {
-    // Transition de page légère (fade + micro translate), voir .page-* dans main.css.
-    pageTransition: { name: 'page', mode: 'out-in' },
+    // Transition gérée par un overlay "fondu vers le noir" piloté dans app.vue
+    // (couvre aussi la nav/menu). Pas de pageTransition Vue.
     head: {
       title: 'Mariell — Recrutement Sales Premium',
       htmlAttrs: { lang: 'fr' },
