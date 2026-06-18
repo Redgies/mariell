@@ -1,18 +1,14 @@
 <script setup lang="ts">
-const route = useRoute()
-const isFocusedTool = computed(() =>
-  route.path.startsWith('/lab/demande-stage-alternance') ||
-  route.path.startsWith('/lab/plan-de-sourcing') ||
-  route.path.startsWith('/lab/evaluation-attractivite'),
-)
+// Chrome is owned by layouts/ (default = full nav+footer, tool = focused).
+// Pages select their layout via definePageMeta({ layout: 'tool' }).
+
+// Verbatim per-route SEO (title/meta/canonical/og/JSON-LD) from the design
+// export, applied centrally & reactively for every route. See usePageSeo.
+usePageSeo()
 </script>
 
 <template>
-  <div class="relative min-h-screen text-white">
-    <ScrollProgress v-if="!isFocusedTool" />
-    <GradientBlobs v-if="!isFocusedTool" />
-    <AppNavbar v-if="!isFocusedTool" />
+  <NuxtLayout>
     <NuxtPage />
-    <AppFooter v-if="!isFocusedTool" />
-  </div>
+  </NuxtLayout>
 </template>

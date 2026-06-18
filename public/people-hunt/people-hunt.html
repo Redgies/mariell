@@ -1,0 +1,1470 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>People Hunt — Mariell</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="mariell-tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: transparent;
+    color: var(--fg-1);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Local theme tokens on top of Mariell */
+  :root {
+    --people: rgba(255,255,255,0.32);
+    --people-hero: #FFFFFF;
+  }
+
+  .page {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0;
+  }
+
+  .frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    background: transparent;
+    overflow: visible; /* let silhouettes breathe beyond the frame, no hard clipping */
+  }
+
+  /* Header */
+  .chrome {
+    position: absolute; left: 0; right: 0; top: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 138px var(--space-7) var(--space-5);
+    z-index: 10;
+  }
+  .chrome .meta {
+    display: flex; align-items: center; gap: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--fg-3);
+    font-weight: 500;
+  }
+  .dot {
+    display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand-magenta);
+    margin-right: 8px;
+    vertical-align: middle;
+    box-shadow: 0 0 12px rgba(232,94,255,0.7);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:.35; transform:scale(.7); }
+  }
+  @keyframes crowdReveal { from { opacity: 0; } to { opacity: 1; } }
+
+  .footer {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: var(--space-5) var(--space-7) 52px;
+    z-index: 10;
+  }
+  .kicker {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    letter-spacing: var(--track-snug);
+    color: var(--fg-1);
+    font-weight: 500;
+    max-width: 440px;
+  }
+  .kicker em {
+    font-style: normal;
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .kicker .sub {
+    display:block;
+    color: var(--fg-3);
+    font-style: normal;
+  }
+  .counter {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+    line-height: 1.8;
+  }
+  .counter .n { color: var(--fg-1); }
+  .counter .m {
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  /* Stage — clip to frame so silhouettes exit cleanly off the bottom */
+  .stage {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    /* Soft fade on all four edges so silhouettes and the hero's halo +
+       chromatic aberration never get hard-clipped near the borders. */
+    -webkit-mask-image:
+      linear-gradient(to right,
+        transparent 0%, #000 5%, #000 95%, transparent 100%),
+      linear-gradient(to bottom,
+        transparent 0%, #000 12%, #000 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+            mask-image:
+      linear-gradient(to right,
+        transparent 0%, #000 5%, #000 95%, transparent 100%),
+      linear-gradient(to bottom,
+        transparent 0%, #000 12%, #000 92%, transparent 100%);
+            mask-composite: intersect;
+  }
+  .crowd {
+    position: absolute; inset: 0;
+    transform-origin: 50% 62%;
+    transition: transform 500ms var(--ease-in-out);
+    will-change: transform;
+    opacity: 0;
+    animation: crowdReveal 4000ms var(--ease-out) 500ms forwards;
+  }
+  .ph-debug-tag {
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: monospace; font-size: 10px; line-height: 1.2;
+    color: #5EE7E7; background: rgba(0,0,0,0.82);
+    padding: 2px 5px; border-radius: 4px; white-space: nowrap;
+    pointer-events: none; max-width: 220px; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* Walker = a single <video> element. We size with height, width auto from intrinsic ratio. */
+  .walker {
+    position: absolute;
+    top: 0; left: 0;
+    /* Reference natural size; per-walker transform scales it for depth. */
+    width: 356px;
+    height: 200px;
+    transform-origin: 0 0;
+    will-change: transform, opacity;
+    pointer-events: none;
+    /* JS sets --alpha each frame for depth-dim + smooth spawn/exit fade. */
+    opacity: var(--alpha, 0);
+    /* Videos are now PRE-INVERTED (white silhouettes) at re-encode time, so no
+       runtime invert() is needed — this removes the biggest per-frame GPU cost. */
+  }
+  /* Faded state (kept for backward compat). Subtler dim used during scans. */
+  .walker.faded { opacity: 0 !important; transition: opacity 700ms var(--ease-out); }
+  /* Dimmed state: heavily faded + blurred so they sit deep behind the hero.
+     We combine brightness reduction, opacity, and a sizable blur so the
+     remaining background silhouettes don't bleed through the hero's
+     alpha-transparent regions. */
+  .walker.dimmed {
+    filter: brightness(0.10) blur(8px) !important;
+    opacity: 0.45 !important;
+    transition: filter 700ms var(--ease-out), opacity 700ms var(--ease-out);
+  }
+  /* Walkers that visually overlap the hero get completely hidden during the
+     scan so they don't bleed through the hero's alpha-transparent regions. */
+  .walker.hidden-during-scan {
+    opacity: 0 !important;
+    transition: opacity 500ms var(--ease-out);
+  }
+  .walker { transition: opacity 280ms var(--ease-out); }
+
+  /* Hero glow + chromatic-aberration via drop-shadow stack.
+     Glow sizes use CSS variables so JS can shrink them as the hero zooms in. */
+  .walker.hero {
+    --aber-offset: 2px;
+    --halo-white: 7px;
+    --halo-purple: 18px;
+    --aber-alpha: 0.7;
+    --halo-white-alpha: 0.28;
+    --halo-purple-alpha: 0.42;
+    filter:
+      drop-shadow(calc(-1 * var(--aber-offset)) 0 0 rgba(94, 231, 231, var(--aber-alpha)))
+      drop-shadow(var(--aber-offset) 0 0 rgba(232, 94, 255, var(--aber-alpha)))
+      drop-shadow(0 0 var(--halo-white) rgba(255, 255, 255, var(--halo-white-alpha)))
+      drop-shadow(0 0 var(--halo-purple) rgba(139, 92, 246, var(--halo-purple-alpha))) !important;
+    z-index: 60 !important;
+  }
+
+  /* one-tick flash (background tint over the silhouette via filter) */
+  .walker.hero.flashing {
+    animation: flash 0.40s steps(1,end) 1;
+  }
+  @keyframes flash {
+    0%   { filter: drop-shadow(0 0 18px rgba(232,94,255,0.95)) hue-rotate(280deg); }
+    50%  { filter: drop-shadow(0 0 22px rgba(94,231,231,0.95)) hue-rotate(160deg); }
+    100% { filter: none; }
+  }
+
+  /* Reticle — soft circular scan halo */
+  .reticle {
+    position: absolute;
+    width: 220px; height: 320px;
+    transform: translate(-50%,-50%) scale(.96);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-in-out);
+    z-index: 8;
+  }
+  .reticle.on { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  /* Thin vertical rule suggests the scan column, no boxy corners */
+  .reticle .rule-v {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--fg-3), transparent);
+    opacity: .35;
+  }
+  /* Scanning line */
+  .reticle .scanline {
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: var(--gradient-brand);
+    opacity: 0;
+    top: 0;
+  }
+  /* Run the scan line only while the reticle is active so the 2 passes
+     coincide with the scan phase (and don't fire on page load). */
+  .reticle.on .scanline {
+    animation: scan 2.6s cubic-bezier(.5,0,.5,1) 2;
+  }
+  @keyframes scan {
+    0%  { top: 0;   opacity: 0; }
+    12% { opacity: .9; }
+    50% { top: 100%; opacity: .9; }
+    62% { opacity: 0; }
+    100%{ top: 0;   opacity: 0; }
+  }
+
+  /* Tags — borderless, typographic only */
+  .tag {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out) 200ms, transform 800ms var(--ease-in-out) 200ms;
+  }
+  .tag.top {
+    top: -28px;
+    transform: translate(-50%,-100%) translateY(8px);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--fg-3);
+    font-weight: 500;
+  }
+  .tag.best {
+    /* Sits ABOVE the dossier card, horizontally centered on the card. */
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    font-family: var(--font-text);
+    font-style: normal;
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: var(--track-snug);
+    color: #F4EFE3;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out) 200ms;
+  }
+  .reticle.on .tag.top  { opacity: 1; transform: translate(-50%,-100%); }
+  .report.on .tag.best { opacity: 1; }
+
+  /* Soft halo behind the dossier card: a larger blurred disc
+     that eases into the page and masks text cleanly without hard edges. */
+  .report-halo {
+    position: absolute;
+    width: 460px;
+    height: 460px;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out);
+    background: radial-gradient(
+      closest-side,
+      #000 0%,
+      rgba(0,0,0,0.98) 40%,
+      rgba(0,0,0,0.85) 60%,
+      rgba(0,0,0,0.45) 78%,
+      rgba(0,0,0,0.15) 90%,
+      rgba(0,0,0,0)    100%
+    );
+    filter: blur(10px);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .report-halo.on { opacity: 1; }
+
+  /* Dossier card — solid panel sits on top of the halo */
+  .report {
+    position: absolute;
+    width: 300px;
+    background: #0B0D10;
+    border: 1px solid var(--stroke-2);
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 20px;
+    box-shadow:
+      0 1px 0 rgba(244,239,227,0.04) inset,
+      0 28px 70px rgba(0,0,0,0.7);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-in-out);
+    z-index: 21;
+    /* Sober, page-matching palette scoped to the dossier: cream on ink,
+       no cyan/magenta. Redefining the tokens recolors every child. */
+    --fg-1: #F4EFE3;
+    --fg-2: rgba(244,239,227,0.72);
+    --fg-3: rgba(244,239,227,0.50);
+    --fg-4: rgba(244,239,227,0.34);
+    --fg-5: rgba(244,239,227,0.16);
+    --stroke-1: rgba(244,239,227,0.10);
+    --stroke-2: rgba(244,239,227,0.16);
+    --gradient-brand: rgba(244,239,227,0.88);
+  }
+  /* Subtle gradient hairline accent on the top edge */
+  .report::before {
+    content: "";
+    position: absolute;
+    left: 20px; right: 20px; top: 0;
+    height: 1px;
+    background: var(--gradient-brand);
+    opacity: .5;
+    border-radius: inherit;
+  }
+  .report.on { opacity: 1; }
+
+  .report .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--fg-3);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .report .eyebrow::before {
+    content:""; width: 18px; height: 1px; background: currentColor; opacity:.6;
+  }
+  .report .name {
+    font-family: var(--font-text);
+    font-size: var(--step-3);
+    line-height: 1.05;
+    letter-spacing: var(--track-snug);
+    color: var(--fg-1);
+    font-weight: 500;
+    margin: 0 0 2px;
+  }
+  .report .role {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--fg-3);
+    margin: 0;
+  }
+  .report .id {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--fg-4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .rule {
+    height: 1px; background: var(--stroke-1);
+    margin: 14px 0 12px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 100px 1fr 32px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+  }
+  .row .label { color: var(--fg-3); font-weight: 500; }
+  .row .bar-outer {
+    position: relative; height: 2px; background: var(--fg-5);
+    border-radius: 1px; overflow: hidden;
+  }
+  .row .bar-inner {
+    position: absolute; top:0; left:0; bottom:0;
+    background: var(--fg-1);
+    width: 0%;
+    transition: width 1000ms var(--ease-in-out);
+  }
+  .row.gradient .bar-inner { background: var(--gradient-brand); }
+  .row .val {
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--fg-1);
+    text-align: right;
+    text-transform: none;
+  }
+  .footer-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px;
+  }
+  .verdict {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--fg-1);
+    background: transparent;
+    padding: 0;
+    font-weight: 500;
+  }
+  .verdict::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gradient-brand);
+    box-shadow: none;
+  }
+  .rarity {
+    font-family: var(--font-text);
+    font-style: normal;
+    font-size: var(--step--1);
+    color: var(--fg-3);
+  }
+
+  /* Tweaks */
+  .tweaks {
+    position: fixed; right: 20px; top: 20px;
+    width: 260px;
+    background: var(--bg-2);
+    border: 1px solid var(--stroke-1);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    z-index: 50;
+    color: var(--fg-2);
+    display: none;
+    box-shadow: var(--shadow-raised);
+  }
+  .tweaks.on { display: block; }
+  .tweaks h4 {
+    margin: 0 0 12px 0;
+    font-family: var(--font-display);
+    font-style: normal;
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--fg-1);
+  }
+  .tweaks label {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  .tweaks input[type="range"] { width: 110px; accent-color: var(--brand-purple); }
+  .tweaks input[type="color"] { width: 34px; height: 22px; border: 1px solid var(--stroke-2); background: none; padding: 0; border-radius: 4px; }
+  .tweaks .btn {
+    display: block; width: 100%; margin-top: 12px;
+    background: var(--gradient-button);
+    color: #0B0B12;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--glow-button);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="frame" id="frame">
+
+    <header class="chrome">
+      <div></div>
+      <div class="meta">
+        <span><span class="dot"></span>Live Talent Map</span>
+        <span id="clock">00:00 CET</span>
+      </div>
+    </header>
+
+    <div class="stage" id="stage">
+      <div class="crowd" id="crowd"></div>
+
+      <div class="reticle" id="reticle">
+        <div class="rule-v"></div>
+        <div class="scanline"></div>
+      </div>
+    </div>
+
+    <!-- Halo + dossier live at frame-level so they sit above the footer chrome -->
+    <div class="report-halo" id="report-halo"></div>
+    <aside class="report" id="report">
+      <div class="tag best">Best Profile on Market</div>
+      <div class="eyebrow">Candidate Dossier</div>
+      <h3 class="name" id="r-name">—</h3>
+      <p class="role" id="r-role">—</p>
+      <span class="id" id="r-id">Réf. 000 000</span>
+      <div class="rule"></div>
+      <div class="row"><span class="label">Soft Skills</span><span class="bar-outer"><span class="bar-inner" data-k="pipe"></span></span><span class="val" id="v-pipe">0</span></div>
+      <div class="row"><span class="label">Hard Skills</span><span class="bar-outer"><span class="bar-inner" data-k="close"></span></span><span class="val" id="v-close">0</span></div>
+      <div class="row"><span class="label">Quota att.</span><span class="bar-outer"><span class="bar-inner" data-k="quota"></span></span><span class="val" id="v-quota">0</span></div>
+      <div class="row gradient"><span class="label">Fit Score</span><span class="bar-outer"><span class="bar-inner" data-k="fit"></span></span><span class="val" id="v-fit">0</span></div>
+      <div class="footer-row">
+        <span class="verdict">Signal d'embauche</span>
+        <span class="rarity" id="r-rarity">1 sur 14 200</span>
+      </div>
+    </aside>
+
+    <footer class="footer">
+      <div></div>
+      <div class="counter">
+        <div>Profils scannés <span class="n" id="c-scan">000 000</span></div>
+        <div>Signatures <span class="m" id="c-match">0</span></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="tweaks" id="tweaks">
+  <h4>Tweaks</h4>
+  <label>Densité <input type="range" id="tw-density" min="6" max="22" value="15"/></label>
+  <label>Vitesse <input type="range" id="tw-speed" min="40" max="200" value="108"/></label>
+  <label>Couleur silhouettes <input type="color" id="tw-people" value="#ffffff"/></label>
+  <button class="btn" id="tw-trigger">Lancer un scan</button>
+</div>
+
+<script src="videos.js?v=12"></script>
+<script>
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "density": 9,
+  "speed": 106,
+  "people": "#ffffff"
+}/*EDITMODE-END*/;
+
+// --- Walkers: real silhouette videos approaching the camera.
+//     Loaded from videos.js as STOCK_VIDEOS = [{gender, src}, ...].
+//     Each walker has a `progress` 0..1 that drives size + Y position
+//     (small at horizon → large exiting off bottom). Z-index follows progress
+//     so foreground walkers occlude background ones naturally.
+
+const VARIANTS = STOCK_VIDEOS;
+const VARIANTS_M = STOCK_VIDEOS.filter(x => x.gender === 'm');
+const VARIANTS_F = STOCK_VIDEOS.filter(x => x.gender === 'f');
+
+const crowdEl = document.getElementById('crowd');
+const stageEl = document.getElementById('stage');
+const reticleEl = document.getElementById('reticle');
+const reportEl = document.getElementById('report');
+const cScan = document.getElementById('c-scan');
+const cMatch = document.getElementById('c-match');
+
+let walkers = [], hero = null, zooming = false;
+// Cache of video durations keyed by src, so recycled walkers can sync their
+// travel speed immediately to the new variant without waiting for metadata.
+const DURATIONS = new Map();
+let last = performance.now();
+let scannedCount = 213974;
+let matchCount = 7;
+let nextTimer = null;
+
+const rand = (a,b) => a + Math.random()*(b-a);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const fmtFr = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+// --- Walker model ----------------------------------------------------------
+// progress = 0 at horizon (back), 1 at full size (front edge of frame).
+// Beyond 1 the walker has exited off the bottom and is recycled.
+//
+// Geometry: at progress p (0..1) the walker's feet sit at y_feet(p),
+// and its height is h(p). We use accelerating curves so the visual
+// "approach" feels right (slow far away, fast up close).
+
+function easeInPerspective(p) {
+  // Gentler foreshortening (was p^1.8) so walkers don't crawl when they first
+  // appear — more even apparent speed across the whole passage.
+  return Math.pow(p, 1.42);
+}
+
+function walkerGeometry(w) {
+  const stageH = stageEl.clientHeight;
+  const stageW = stageEl.clientWidth;
+  const p = easeInPerspective(w.progress);
+  // Size range — appear closer (less tiny at the horizon) so they don't seem to
+  // come from infinitely far; foreground kept below the nav.
+  const minH = stageH * 0.20;
+  const maxH = stageH * 0.92;
+  const h = minH + (maxH - minH) * p;
+  // Y of the feet: starts lower (52% of stage) — horizon closer to camera.
+  const yStart = stageH * 0.52;
+  const yEnd   = stageH * 1.32;
+  const yFeet = yStart + (yEnd - yStart) * p;
+  // X center: stage middle ± per-walker static drift. Wider range spreads the
+  // crowd across the full width instead of bunching near centre.
+  const xCenter = stageW * 0.5 + w.xDrift * stageW * 0.48;
+  return { h, yFeet, xCenter, p };
+}
+
+function applyWalkerStyle(w) {
+  const g = walkerGeometry(w);
+  // Reference natural box is 356×200 (16:9 at height 200). Scale and translate
+  // entirely with transform to keep the update GPU-accelerated (no reflow).
+  const REF_H = 200, REF_W = 356;
+  const sc = g.h / REF_H;
+  const tx = g.xCenter - (REF_W * sc) / 2;
+  const ty = g.yFeet - g.h;
+  w.el.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(${sc.toFixed(4)})`;
+  w.el.style.zIndex = Math.floor(g.p * 200) + 10;
+  // DEBUG label follows the walker (upright, unscaled) at its feet.
+  if (w.el._debugTag) {
+    const t = w.el._debugTag;
+    if (!t.parentNode) crowdEl.appendChild(t);
+    t.style.left = g.xCenter.toFixed(0) + 'px';
+    t.style.top = (g.yFeet + 6).toFixed(0) + 'px';
+    t.style.display = w.progress < 0 ? 'none' : 'block';
+    t.style.zIndex = 9999;
+  }
+  // Walkers with negative progress are still queued behind the horizon: keep them invisible.
+  if (w.progress < 0) { w.el.style.setProperty('--alpha', '0'); return; }
+  // Depth dimming via --alpha. Walkers reach near-full opacity quickly and hold
+  // it for most of the journey (only a short fade-in at spawn / fade-out at
+  // exit) so the scene feels populated, not faint.
+  const depthDim = 0.62 + 0.38 * g.p;
+  // Cubic smoothstep (smoother than quadratic) for an extra-gentle curve.
+  const smooth = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const fadeIn  = smooth(Math.max(0, Math.min(1, w.progress / 0.32)));
+  // Fade-out must reach 0 BY the recycle point (1.08), otherwise the walker is
+  // still ~8% visible when it teleports behind the horizon → a visible "pop".
+  const fadeOut = smooth(Math.max(0, Math.min(1, (1.08 - w.progress) / 0.42)));
+  const alpha = depthDim * Math.min(fadeIn, fadeOut);
+  w.el.style.setProperty('--alpha', alpha.toFixed(3));
+}
+
+// Pick a value from a candidate set that maximizes minimum distance to a list
+// of existing values. Used to spread walkers in depth + horizontal position
+// so they don't stack up.
+function pickSpread(existing, candidateCount, range) {
+  let best = null, bestDist = -Infinity;
+  for (let i = 0; i < candidateCount; i++) {
+    const v = rand(range[0], range[1]);
+    let minDist = Infinity;
+    for (const e of existing) minDist = Math.min(minDist, Math.abs(v - e));
+    if (minDist > bestDist) { bestDist = minDist; best = v; }
+  }
+  return best;
+}
+
+// Pick an xDrift via bucketing across the usable width. Divide it into slots
+// and pick whichever has the fewest depth-neighbors, so the crowd stays spread
+// instead of clustering. Slots pick ranges OVERLAP slightly (~12% each side)
+// so positions vary organically while the per-slot occupancy count still
+// prevents two walkers landing in the same lane (no superposition).
+function pickXDriftSpread(refProgress, depthWindow = 2.0) {
+  const LO = -0.62, HI = 0.62;
+  const SLOTS = 18;
+  const slotWidth = (HI - LO) / SLOTS;
+  const others = walkers.filter(o =>
+    Math.abs(o.progress - refProgress) < depthWindow);
+  // Per-slot cost. A walker's footprint at foreground is far wider than the lane
+  // spacing, so adjacent lanes overlap visually too — we therefore spread each
+  // occupied lane's penalty to its NEIGHBOURS (full on same lane, tapering off
+  // over the footprint width ≈ 3 fine lanes), weighted by how close the other
+  // walker is in DEPTH (closer depth = higher real overlap risk).
+  const cost = new Array(SLOTS).fill(0);
+  for (const o of others) {
+    const f = (o.xDrift - LO) / (HI - LO);
+    const oi = Math.max(0, Math.min(SLOTS - 1, Math.floor(f * SLOTS)));
+    // With uniform speed the depth gap between two walkers stays CONSTANT for the
+    // whole journey, so overlap risk is fixed per pair. Penalise lanes within the
+    // other walker's FOOTPRINT — which is wide at the foreground (a near walker
+    // spans ~half the stage) and narrow far away. Radius scales with how forward
+    // the deeper of the two walkers is, and with depth-closeness.
+    const fwd = Math.max(refProgress, o.progress);          // 0 (far) → 1 (front)
+    const radius = 2 + Math.round(7 * Math.max(0, fwd));     // ±2 lanes far → ±9 near
+    // NOTE: do NOT discount by depth gap. xCenter depends only on the lane, not
+    // depth — so two walkers in the same lane ALWAYS stack on screen (the near,
+    // larger one covers the far one). Every occupied lane blocks its footprint
+    // at full weight regardless of how far apart the two are in depth.
+    const w = 1;
+    for (let s = 0; s < SLOTS; s++) {
+      const ld = Math.abs(s - oi);
+      if (ld > radius) continue;
+      const laneW = 1 - (ld / (radius + 1));                 // full on lane, linear taper
+      cost[s] += laneW * w;
+    }
+  }
+  const minCost = Math.min(...cost);
+  const candidates = [];
+  for (let i = 0; i < SLOTS; i++) if (cost[i] <= minCost + 1e-6) candidates.push(i);
+  const chosen = pick(candidates);
+  // Centre the walker in its chosen lane (tiny jitter) so it stays as far as
+  // possible from both neighbouring lanes.
+  const slotMin = LO + chosen * slotWidth + slotWidth * 0.25;
+  const slotMax = slotMin + slotWidth * 0.50;
+  return rand(slotMin, slotMax);
+}
+
+// Pick a variant that's NOT currently used by ANY walker on screen or queued.
+// Falls back to one used by no visible walker if all are taken.
+function pickFreshVariant(exceptWalker) {
+  // Strictest: exclude every other walker's variant, regardless of progress.
+  const usedAll = new Set(
+    walkers
+      .filter(o => o !== exceptWalker)
+      .map(o => o.variant.src)
+  );
+  const freeAll = VARIANTS.filter(v => !usedAll.has(v.src));
+  if (freeAll.length > 0) {
+    // Diversity: avoid (a) the same visual TYPE already on screen, and (b) the
+    // few most-recently-used variants — so the rotation cycles through all looks
+    // instead of bouncing between the same handful. Runs ONCE per recycle (not in
+    // the placement loop), so its cost is negligible.
+    const vis = walkers.filter(o => o !== exceptWalker && o.progress >= 0);
+    const visTypes = new Set(vis.map(o => o.variant && o.variant.type));
+    const recent = window._phRecent || (window._phRecent = []);
+    let pool = freeAll.filter(v => !visTypes.has(v.type) && !recent.includes(v.src));
+    if (!pool.length) pool = freeAll.filter(v => !visTypes.has(v.type));
+    if (!pool.length) pool = freeAll.filter(v => !recent.includes(v.src));
+    if (!pool.length) pool = freeAll;
+    const chosen = pick(pool);
+    recent.push(chosen.src);
+    while (recent.length > 4) recent.shift();  // remember last 4 to force rotation
+    return chosen;
+  }
+  // Next: exclude only visible walkers (queued ones don't matter since they're invisible).
+  const usedVisible = new Set(
+    walkers
+      .filter(o => o !== exceptWalker && o.progress >= 0)
+      .map(o => o.variant.src)
+  );
+  const freeVisible = VARIANTS.filter(v => !usedVisible.has(v.src));
+  if (freeVisible.length > 0) return pick(freeVisible);
+  return pick(VARIANTS);
+}
+
+function spawnWalker(progressInit) {
+  const variant = pickFreshVariant(null);
+  const v = document.createElement('video');
+  v.src = variant.src;
+  v.muted = true;
+  v.loop = false;
+  v.playsInline = true;
+  v.preload = 'auto';
+  v.disablePictureInPicture = true;
+  v.disableRemotePlayback = true;
+  v.setAttribute('muted', '');
+  v.setAttribute('playsinline', '');
+  v.setAttribute('webkit-playsinline', '');
+  v.className = 'walker';
+  v.dataset.gender = variant.gender;
+  // DEBUG: filename label under each silhouette (temporary — toggle with PH_DEBUG)
+  if (window.PH_DEBUG) {
+    const tag = document.createElement('div');
+    tag.className = 'ph-debug-tag';
+    const fname = variant.src.split('/').pop().replace('.webm','');
+    tag.textContent = (variant.type ? '['+variant.type+'] ' : '') + fname;
+    v._debugTag = tag;
+  }
+  // If a clip ends while the walker is still on screen, DON'T recycle abruptly
+  // (that would make it vanish without a fade). Just hold the last frame —
+  // the walker keeps translating + fading via transform/alpha and recycles
+  // cleanly when it exits at progress > 1.15.
+  v.addEventListener('ended', () => { try { v.pause(); v.currentTime = Math.max(0, (v.duration || 0) - 0.04); } catch (e) {} });
+  crowdEl.appendChild(v);
+  const xDrift = pickXDriftSpread(progressInit);
+  const cachedDur = DURATIONS.get(variant.src);
+  const w = {
+    el: v,
+    variant,
+    gender: variant.gender,
+    progress: progressInit,
+    speed: 0,
+    xDrift,
+    jitter: rand(1.08, 1.13),
+    // Visible-on-init walkers play immediately; queued ones stay paused at 0
+    // until they cross the horizon.
+    _videoStarted: progressInit >= 0,
+    scanned: false,
+  };
+  if (progressInit >= 0) {
+    // Align the clip's playhead to the walker's starting depth so even the
+    // first (staggered) cycle is in sync — video position = progress fraction.
+    const setStart = (dur) => { try { v.currentTime = Math.max(0, Math.min(progressInit / 1.15, 0.98)) * dur; } catch (e) {} };
+    const cd = DURATIONS.get(variant.src);
+    if (cd && cd > 0) setStart(cd);
+    v.play().catch(() => {});
+  }
+  // BULLETPROOF anti-freeze: whenever the browser pauses this video for ANY
+  // reason (off-screen iframe, scroll, throttle, decode stall), instantly
+  // resume it — UNLESS it's legitimately meant to be paused (queued behind the
+  // horizon, hidden during a scan, or the scanned hero being held). This event
+  // fires on every pause, so a visible walker can never stay frozen.
+  v.addEventListener('pause', () => {
+    if (v.ended) return;
+    const legit = w.progress < 0 || w === hero || v.classList.contains('hidden-during-scan');
+    if (!legit && w._videoStarted) {
+      // next tick, so we don't fight a pause that's part of a deliberate sequence
+      requestAnimationFrame(() => { if (!v.ended && w.progress >= 0 && w !== hero && !v.classList.contains('hidden-during-scan')) v.play().catch(() => {}); });
+    }
+  });
+  if (cachedDur && cachedDur > 0) syncWalkerToVideo(w, cachedDur);
+  v.addEventListener('loadedmetadata', () => {
+    if (v.duration > 0 && isFinite(v.duration)) {
+      DURATIONS.set(v.currentSrc || w.variant.src, v.duration);
+      syncWalkerToVideo(w, v.duration);
+      if (w.progress >= 0 && !w._seeked) {
+        w._seeked = true;
+        try { v.currentTime = Math.max(0, Math.min(w.progress / 1.15, 0.98)) * v.duration; } catch (e) {}
+      }
+    }
+    if (w.progress >= 0) v.play().catch(() => {});
+  });
+  applyWalkerStyle(w);
+  return w;
+}
+
+// Set travel speed so the walker traverses the visible zone (0 → 1.15)
+// FASTER than one video duration. Combined with pausing the video while
+// queued + restarting it at frame 0 on entry, the video never completes a
+// loop while visible → no mid-passage "shift". We leave playbackRate at 1.0
+// (native) so no decoder hitches from rate changes.
+function syncWalkerToVideo(w, duration) {
+  // UNIFORM traversal time for every walker → no walker ever catches up to
+  // another (catch-up in adjacent lanes was the last source of overlap, since
+  // foreground silhouettes are wider than the lane spacing and lateral movement
+  // is forbidden). A fixed ~9.6s traversal is shorter than every clip's duration,
+  // so the clip still never ends on screen (no reboot/freeze). For any unusually
+  // short clip it scales down safely.
+  const trav = Math.min(9.6, (duration || 12) * 0.92);
+  w.speed = 1.15 / trav;
+}
+
+function recycleWalker(w) {
+  // Re-randomize. Quick re-entry just behind horizon + xDrift spread away
+  // from walkers in a similar depth band (so they don't stack as they grow).
+  // Also pick a variant that's not currently on screen to avoid duplicates.
+  const variant = pickFreshVariant(w);
+  w.variant = variant;
+  w.gender = variant.gender;
+  w.el.src = variant.src;
+  w.el.dataset.gender = variant.gender;
+  // Re-enter behind the horizon. Choose the depth (and lane) that maximises
+  // separation from every other walker so the crowd never bunches in one plane
+  // and never leaves a gap. Wider band + more candidates = finer optimisation.
+  const others = walkers.filter(o => o !== w).map(o => o.progress);
+  // Re-entry placement scored in SCREEN SPACE (the real overlap test): project
+  // each candidate (depth→size+y, lane→x) and every other walker to pixels, then
+  // maximise the minimum normalised box distance. Two silhouettes only "overlap"
+  // when their projected boxes are close, so optimising this directly is far more
+  // effective than abstract depth/lane gaps.
+  const stageH = stageEl.clientHeight, stageW = stageEl.clientWidth;
+  const proj = (progress, xDrift) => {
+    const p = easeInPerspective(Math.max(0, progress));
+    const h = stageH * (0.20 + 0.72 * p);
+    const y = (stageH * 0.52) + (stageH * 1.32 - stageH * 0.52) * p - h * 0.5;
+    const x = stageW * 0.5 + xDrift * stageW * 0.48;
+    return { x, y, w: h * 0.42, h };
+  };
+  let bestProg = -0.06, bestDrift = 0, bestScore = -Infinity;
+  for (let i = 0; i < 14; i++) {
+    const cand = rand(-0.65, -0.02);
+    const drift = pickXDriftSpread(cand);
+    const a = proj(cand, drift);
+    let minSep = Infinity;
+    for (const o of walkers) {
+      if (o === w) continue;
+      const b = proj(o.progress, o.xDrift);
+      // Normalised gap: x-overlap penalised by combined half-widths, y by heights.
+      const dx = Math.abs(a.x - b.x) / ((a.w + b.w) * 0.5 + 1);
+      const dy = Math.abs(a.y - b.y) / ((a.h + b.h) * 0.35 + 1);
+      const sep = Math.min(dx, dy);
+      if (sep < minSep) minSep = sep;
+    }
+    if (minSep > bestScore) { bestScore = minSep; bestProg = cand; bestDrift = drift; }
+  }
+  w.progress = bestProg;
+  w.xDrift = bestDrift;
+  w.jitter = rand(1.08, 1.13);
+  w._videoStarted = false;
+  // Queued behind the horizon: park the video at frame 0 and keep it PAUSED
+  // (no decode cost, no advance) until it crosses into view.
+  try { w.el.pause(); } catch (e) {}
+  try { w.el.currentTime = 0; } catch (e) {}
+  const knownDur = DURATIONS.get(variant.src);
+  if (knownDur && knownDur > 0) {
+    // Re-enter just behind the horizon so the new walker rises into view BEFORE
+    // the exiting one has fully gone — keeps the scene populated without gaps.
+    syncWalkerToVideo(w, knownDur);
+  } else {
+    w.speed = 0;
+  }
+  w.el.addEventListener('loadedmetadata', function onMeta() {
+    w.el.removeEventListener('loadedmetadata', onMeta);
+    const d = w.el.duration;
+    if (d > 0 && isFinite(d)) { DURATIONS.set(variant.src, d); syncWalkerToVideo(w, d); }
+  });
+  w.scanned = false;
+}
+
+function buildCrowd() {
+  crowdEl.innerHTML = '';
+  walkers = [];
+  // Fewer concurrent videos = far smoother. Alpha 1080p webm are decode-heavy,
+  // so we cap the simultaneous count low; depth staggering keeps it looking full.
+  const target = Math.max(7, Math.min(7, Math.round(TWEAKS.density * 0.55)));
+  // On init: stagger progress across the FULL cycle, from behind the horizon
+  // (−0.35) through the visible zone (→ 1.0). Seeding some walkers already
+  // "queued" behind the horizon means that as the first wave exits, others are
+  // immediately rising to fill the scene — no synchronized gap after the first
+  // passes. A small per-walker random offset breaks any residual lock-step.
+  // Spread walkers across the FULL visible cycle on first load (some already in
+  // view). A long crowd-level fade (see crowdEl reveal) softens the entrance.
+  const SPAN_LO = -0.35, SPAN_HI = 1.0;
+  const LANE_LO = -0.58, LANE_HI = 0.58;
+  // Even lane assignment, shuffled so depth order isn't correlated with x.
+  const laneOrder = [];
+  for (let i = 0; i < target; i++) laneOrder.push(i);
+  for (let i = laneOrder.length - 1; i > 0; i--) { const j = Math.floor(rand(0, i + 1)); [laneOrder[i], laneOrder[j]] = [laneOrder[j], laneOrder[i]]; }
+  for (let i = 0; i < target; i++) {
+    // Evenly spaced DEPTHS with only small jitter — so no two walkers land at a
+    // similar depth (the main cause of first-frame overlap). Distinct depths
+    // mean distinct screen heights → they don't overlap even in nearby lanes.
+    const frac = (i + 0.5 + rand(-0.22, 0.22)) / target;
+    const p = SPAN_LO + (SPAN_HI - SPAN_LO) * frac;
+    const w = spawnWalker(p);
+    const laneFrac = (laneOrder[i] + 0.5) / target;
+    w.xDrift = LANE_LO + (LANE_HI - LANE_LO) * laneFrac + rand(-0.03, 0.03);
+    walkers.push(w);
+  }
+  // GUARANTEE a scannable target for the first scan: move the walker nearest 0.64
+  // into the foreground scan band on a clear right lane.
+  let seed = walkers[0], best = Infinity;
+  for (const w of walkers) {
+    const d = Math.abs(w.progress - 0.64);
+    if (d < best) { best = d; seed = w; }
+  }
+  seed.progress = 0.64;
+  seed.xDrift = 0.30;
+  syncVideoTimeToProgress(seed);
+  // RESOLVE first-frame overlaps: if any two walkers are close in BOTH depth and
+  // lane, push the later one to the lane furthest from all others at similar
+  // depth. Repeated a few times so the whole set settles cleanly.
+  const DEPTH_NEAR = 0.24, LANE_NEAR = 0.16;
+  for (let pass = 0; pass < 4; pass++) {
+    for (let a = 0; a < walkers.length; a++) {
+      for (let b = a + 1; b < walkers.length; b++) {
+        const wa = walkers[a], wb = walkers[b];
+        if (Math.abs(wa.progress - wb.progress) < DEPTH_NEAR &&
+            Math.abs(wa.xDrift - wb.xDrift) < LANE_NEAR) {
+          // Find the lane (sampled across the width) furthest from every other
+          // walker that's near wb in depth, and move wb there.
+          let bestX = wb.xDrift, bestGap = -Infinity;
+          for (let s = 0; s < 24; s++) {
+            const cx = LANE_LO + (LANE_HI - LANE_LO) * (s / 23);
+            let gap = Infinity;
+            for (const o of walkers) {
+              if (o === wb) continue;
+              if (Math.abs(o.progress - wb.progress) < DEPTH_NEAR) gap = Math.min(gap, Math.abs(cx - o.xDrift));
+            }
+            if (gap > bestGap) { bestGap = gap; bestX = cx; }
+          }
+          wb.xDrift = bestX;
+        }
+      }
+    }
+  }
+}
+
+// Align a walker's video currentTime to its current progress, matching the
+// speed=1.15/(dur*0.96) relationship. Used after ANY forced progress jump so
+// the clip never ends before the walker exits (no freeze, no reboot in passage).
+function syncVideoTimeToProgress(w) {
+  try {
+    const dur = w.el.duration || DURATIONS.get(w.variant.src);
+    if (dur && isFinite(dur) && dur > 0) {
+      const frac = Math.max(0, Math.min(0.94, (w.progress / 1.15) * 0.96));
+      w.el.currentTime = frac * dur;
+    }
+  } catch (e) {}
+}
+
+function tick(now) {
+  const rawGap = now - last;
+  const dt = Math.min(0.05, rawGap / 1000);
+  last = now;
+  // ── ANTI-FREEZE WATCHDOG ── Guarantee: no on-screen silhouette is ever frozen.
+  // Runs after a throttle gap (scroll-back resumes paused <video>) or ~6×/sec
+  // (catches end-of-clip), not every frame — keeps the hot path light for
+  // fluidity while still being bulletproof.
+  wdAccum += rawGap;
+  if (rawGap > 220 || wdAccum >= 160) {
+    wdAccum = 0;
+    for (const w of walkers) {
+      if (w.progress < 0 || w.progress > 1.15) continue;
+      if (w === hero) continue;
+      if (w.el.classList.contains('hidden-during-scan')) continue;
+      const v = w.el;
+      const dur = v.duration || DURATIONS.get(w.variant && w.variant.src) || 0;
+      if (v.ended || (dur && v.currentTime >= dur - 0.06)) {
+        try { syncVideoTimeToProgress(w); } catch (e) {}
+      }
+      if (v.paused) { w._videoStarted = true; v.play().catch(() => {}); }
+    }
+  }
+  if (!zooming) {
+    for (const w of walkers) {
+      const wasQueued = w.progress < 0;
+      w.progress += w.speed * dt;
+      // When a walker crosses the horizon into view, START its video (it was
+      // paused at frame 0 while queued). It's fully transparent here, so the
+      // play() start is invisible — and the video can't loop mid-passage
+      // because traversal is faster than one duration.
+      if (wasQueued && w.progress >= 0 && !w._videoStarted) {
+        w._videoStarted = true;
+        w.el.play().catch(() => {});
+      }
+      if (w.progress > 1.08) recycleWalker(w);
+      // WATCHDOG: a visible walker's video must NEVER be paused outside a scan.
+      // Browsers pause/throttle <video> in off-screen iframes; on scroll-back
+      // they can stay paused while progress keeps advancing → frozen-but-moving
+      // silhouette. Resume any visible, started, non-queued walker that's paused.
+      if (w.progress >= 0 && w.el.paused && !w.el.ended && w !== hero &&
+          !w.el.classList.contains('hidden-during-scan')) {
+        w._videoStarted = true;
+        w.el.play().catch(() => {});
+      }
+      applyWalkerStyle(w);
+    }
+    // Maintain a minimum on-screen population: whenever fewer than MIN walkers
+    // are visible (progress 0..1.15), pull the queued walker nearest the horizon
+    // forward to the entry point so it fades in immediately. Keeps 4-6 on screen.
+    const MIN_VISIBLE = 6;
+    let visible = 0;
+    for (const w of walkers) if (w.progress >= 0 && w.progress <= 1.15) visible++;
+    if (visible < MIN_VISIBLE) {
+      let cand = null;
+      for (const w of walkers) {
+        if (w.progress < 0 && (!cand || w.progress > cand.progress)) cand = w;
+      }
+      if (cand) {
+        cand.progress = 0.005;
+        // Sync video time to the near-zero progress, then start it (the normal
+        // cross-horizon trigger won't fire since we've jumped to positive
+        // progress) so it never walks frozen.
+        syncVideoTimeToProgress(cand);
+        if (!cand._videoStarted) { cand._videoStarted = true; cand.el.play().catch(() => {}); }
+      }
+    }
+    scannedCount += Math.floor(rand(18, 52) * dt * 60);
+    // Throttle the counter DOM write to ~5/sec instead of every frame to avoid
+    // a per-frame reflow of the counter text.
+    scanAccum += dt;
+    if (scanAccum >= 0.2) { scanAccum = 0; cScan.textContent = fmtFr(scannedCount); }
+  }
+  requestAnimationFrame(tick);
+}
+let scanAccum = 0;
+let wdAccum = 0;
+
+function updateClock() {
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${hh}:${mm} CET`;
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// Culturally-coherent name pools — first+last always drawn from the same origin
+const NAMES = {
+  fr: {
+    m: ['Antoine','Louis','Hugo','Baptiste','Thibault','Maxime','Arthur','Victor','Romain','Pierre-Louis','Guillaume','Alexandre','Étienne','Gaspard','Raphaël'],
+    f: ['Camille','Margaux','Élodie','Clémence','Inès','Charlotte','Léa','Juliette','Sophie','Alice','Marine','Anaïs','Amélie','Héloïse','Éléonore','Constance'],
+    last: ['Lefèvre','Moreau','Dubois','Martin','Bernard','Rousseau','Laurent','Garnier','Fontaine','Beauchamp','Mercier','Chevalier','Leclerc','Dupont','Giraud','Vidal','Noël','Roche','Dumas','de Villiers',"d'Arcy",'Saint-Jean']
+  },
+  arab: {
+    m: ['Karim','Mehdi','Ibrahim','Youssef','Omar','Rayan','Nordine','Saïd','Hakim','Bilal','Anis','Tarek'],
+    f: ['Yasmine','Aïcha','Leila','Nawel','Amina','Sarah','Inès','Sofia','Nora'],
+    last: ['Benali','El Amrani','Bensaïd','Kaddour','Khelifi','Belkacem','Haddad','Cherif','Ziani','Boukhari','Mansouri']
+  },
+  african: {
+    m: ['Mamadou','Amadou','Moussa','Ousmane','Ibrahima','Cheikh','Abdoulaye'],
+    f: ['Fatou','Maïmouna','Aïssatou','Awa','Khadija','Binta'],
+    last: ['Traoré','Diallo','Cisse','Ndiaye','Ouattara','Sow','Koné','Sarr','Camara','Diakité']
+  },
+  intl: {
+    m: ['Matteo','Oliver','Lucas'],
+    f: ['Sofia','Nina','Elena'],
+    last: ['Ferraro','Van der Berg','Karlsson','Romano','Lindqvist']
+  },
+  asian: {
+    m: ['Kenji','Hiroshi','Wei','Minjun','Haruto','Jun'],
+    f: ['Mei','Yuki','Hana','Linh','Soo-jin','Aiko','Lan'],
+    last: ['Nakamura','Tanaka','Chen','Kim','Wang','Nguyen','Lee','Sato','Park','Liu']
+  }
+};
+// Weighted origin mix — 65% French, 15% International, 10% Arab, 5% African, 5% Asian
+const ORIGINS = [
+  'fr','fr','fr','fr','fr','fr','fr','fr','fr','fr','fr','fr','fr',
+  'intl','intl','intl',
+  'arab','arab',
+  'african',
+  'asian'
+];
+const ROLES = [
+  'Business Developer · SaaS',
+  'Account Executive · Enterprise',
+  'Head of Sales · EMEA',
+  'Sales Development Representative',
+  'VP Sales · Série B',
+  'Account Manager · Grands Comptes',
+  'Business Developer · Fintech',
+  'Account Executive · Mid-Market',
+  'Head of Sales · France',
+  'VP Sales · Scale-up',
+  'Account Manager · Luxe & Retail',
+  'SDR · Outbound'
+];
+const RARITY = ['1 sur 8 400','1 sur 12 200','1 sur 14 600','1 sur 19 800','1 sur 24 100'];
+
+function genDossier(gender) {
+  const pipe = Math.floor(rand(88, 99));
+  const close = Math.floor(rand(90, 99));
+  const quota = Math.floor(rand(108, 142));
+  const fit = Math.floor(rand(94, 99));
+  const origin = pick(ORIGINS);
+  const pool = NAMES[origin];
+  const first = pick(gender === 'f' ? pool.f : pool.m);
+  const last = pick(pool.last);
+  return {
+    name: first + ' ' + last,
+    id: 'Réf. ' + String(Math.floor(rand(100000, 999999))).replace(/(\d{3})(\d{3})/, '$1 $2'),
+    role: pick(ROLES),
+    pipe, close, quota, fit,
+    rarity: pick(RARITY)
+  };
+}
+
+function setReport(d) {
+  document.getElementById('r-name').textContent = d.name;
+  document.getElementById('r-id').textContent = d.id;
+  document.getElementById('r-role').textContent = d.role;
+  document.getElementById('r-rarity').textContent = d.rarity;
+  document.getElementById('v-pipe').textContent = d.pipe;
+  document.getElementById('v-close').textContent = d.close;
+  document.getElementById('v-quota').textContent = d.quota + '%';
+  document.getElementById('v-fit').textContent = d.fit;
+  reportEl.querySelectorAll('.bar-inner').forEach(b => b.style.width = '0%');
+  requestAnimationFrame(() => {
+    reportEl.querySelector('[data-k="pipe"]').style.width = d.pipe + '%';
+    reportEl.querySelector('[data-k="close"]').style.width = d.close + '%';
+    reportEl.querySelector('[data-k="quota"]').style.width = Math.min(100, d.quota - 20) + '%';
+    reportEl.querySelector('[data-k="fit"]').style.width = d.fit + '%';
+  });
+}
+
+async function runScanSequence() {
+  if (zooming) return;
+  zooming = true;
+
+  // Scannable lanes: C3+C4 (xDrift -0.372..0.0) and C6 onward (xDrift ≥ 0.124).
+  // C5 stays EXCLUDED. Card goes right for C3 & C4 (left-of-centre lanes).
+  const laneOK = (x, pad) => (x >= -0.372 - pad && x < 0.0) || (x >= 0.124);
+  const cands = walkers.filter(w =>
+    !w.scanned && w.progress > 0.70 && w.progress < 0.80 && laneOK(w.xDrift, 0));
+  const fallback = walkers.filter(w =>
+    !w.scanned && w.progress > 0.64 && w.progress < 0.84 && laneOK(w.xDrift, 0.02));
+  const target = cands.length ? pick(cands) : (fallback.length ? pick(fallback) : null);
+  if (!target) { zooming = false; scheduleNext(); return; }
+  hero = target;
+  hero.scanned = true;
+
+  // During the scan, the hero AND all other walkers are fully paused
+  // (videos + translation). This guarantees the walker's video duration
+  // still covers the full 0→1 travel — no premature loop seam.
+  try { hero.el.pause(); } catch (e) {}
+  // Compute hero's bbox so we can detect which walkers visually overlap with
+  // it. Overlapping walkers (mostly the ones BEHIND the hero) get fully
+  // hidden, since their alpha-transparent regions otherwise bleed through.
+  const heroBox = hero.el.getBoundingClientRect();
+  for (const w of walkers) {
+    if (w === hero) continue;
+    const b = w.el.getBoundingClientRect();
+    const overlaps =
+      b.right > heroBox.left + 12 &&
+      b.left < heroBox.right - 12 &&
+      b.bottom > heroBox.top + 12 &&
+      b.top < heroBox.bottom - 12;
+    if (overlaps) w.el.classList.add('hidden-during-scan');
+    else if (w.progress < 0.22) w.el.classList.add('hidden-during-scan');
+    else w.el.classList.add('dimmed');
+    // Only HERO + hidden walkers pause during a scan. Dimmed-but-VISIBLE walkers
+    // keep animating (the user requires no frozen on-screen silhouette except the
+    // scanned one). The watchdog also re-enforces this every frame.
+    if (w.el.classList.contains('hidden-during-scan')) { try { w.el.pause(); } catch (e) {} }
+  }
+
+  // Save & boost the hero so its colors stay vivid above any overlap.
+  hero._origZ = hero.el.style.zIndex;
+  hero._origOpacity = hero.el.style.opacity;
+  hero.el.style.zIndex = 50;
+  hero.el.style.opacity = 1;
+
+  // Hero visual effect: chromatic aberration via CSS filter (no DOM injection).
+  // Glow intensity scales DOWN as hero progresses forward (gets bigger), so
+  // a closer silhouette gets a tighter, subtler aura.
+  // progress at 0.4 → full glow; at 1.0 → ~30% glow.
+  hero.el.classList.add('hero');
+  const t = Math.max(0, Math.min(1, (hero.progress - 0.4) / 0.6));
+  const k = 1 - 0.7 * t; // 1.0 → 0.3
+  hero.el.style.setProperty('--aber-offset', (2 * k).toFixed(1) + 'px');
+  hero.el.style.setProperty('--halo-white',  (7 * k).toFixed(1) + 'px');
+  hero.el.style.setProperty('--halo-purple', (18 * k).toFixed(1) + 'px');
+  hero.el.style.setProperty('--aber-alpha',         (0.7 * k).toFixed(2));
+  hero.el.style.setProperty('--halo-white-alpha',   (0.28 * k).toFixed(2));
+  hero.el.style.setProperty('--halo-purple-alpha',  (0.42 * k).toFixed(2));
+  hero.el.classList.add('flashing');
+  await wait(420);
+  hero.el.classList.remove('flashing');
+
+  const walkerRect = hero.el.getBoundingClientRect();
+  const stageRect = stageEl.getBoundingClientRect();
+  // Detect the actual horizontal center of the SILHOUETTE (alpha-opaque
+  // pixels) inside the video frame at this moment. The figure might not
+  // sit at the exact box center, especially mid-stride. We sample the
+  // current frame onto a canvas and find the mean column with content.
+  let figureXFraction = 0.5; // fallback: assume figure centered in frame
+  try {
+    const v = hero.el;
+    if (v.videoWidth > 0 && v.videoHeight > 0) {
+      const sampleW = 64;
+      const sampleH = 96;
+      const c = document.createElement('canvas');
+      c.width = sampleW; c.height = sampleH;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(v, 0, 0, sampleW, sampleH);
+      const data = ctx.getImageData(0, 0, sampleW, sampleH).data;
+      let weightedX = 0, totalWeight = 0;
+      // Sample only the upper half (head/torso) where the figure is stable
+      for (let y = 0; y < sampleH * 0.7; y++) {
+        for (let x = 0; x < sampleW; x++) {
+          const a = data[(y * sampleW + x) * 4 + 3];
+          if (a > 16) { weightedX += x * a; totalWeight += a; }
+        }
+      }
+      if (totalWeight > 0) figureXFraction = (weightedX / totalWeight) / sampleW;
+    }
+  } catch (e) { /* canvas tainting or video not ready — fall back to center */ }
+
+  const cx = walkerRect.left + walkerRect.width * figureXFraction - stageRect.left;
+  const cy = walkerRect.top + walkerRect.height*0.5 - stageRect.top;
+
+  const zoomScale = 1.32;
+  const originX = (cx / stageRect.width) * 100;
+  const originY = (cy / stageRect.height) * 100;
+  crowdEl.style.transformOrigin = originX + '% ' + originY + '%';
+  crowdEl.style.transform = `scale(${zoomScale})`;
+
+  await wait(550);
+
+  reticleEl.style.left = cx + 'px';
+  reticleEl.style.top = cy + 'px';
+  const visualH = walkerRect.height * zoomScale;
+  const visualW = walkerRect.width * zoomScale;
+  reticleEl.style.height = visualH + 'px';
+  reticleEl.style.width = Math.max(visualW * 1.8, 200) + 'px';
+  reticleEl.classList.add('on');
+
+  const cardW = 300, cardH = 320, gap = 40;
+  const rightSpace = stageRect.width - cx;
+  // Dossier card placed to the LEFT of the scanned silhouette, EXCEPT for the
+  // Card on the RIGHT for the left-of-centre scannable lanes C3 & C4
+  // (xDrift -0.40..0.0) so it doesn't collide with the headline on the left.
+  const placeRight = (hero.xDrift >= -0.40 && hero.xDrift < 0.0);
+  let rx = placeRight ? (cx + 150 + gap) : (cx - 150 - gap - cardW);
+  // Place naturally; the card has a solid opaque panel so it reads fine even
+  // when it overlaps the hero's left fade zone.
+  rx = Math.max(16, Math.min(stageRect.width - cardW - 16, rx));
+  const ry = Math.max(24, Math.min(stageRect.height - cardH - 24, cy - cardH/2));
+  reportEl.style.left = rx + 'px';
+  reportEl.style.top = ry + 'px';
+  reportEl.style.transform = 'translateX(' + (placeRight ? '14px' : '-14px') + ')';
+
+  const haloEl = document.getElementById('report-halo');
+  haloEl.style.left = (rx + cardW / 2) + 'px';
+  haloEl.style.top  = (ry + cardH / 2) + 'px';
+  haloEl.classList.add('on');
+
+  setReport(genDossier(hero.gender));
+
+  await wait(260);
+  reportEl.classList.add('on');
+  reportEl.style.transform = 'translateX(0)';
+
+  matchCount += 1;
+  cMatch.textContent = matchCount;
+
+  await wait(3000);
+
+  // Pre-warm: resume the videos that should be playing (visible + hero) ~450ms
+  // before the dezoom, so their decoders deliver fresh frames before motion
+  // becomes visible. Queued walkers stay paused at frame 0.
+  const toResume = walkers.filter(w => w === hero || w.progress >= 0);
+  for (const w of toResume) { try { w.el.play(); } catch (e) {} }
+
+  await wait(450);
+
+  reportEl.classList.remove('on');
+  document.getElementById('report-halo').classList.remove('on');
+  reticleEl.classList.remove('on');
+
+  // Dezoom + un-dim. Videos are already playing from the pre-warm above, so
+  // the hero resumes in perfect sync with the rest (no per-walker await that
+  // could single the hero out).
+  crowdEl.style.transform = 'scale(1)';
+  if (hero) {
+    hero.el.classList.remove('hero');
+    hero.el.style.zIndex = hero._origZ || '';
+    hero.el.style.opacity = hero._origOpacity || '';
+  }
+  for (const w of walkers) {
+    w.el.classList.remove('dimmed');
+    w.el.classList.remove('hidden-during-scan');
+    if (w === hero || w.progress >= 0) { try { w.el.play(); } catch (e) {} }
+  }
+  zooming = false;
+  hero = null;
+  await wait(500);
+  scheduleNext();
+}
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function scheduleNext(){
+  clearTimeout(nextTimer);
+  // First scan fires fast (within ~3s of load) for immediate signal of intent;
+  // subsequent scans use the calmer cadence.
+  const delay = firstScanDone ? rand(2400, 3500) : rand(2600, 3400);
+  firstScanDone = true;
+  nextTimer = setTimeout(runScanSequence, delay);
+}
+let firstScanDone = false;
+
+function applyPeople(c){ document.documentElement.style.setProperty('--people-hero', c); }
+
+function init() {
+  applyPeople(TWEAKS.people);
+  buildCrowd();
+  // First-load reveal is handled purely in CSS (#crowd { animation: crowdReveal })
+  // so it always plays on load, independent of JS timing.
+  const vids = crowdEl.querySelectorAll('video');
+  last = performance.now();
+  requestAnimationFrame(tick);
+  scheduleNext();
+}
+init();
+
+// Resume any visible walker videos when the page/tab becomes visible again
+// (browsers pause media in backgrounded/off-screen contexts).
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { hiddenAt = performance.now(); return; }
+  last = performance.now();
+  const awayMs = hiddenAt ? (performance.now() - hiddenAt) : 0;
+
+  // Resync every visible walker's frame to its progress before resuming.
+  for (const w of walkers) {
+    if (w.progress >= 0 && w._videoStarted && w !== hero && !w.el.classList.contains('hidden-during-scan')) {
+      try { syncVideoTimeToProgress(w); } catch (e) {}
+      if (w.el.paused && !w.el.ended) w.el.play().catch(() => {});
+    }
+  }
+
+  // After a PROLONGED absence (>1.2s), the frozen state looks abrupt: a scan may
+  // be stuck mid-zoom and walkers "snap" back on. Cancel any frozen scan and
+  // gently re-reveal the whole crowd with the same soft fade used on first load.
+  if (awayMs > 1200) {
+    if (zooming || hero) {
+      clearTimeout(nextTimer);
+      try { document.querySelectorAll('.walker.dimmed,.walker.hidden-during-scan').forEach(el => el.classList.remove('dimmed','hidden-during-scan')); } catch (e) {}
+      if (hero) { try { hero.el.classList.remove('hero'); hero.el.style.filter=''; } catch (e) {} hero.scanned = false; }
+      const r = document.getElementById('reticle'); if (r) r.classList.remove('on');
+      const rep = document.getElementById('report'); if (rep) rep.classList.remove('on');
+      zooming = false; hero = null;
+      for (const w of walkers) { if (w.progress >= 0 && w.el.paused && !w.el.ended) w.el.play().catch(()=>{}); }
+      scheduleNext();
+    }
+    // Soft collective re-reveal (re-run the first-load fade), without disturbing motion.
+    crowdEl.style.animation = 'none';
+    void crowdEl.offsetWidth;            // reflow to restart the animation
+    crowdEl.style.animation = 'crowdReveal 1100ms var(--ease-out) forwards';
+  }
+  hiddenAt = 0;
+});
+
+// Final safety net: a timer (independent of rAF, which stops while the iframe is
+// off-screen) that resumes any visible walker whose video is paused but should
+// be playing. Runs ~4×/s so a frozen silhouette self-heals within ~250ms.
+setInterval(() => {
+  for (const w of walkers) {
+    if (w.progress >= 0 && w._videoStarted && w.el.paused && !w.el.ended &&
+        w !== hero && !w.el.classList.contains('hidden-during-scan')) {
+      w.el.play().catch(() => {});
+    }
+  }
+}, 250);
+
+let rT;
+window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(buildCrowd, 180); });
+
+// Tweaks
+const twEl = document.getElementById('tweaks');
+const twDensity = document.getElementById('tw-density');
+const twSpeed = document.getElementById('tw-speed');
+const twPeople = document.getElementById('tw-people');
+const twTrigger = document.getElementById('tw-trigger');
+twDensity.value = TWEAKS.density;
+twSpeed.value = TWEAKS.speed;
+twPeople.value = TWEAKS.people;
+
+function persist(){ window.parent && window.parent.postMessage({ type:'__edit_mode_set_keys', edits:{...TWEAKS} }, '*'); }
+twDensity.addEventListener('input', e => { TWEAKS.density = parseInt(e.target.value); buildCrowd(); persist(); });
+twSpeed.addEventListener('input', e => {
+  TWEAKS.speed = parseInt(e.target.value);
+  walkers.forEach(w => {
+    const dur = DURATIONS.get(w.variant.src);
+    if (dur && dur > 0) syncWalkerToVideo(w, dur);
+  });
+  persist();
+});
+twPeople.addEventListener('input', e => { TWEAKS.people = e.target.value; applyPeople(TWEAKS.people); persist(); });
+twTrigger.addEventListener('click', () => { clearTimeout(nextTimer); runScanSequence(); });
+
+window.addEventListener('message', (e)=>{
+  const d = e.data || {};
+  if (d.type === '__activate_edit_mode') twEl.classList.add('on');
+  if (d.type === '__deactivate_edit_mode') twEl.classList.remove('on');
+});
+window.parent && window.parent.postMessage({ type:'__edit_mode_available' }, '*');
+</script>
+</body>
+</html>

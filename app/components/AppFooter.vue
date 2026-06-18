@@ -1,59 +1,136 @@
 <script setup lang="ts">
+/**
+ * Mariell footer — ink-1000 ground, 4 link columns + legal bar.
+ * Mirrors the nav routes. Two legal links only (CGU + footer LinkedIn were
+ * dropped per the design decisions). Clean Nuxt paths.
+ */
+const calendlyUrl = useRuntimeConfig().public.calendlyUrl
 const year = new Date().getFullYear()
+
+const columns: { head: string; items: { label: string; to: string; external?: boolean }[] }[] = [
+  {
+    head: '— Mariell',
+    items: [
+      { label: 'Mariell', to: '/mariell' },
+      { label: 'Méthode', to: '/methode' },
+      { label: 'Le Lab', to: '/lab' },
+      { label: 'Blog', to: '/blog' },
+    ],
+  },
+  {
+    head: '— Expertises',
+    items: [
+      { label: 'SDR / BDR', to: '/expertises/sdr' },
+      { label: 'Account Executive', to: '/expertises/account-executive-mid-market' },
+      { label: 'Head of Sales', to: '/expertises/head-of-sales' },
+      { label: 'CRO', to: '/expertises/cro' },
+      { label: 'Team Buildout', to: '/expertises/team-buildout' },
+    ],
+  },
+  {
+    head: '— Références',
+    items: [
+      { label: 'Suivi de performance', to: '/performances' },
+      { label: 'Cas clients', to: '/cas-clients' },
+      { label: 'Toutes les expertises', to: '/expertises' },
+    ],
+  },
+  {
+    head: '— Contact',
+    items: [
+      { label: 'Parler à Mariell', to: calendlyUrl, external: true },
+      { label: 'chez@mariell.fr', to: 'mailto:chez@mariell.fr', external: true },
+      { label: 'LinkedIn', to: 'https://www.linkedin.com/company/chezmariell', external: true },
+    ],
+  },
+]
 </script>
 
 <template>
-  <footer class="relative border-t border-white/8 bg-black px-5 pt-12 pb-6 md:px-10 lg:px-16">
-    <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-[2fr_1fr_1fr] md:gap-12">
-        <div>
-          <a href="#accueil">
-            <img src="/logo.svg" alt="Mariell" class="block h-9 w-auto" />
-          </a>
-          <p
-            class="mt-4 max-w-md text-[0.9rem] leading-[1.6] text-white/55"
-            style="font-family: var(--font-grotesk); font-weight: 300;"
-          >
-            Cabinet de recrutement Sales premium. Paris — mais on chasse partout où vos meilleurs profils se cachent.
-          </p>
-        </div>
-
-        <div>
-          <p class="font-mono-num mb-3 text-[0.7rem] uppercase tracking-[0.24em] text-white/40">
-            Navigation
-          </p>
-          <ul class="flex flex-col gap-2 text-[0.9rem]" style="font-family: var(--font-grotesk); font-weight: 300;">
-            <li><a href="#accueil" class="text-white/75 transition-colors hover:text-white">Accueil</a></li>
-            <li><a href="#who" class="text-white/75 transition-colors hover:text-white">Who is Mariell ?</a></li>
-            <li><a href="#process-section" class="text-white/75 transition-colors hover:text-white">Process</a></li>
-            <li><a href="#pricing" class="text-white/75 transition-colors hover:text-white">Pricing</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="font-mono-num mb-3 text-[0.7rem] uppercase tracking-[0.24em] text-white/40">
-            Légal
-          </p>
-          <ul class="flex flex-col gap-2 text-[0.9rem]" style="font-family: var(--font-grotesk); font-weight: 300;">
-            <li><NuxtLink to="/mentions-legales" class="text-white/75 transition-colors hover:text-white">Mentions légales</NuxtLink></li>
-            <li><NuxtLink to="/politique-confidentialite" class="text-white/75 transition-colors hover:text-white">Politique de protection des données</NuxtLink></li>
-          </ul>
-        </div>
+  <footer class="site-footer">
+    <div class="container site-footer__cols">
+      <div v-for="col in columns" :key="col.head" class="site-footer__col">
+        <div class="site-footer__head">{{ col.head }}</div>
+        <ul class="site-footer__list">
+          <li v-for="item in col.items" :key="item.label">
+            <a v-if="item.external" class="site-footer__link" :href="item.to" target="_blank" rel="noopener">{{ item.label }}</a>
+            <NuxtLink v-else class="site-footer__link" :to="item.to">{{ item.label }}</NuxtLink>
+          </li>
+        </ul>
       </div>
+    </div>
 
-      <div
-        class="flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-5"
-      >
-        <p class="font-mono-num text-[0.72rem] tracking-[0.2em] text-white/40">
-          © {{ year }} MARIELL · TOUS DROITS RÉSERVÉS
-        </p>
-        <p
-          class="text-[0.95rem] italic text-white/55"
-          style="font-family: var(--font-grotesk); font-weight: 500;"
-        >
-          Recruter n'est pas un pari.
-        </p>
+    <div class="container site-footer__legal">
+      <div>© {{ year }} Mariell. Tous droits réservés.</div>
+      <div class="site-footer__legal-links">
+        <NuxtLink to="/mentions-legales">Mentions légales</NuxtLink>
+        <NuxtLink to="/politique-confidentialite">Politique de confidentialité</NuxtLink>
       </div>
     </div>
   </footer>
 </template>
+
+<style scoped>
+.site-footer {
+  background: var(--ink-1000);
+  color: var(--fg-on-ink-1);
+  padding: 60px 40px 22px;
+}
+.site-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+.site-footer__head {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 227, 0.5);
+  margin-bottom: 18px;
+}
+.site-footer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.site-footer__link {
+  color: rgba(244, 239, 227, 0.82);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 160ms var(--ease-out);
+}
+.site-footer__link:hover { color: var(--cyan); }
+.site-footer__legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(244, 239, 227, 0.08);
+  font-size: 12px;
+  color: rgba(244, 239, 227, 0.5);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.site-footer__legal-links {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.site-footer__legal-links a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-footer__legal-links a:hover { color: var(--cyan); }
+
+@media (max-width: 900px) {
+  .site-footer__cols { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .site-footer__cols { grid-template-columns: 1fr; }
+}
+</style>

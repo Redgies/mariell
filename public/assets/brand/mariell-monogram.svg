@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Mariell monogram">
+  <defs>
+    
+  </defs>
+  <g transform="translate(60 95)" text-anchor="middle">
+    <text class="m-mono" x="-3" y="0" fill="#7FE7E1">M</text>
+    <text class="m-mono" x="3" y="0" fill="#E68BE8">M</text>
+    <text class="m-mono" x="0" y="0" fill="#FFFFFF">M</text>
+  </g>
+</svg>

@@ -1,0 +1,296 @@
+/* ============================================================
+   MARIELL — Colors & Type
+   ------------------------------------------------------------
+   Fonts are loaded from Google Fonts as best-available
+   substitutes for the live site (see README → VISUAL FOUNDATIONS).
+   Swap to real brand files by replacing the @import below and
+   updating the --font-* variables.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Geist:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  /* -------- Brand core palette -------- */
+  --brand-cyan:      #5EE7E7;   /* aqua — left edge of gradient */
+  --brand-magenta:   #E85EFF;   /* fuchsia — right edge of gradient */
+  --brand-purple:    #8B5CF6;   /* midpoint accent */
+  --brand-pink:      #FF3EA5;   /* chromatic-aberration right channel */
+  --brand-aqua-lite: #7EEFEF;   /* chromatic-aberration left channel */
+
+  /* -------- Neutrals (dark-first) -------- */
+  --bg-0:            #000000;   /* page black */
+  --bg-1:            #08080A;   /* card base */
+  --bg-2:            #0E0E12;   /* raised card */
+  --bg-3:            #16161C;   /* input / hover surface */
+  --stroke-1:        rgba(255,255,255,0.08);  /* hairline border */
+  --stroke-2:        rgba(255,255,255,0.14);  /* emphasized border */
+  --stroke-3:        rgba(255,255,255,0.22);  /* focus border */
+
+  /* -------- Foreground -------- */
+  --fg-1:            #FFFFFF;             /* primary on dark */
+  --fg-2:            rgba(255,255,255,0.72); /* secondary */
+  --fg-3:            rgba(255,255,255,0.48); /* tertiary / meta */
+  --fg-4:            rgba(255,255,255,0.32); /* labels, numbering */
+  --fg-5:            rgba(255,255,255,0.18); /* dividers, lowest */
+
+  /* -------- Semantic status -------- */
+  --success:         #4ADE80;
+  --warning:         #FACC15;
+  --danger:          #F87171;
+  --info:            var(--brand-cyan);
+
+  /* -------- Signature gradients -------- */
+  --gradient-brand:       linear-gradient(90deg, #5EE7E7 0%, #8B5CF6 50%, #E85EFF 100%); /* @kind color */
+  --gradient-brand-soft:  linear-gradient(90deg, #5EE7E7 0%, #B47EFF 50%, #E85EFF 100%); /* @kind color */
+  --gradient-button:      linear-gradient(90deg, #5EE7E7 0%, #9B6BFF 55%, #E85EFF 100%); /* @kind color */
+  --gradient-glow-purple: radial-gradient(60% 60% at 80% 40%, rgba(139,92,246,0.28), transparent 70%); /* @kind color */
+  --gradient-glow-teal:   radial-gradient(60% 60% at 10% 60%, rgba(94,231,231,0.18), transparent 70%); /* @kind color */
+
+  /* -------- Type families -------- */
+  --font-display: "Cormorant Garamond", "Canela", "Ogg", "GT Super Display", ui-serif, Georgia, serif;
+  --font-sans:    "Geist", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* -------- Type scale (px) -------- */
+  --step--2: 11px;  /* micro labels @kind font */
+  --step--1: 13px;  /* small / captions @kind font */
+  --step-0:  15px;  /* body @kind font */
+  --step-1:  17px;  /* body-lg @kind font */
+  --step-2:  22px;  /* h5 @kind font */
+  --step-3:  28px;  /* h4 @kind font */
+  --step-4:  38px;  /* h3 @kind font */
+  --step-5:  52px;  /* h2 @kind font */
+  --step-6:  72px;  /* h1 @kind font */
+  --step-7:  104px; /* hero @kind font */
+
+  /* -------- Letter spacing -------- */
+  --track-label: 0.22em;   /* uppercase eyebrows @kind font */
+  --track-tight: -0.02em;  /* big serif display @kind font */
+  --track-snug:  -0.01em;  /* headings @kind font */
+  --track-normal: 0;       /* @kind font */
+
+  /* -------- Spacing scale (8px base) -------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10:128px;
+
+  /* -------- Radii -------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* -------- Shadows & glows -------- */
+  --shadow-card:   0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-raised: 0 1px 0 rgba(255,255,255,0.06) inset, 0 24px 60px rgba(0,0,0,0.6);
+  --glow-cyan:     0 0 32px rgba(94,231,231,0.45);
+  --glow-magenta:  0 0 40px rgba(232,94,255,0.45);
+  --glow-button:   0 10px 40px rgba(139,92,246,0.35);
+
+  /* -------- Motion -------- */
+  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);  /* @kind other */
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);  /* @kind other */
+  --dur-fast:      150ms;   /* @kind other */
+  --dur-base:      260ms;   /* @kind other */
+  --dur-slow:      520ms;   /* @kind other */
+}
+
+/* ============================================================
+   Semantic type classes
+   ============================================================ */
+
+.t-hero {
+  font-family: var(--font-display);
+  font-size: var(--step-7);
+  line-height: 0.96;
+  letter-spacing: var(--track-tight);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--step-6);
+  line-height: 1.02;
+  letter-spacing: var(--track-tight);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  line-height: 1.06;
+  letter-spacing: var(--track-snug);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  line-height: 1.12;
+  letter-spacing: var(--track-snug);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.t-h4 {
+  font-family: var(--font-sans);
+  font-size: var(--step-3);
+  line-height: 1.2;
+  letter-spacing: var(--track-snug);
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.t-h5 {
+  font-family: var(--font-sans);
+  font-size: var(--step-2);
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.t-body-lg {
+  font-family: var(--font-sans);
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.t-small {
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--fg-3);
+}
+
+.t-label {
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--fg-3);
+  font-weight: 500;
+}
+
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.t-italic-accent {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   Building blocks
+   ============================================================ */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--fg-3);
+  font-weight: 500;
+}
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-button);
+  color: #0B0B12;
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              filter var(--dur-fast) var(--ease-out);
+  box-shadow: var(--glow-button);
+}
+.btn-gradient:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-gradient:active { transform: translateY(0) scale(0.99); filter: brightness(0.96); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  font-weight: 500;
+  border: 1px solid var(--stroke-2);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.04); border-color: var(--stroke-3); }
+
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+/* Chromatic-aberration wordmark effect (apply to any text element) */
+.chromatic {
+  position: relative;
+  display: inline-block;
+  color: var(--fg-1);
+}
+.chromatic::before,
+.chromatic::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.chromatic::before { color: var(--brand-aqua-lite); transform: translate(-2px, 0); }
+.chromatic::after  { color: var(--brand-pink);      transform: translate(2px, 0); }

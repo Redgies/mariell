@@ -1,14 +1,5 @@
 <script setup lang="ts">
-useHead({
-  title: "Évaluation d'attractivité — Mariell · Le Lab",
-  meta: [
-    {
-      name: 'description',
-      content:
-        "Évaluez l'attractivité de votre offre Sales en moins de 60 secondes. Une lecture experte calibrée sur le marché 2026.",
-    },
-  ],
-})
+definePageMeta({ layout: 'tool' })
 
 const config = useRuntimeConfig()
 const hasTurnstile = computed(() => {
@@ -169,7 +160,7 @@ function validateField(key: FieldKey): string | null {
     case 'intitulePoste': return form.intitulePoste ? null : "Sélectionnez un intitulé de poste."
     case 'intitulePosteAutre':
       if (form.intitulePoste !== 'Autre') return null
-      return t(form.intitulePosteAutre).length >= 3 ? null : "Précisez l'intitulé (3 caractères min)."
+      return t(form.intitulePosteAutre).length >= 3 ? null : "Précisez l’intitulé (3 caractères min)."
     case 'seniorite': return form.seniorite ? null : 'Sélectionnez un niveau de séniorité.'
     case 'typeCycle': return form.typeCycle ? null : 'Sélectionnez un type de cycle.'
     case 'typeCycleAutre':
@@ -191,9 +182,9 @@ function validateField(key: FieldKey): string | null {
     case 'packageOte': {
       const n = stripNumber(form.packageOte)
       if (n === null) return 'Champ obligatoire.'
-      if (n < 0 || n > 800000) return "L'OTE doit être entre 0 € et 800 000 €."
+      if (n < 0 || n > 800000) return "L’OTE doit être entre 0 € et 800 000 €."
       const f = stripNumber(form.packageFixe)
-      if (f !== null && n < f) return "L'OTE doit être supérieur ou égal au fixe."
+      if (f !== null && n < f) return "L’OTE doit être supérieur ou égal au fixe."
       return null
     }
     case 'rgpd': return form.rgpd ? null : 'Vous devez accepter la politique de confidentialité.'
@@ -272,8 +263,8 @@ const ALERT_BY_CODE: Record<string, AlertConfig> = {
     text: 'Merci de rafraîchir la page et réessayer.',
   },
   INTERNAL_ERROR: {
-    title: "Une erreur technique s'est produite.",
-    text: "Votre demande n'a pas pu être enregistrée. Merci de réessayer dans quelques minutes, ou de nous contacter directement à <a href=\"mailto:bonjour@mariell.fr\">bonjour@mariell.fr</a>.",
+    title: "Une erreur technique s’est produite.",
+    text: "Votre demande n’a pas pu être enregistrée. Merci de réessayer dans quelques minutes, ou de nous contacter directement à <a href=\"mailto:bonjour@mariell.fr\">bonjour@mariell.fr</a>.",
   },
 }
 
@@ -337,85 +328,68 @@ async function onSubmit() {
 </script>
 
 <template>
-  <LabToolShell>
-    <main class="page">
-      <div class="shell">
+    <div class="tool-shell">
         <Transition name="alert-fade">
-          <div v-if="globalAlert" class="global-alert" role="alert">
-            <span class="global-alert__mark" aria-hidden="true">
+          <div v-if="globalAlert" class="galert" role="alert">
+            <span class="galert__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="8" x2="12" y2="13" />
-                <line x1="12" y1="16.5" x2="12" y2="17" />
+                <circle cx="12" cy="12" r="9" /><path d="M12 8v5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none" />
               </svg>
             </span>
-            <div class="global-alert__body">
-              <h3 class="global-alert__title">{{ globalAlert.title }}</h3>
-              <p class="global-alert__text" v-html="globalAlert.text" />
+            <div class="galert__body">
+              <p class="galert__title">{{ globalAlert.title }}</p>
+              <p class="galert__text" v-html="globalAlert.text" />
             </div>
           </div>
         </Transition>
 
-        <section class="header">
-          <div class="header__eyebrow">
-            <span class="eyebrow-cyan">Le Lab Mariell</span>
-          </div>
-          <h1 class="header__title">
-            Évaluation <em>d'attractivité.</em>
+        <header style="text-align: center;">
+          <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>
+          <h1 class="tool-title" style="margin-left: auto; margin-right: auto;">
+            Évaluation <em>d’attractivité.</em>
           </h1>
-          <p class="header__sub">
-            Une lecture experte de votre offre Sales, calibrée sur le marché 2026. Marque, secteur, mission, package — en moins de 60 secondes.
+          <p class="tool-subtitle" style="margin-left: auto; margin-right: auto;">
+            Votre offre Sales, confrontée au marché 2026. Diagnostic chiffré, comparatif, et leviers concrets à activer.
           </p>
-          <div class="header__meta">
-            <span class="dot" aria-hidden="true" />
-            <span>Gratuit · Sans inscription · &lt; 60 secondes</span>
+          <div style="margin-top: 22px; display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-on-ink-3); border: 1px solid var(--border-on-ink); border-radius: 999px; padding: 7px 16px;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan);" aria-hidden="true" />
+            Gratuit · Sans inscription · &lt;&nbsp;60 secondes
           </div>
-        </section>
+        </header>
 
-        <aside class="quality-notice" role="note">
-          <span class="quality-notice__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9.5" />
-              <path d="M12 8v5" />
-              <circle cx="12" cy="16.2" r="0.7" fill="currentColor" stroke="none" />
-            </svg>
-          </span>
-          <p class="quality-notice__body">
-            <strong>La qualité de l'évaluation dépend de votre formulaire.</strong>
-            Veillez à partager <em>un maximum d'informations avec précision</em> pour obtenir le meilleur résultat.
-          </p>
-        </aside>
+        <form id="eval-form-3" novalidate @submit.prevent="onSubmit">
 
-        <form novalidate @submit.prevent="onSubmit">
-          <!-- BLOC 1 — Contact -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">01</span>
-              <h2 class="block__title">Contact</h2>
-            </header>
-            <div class="grid grid--2">
-              <div class="field" :class="{ 'field--error': errors.prenom }">
-                <label class="field__label" for="prenom">Prénom <span class="req">*</span></label>
-                <input id="prenom" v-model="form.prenom" class="ctrl" type="text" autocomplete="given-name"
+          <!-- 01 Identité -->
+          <section class="tblock">
+            <div class="tblock-head">
+              <span class="tblock-num">01</span>
+              <h2 class="tblock-title">Identité</h2>
+              <span class="tblock-rule" aria-hidden="true" />
+            </div>
+            <div class="tfields--2">
+              <div class="tfield" :class="{ 'is-error': errors.prenom }">
+                <label class="tlabel" for="ea-prenom">Prénom <span class="treq">*</span></label>
+                <input id="ea-prenom" v-model="form.prenom" class="tinput" type="text" autocomplete="given-name"
                        placeholder="Marie" @blur="onBlur('prenom')" @input="clearError('prenom')" />
-                <span class="field__error">{{ errors.prenom || 'Champ obligatoire' }}</span>
+                <p class="terror">{{ errors.prenom || 'Ce champ est requis.' }}</p>
               </div>
-              <div class="field" :class="{ 'field--error': errors.nom }">
-                <label class="field__label" for="nom">Nom <span class="req">*</span></label>
-                <input id="nom" v-model="form.nom" class="ctrl" type="text" autocomplete="family-name"
+              <div class="tfield" :class="{ 'is-error': errors.nom }">
+                <label class="tlabel" for="ea-nom">Nom <span class="treq">*</span></label>
+                <input id="ea-nom" v-model="form.nom" class="tinput" type="text" autocomplete="family-name"
                        placeholder="Dupont" @blur="onBlur('nom')" @input="clearError('nom')" />
-                <span class="field__error">{{ errors.nom || 'Champ obligatoire' }}</span>
+                <p class="terror">{{ errors.nom || 'Ce champ est requis.' }}</p>
               </div>
-              <div class="field grid__full" :class="{ 'field--error': errors.email }">
-                <label class="field__label" for="email">Email <span class="req">*</span></label>
-                <input id="email" v-model="form.email" class="ctrl" type="email" autocomplete="email"
-                       placeholder="marie@votre-entreprise.com" @blur="onBlur('email')" @input="clearError('email')" />
-                <span class="field__error">{{ errors.email || 'Email invalide' }}</span>
+              <div class="tfield" :class="{ 'is-error': errors.email }">
+                <label class="tlabel" for="ea-email">Adresse mail <span class="treq">*</span></label>
+                <input id="ea-email" v-model="form.email" class="tinput" type="email" inputmode="email" autocomplete="email"
+                       placeholder="marie.dupont@entreprise.com" @blur="onBlur('email')" @input="clearError('email')" />
+                <p class="terror">{{ errors.email || 'Format d\'email invalide.' }}</p>
               </div>
-              <div class="field grid__full" :class="{ 'field--error': errors.phone }">
-                <label class="field__label" for="phone">Téléphone <span class="req">*</span></label>
-                <div class="tel-wrap">
-                  <div class="tel-cc">
-                    <select v-model="form.phoneCc" aria-label="Indicatif pays">
+              <div class="tfield" :class="{ 'is-error': errors.phone }">
+                <label class="tlabel" for="ea-phone">Numéro de téléphone <span class="treq">*</span></label>
+                <div class="tphone">
+                  <div class="tselect-wrap">
+                    <select v-model="form.phoneCc" class="tselect" aria-label="Indicatif pays">
                       <option value="+33">FR +33</option>
                       <option value="+32">BE +32</option>
                       <option value="+41">CH +41</option>
@@ -429,707 +403,416 @@ async function onSubmit() {
                       <option value="+353">IE +353</option>
                     </select>
                   </div>
-                  <input id="phone" v-model="form.phoneNumber" class="tel-input" type="tel"
-                         autocomplete="tel-national" placeholder="06 12 34 56 78"
+                  <input id="ea-phone" v-model="form.phoneNumber" class="tinput" type="tel"
+                         inputmode="tel" autocomplete="tel-national" placeholder="06 12 34 56 78"
                          @blur="onBlur('phone')" @input="clearError('phone')" />
                 </div>
-                <span class="field__error">{{ errors.phone || 'Numéro de téléphone invalide.' }}</span>
+                <p class="terror">{{ errors.phone || 'Numéro invalide.' }}</p>
               </div>
             </div>
           </section>
 
-          <!-- BLOC 2 — Entreprise -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">02</span>
-              <h2 class="block__title">Entreprise</h2>
-            </header>
-            <div class="grid grid--2">
-              <div class="field grid__full" :class="{ 'field--error': errors.entreprise }">
-                <label class="field__label" for="entreprise">Nom de l'entreprise <span class="req">*</span></label>
-                <input id="entreprise" v-model="form.entreprise" class="ctrl" type="text"
-                       autocomplete="organization" placeholder="Salesfit"
+          <!-- 02 Contexte entreprise -->
+          <section class="tblock">
+            <div class="tblock-head">
+              <span class="tblock-num">02</span>
+              <h2 class="tblock-title">Contexte entreprise</h2>
+              <span class="tblock-rule" aria-hidden="true" />
+            </div>
+            <div class="tfields--2">
+              <div class="tfield" :class="{ 'is-error': errors.entreprise }">
+                <label class="tlabel" for="ea-entreprise">Entreprise <span class="treq">*</span></label>
+                <input id="ea-entreprise" v-model="form.entreprise" class="tinput" type="text"
+                       autocomplete="organization" placeholder="Nom de votre entreprise"
                        @blur="onBlur('entreprise')" @input="clearError('entreprise')" />
-                <span class="field__error">{{ errors.entreprise || 'Champ obligatoire' }}</span>
+                <p class="terror">{{ errors.entreprise || 'Ce champ est requis.' }}</p>
               </div>
-              <div class="field grid__full" :class="{ 'field--error': errors.siteWeb }">
-                <label class="field__label" for="siteWeb">Site web ou LinkedIn de l'entreprise <span class="req">*</span></label>
-                <input id="siteWeb" v-model="form.site_web" class="ctrl" type="url" inputmode="url"
-                       placeholder="https://salesfit.com ou linkedin.com/company/..."
+              <div class="tfield" :class="{ 'is-error': errors.siteWeb }">
+                <label class="tlabel" for="ea-website">Site web</label>
+                <input id="ea-website" v-model="form.site_web" class="tinput" type="url" inputmode="url"
+                       placeholder="https://votre-entreprise.com"
                        @blur="onBlur('siteWeb')" @input="clearError('siteWeb')" />
-                <span class="field__error">{{ errors.siteWeb || 'URL invalide' }}</span>
+                <p class="terror">{{ errors.siteWeb || 'URL invalide.' }}</p>
               </div>
-              <div class="field" :class="{ 'field--error': errors.localisation }">
-                <label class="field__label" for="localisation">Localisation <span class="req">*</span></label>
-                <input id="localisation" v-model="form.localisation" class="ctrl" type="text"
-                       maxlength="100" placeholder="Paris, Lyon…"
-                       @blur="onBlur('localisation')" @input="clearError('localisation')" />
-                <span class="field__error">{{ errors.localisation || 'Champ obligatoire' }}</span>
-              </div>
-              <div class="field" :class="{ 'field--error': errors.effectifs }">
-                <label class="field__label" for="effectifs">Effectifs entreprise <span class="req">*</span></label>
-                <input id="effectifs" v-model="form.effectifs" class="ctrl" type="text"
-                       maxlength="50" placeholder="80, environ 200, etc."
-                       @blur="onBlur('effectifs')" @input="clearError('effectifs')" />
-                <span class="field__error">{{ errors.effectifs || 'Champ obligatoire' }}</span>
-              </div>
-              <div class="field grid__full" :class="{ 'field--error': errors.secteur }">
-                <label class="field__label" for="secteur">Secteur <span class="req">*</span></label>
-                <select id="secteur" v-model="form.secteur" class="ctrl"
-                        :data-empty="!form.secteur ? 'true' : 'false'"
-                        @change="clearError('secteur')">
-                  <option value="" disabled>Sélectionnez un secteur</option>
-                  <option v-for="s in SECTORS" :key="s" :value="s">{{ s }}</option>
-                </select>
-                <span class="field__error">{{ errors.secteur || 'Sélectionnez un secteur' }}</span>
-                <div v-if="form.secteur === 'Autre'" class="precision is-visible"
-                     :class="{ 'field--error': errors.secteurAutre }">
-                  <input v-model="form.secteurAutre" class="ctrl" type="text" maxlength="60"
-                         placeholder="Précisez votre secteur (60 caractères max)"
-                         @blur="onBlur('secteurAutre')" @input="clearError('secteurAutre')" />
-                  <span v-if="errors.secteurAutre" class="field__error" style="margin-top: 6px;">
-                    {{ errors.secteurAutre }}
-                  </span>
+              <div class="tfield" :class="{ 'is-error': errors.secteur }">
+                <label class="tlabel" for="ea-secteur">Secteur de votre entreprise <span class="treq">*</span></label>
+                <div class="tselect-wrap">
+                  <select id="ea-secteur" v-model="form.secteur" class="tselect"
+                          :class="{ 'is-empty': !form.secteur }"
+                          @change="clearError('secteur')">
+                    <option value="" disabled hidden>Sélectionnez un secteur</option>
+                    <option v-for="s in SECTORS" :key="s" :value="s">{{ s }}</option>
+                  </select>
                 </div>
+                <div v-if="form.secteur === 'Autre'" class="tprecision">
+                  <input v-model="form.secteurAutre" class="tinput" type="text" maxlength="60"
+                         placeholder="Précisez votre secteur (60 caractères max)"
+                         :class="{ 'is-error': errors.secteurAutre }"
+                         @blur="onBlur('secteurAutre')" @input="clearError('secteurAutre')" />
+                  <p v-if="errors.secteurAutre" class="terror">{{ errors.secteurAutre }}</p>
+                </div>
+                <p class="terror">{{ errors.secteur || 'Sélectionnez un secteur.' }}</p>
               </div>
-              <div class="field grid__full" :class="{ 'field--error': errors.equipeSales }">
-                <label class="field__label" for="equipeSales">Composition actuelle de l'équipe Sales <span class="req">*</span></label>
-                <input id="equipeSales" v-model="form.equipeSales" class="ctrl" type="text"
-                       maxlength="300" placeholder="3 SDR + 4 AE + 1 VP Sales"
+              <div class="tfield" :class="{ 'is-error': errors.localisation }">
+                <label class="tlabel" for="ea-localisation">Localisation <span class="treq">*</span></label>
+                <input id="ea-localisation" v-model="form.localisation" class="tinput" type="text"
+                       maxlength="100" placeholder="Paris, France"
+                       @blur="onBlur('localisation')" @input="clearError('localisation')" />
+                <p class="terror">{{ errors.localisation || 'Ce champ est requis.' }}</p>
+              </div>
+              <div class="tfield" :class="{ 'is-error': errors.effectifs }">
+                <label class="tlabel" for="ea-effectifs">Effectifs entreprise <span class="treq">*</span></label>
+                <input id="ea-effectifs" v-model="form.effectifs" class="tinput" type="text"
+                       maxlength="50" placeholder="ex. 800 personnes, 25 personnes"
+                       @blur="onBlur('effectifs')" @input="clearError('effectifs')" />
+                <p class="terror">{{ errors.effectifs || 'Ce champ est requis.' }}</p>
+              </div>
+              <div class="tfield" :class="{ 'is-error': errors.equipeSales }">
+                <label class="tlabel" for="ea-equipe">Composition équipe Sales <span class="treq">*</span></label>
+                <input id="ea-equipe" v-model="form.equipeSales" class="tinput" type="text"
+                       maxlength="300" placeholder="ex. 15 pers (4 SDR, 8 AE, 2 Team Lead, 1 Head of Sales)"
                        @blur="onBlur('equipeSales')" @input="clearError('equipeSales')" />
-                <span class="field__error">{{ errors.equipeSales || 'Champ obligatoire' }}</span>
+                <p class="terror">{{ errors.equipeSales || 'Ce champ est requis.' }}</p>
               </div>
             </div>
           </section>
 
-          <!-- BLOC 3 — Le poste -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">03</span>
-              <h2 class="block__title">Le poste</h2>
-            </header>
-            <div class="grid">
-              <div class="field" :class="{ 'field--error': errors.intitulePoste }">
-                <label class="field__label">Intitulé du poste <span class="req">*</span></label>
-                <div id="jobtitle-combo-3" class="combo">
-                  <button type="button" class="combo-trigger" :class="{ 'is-open': comboOpen }"
+          <!-- 03 Le poste à évaluer -->
+          <section class="tblock">
+            <div class="tblock-head">
+              <span class="tblock-num">03</span>
+              <h2 class="tblock-title">Le poste à évaluer</h2>
+              <span class="tblock-rule" aria-hidden="true" />
+            </div>
+            <div class="tfields">
+              <!-- Intitulé de poste — combobox -->
+              <div class="tfield" :class="{ 'is-error': errors.intitulePoste }">
+                <span class="tlabel">Intitulé de poste <span class="treq">*</span></span>
+                <div id="ea-jt-combo" class="ea-combo">
+                  <button type="button" class="ea-combo-trigger tinput"
+                          :class="{ 'has-value': !!form.intitulePoste, 'is-open': comboOpen }"
                           :aria-expanded="comboOpen" @click="comboOpen = !comboOpen">
-                    <span :class="{ placeholder: !form.intitulePoste }" class="combo-value">
-                      {{ form.intitulePoste || 'Sélectionnez un intitulé' }}
-                    </span>
-                    <span class="chevron" />
+                    <span class="ea-combo-value">{{ form.intitulePoste || 'Sélectionnez un intitulé…' }}</span>
+                    <span class="ea-combo-chevron" aria-hidden="true" />
                   </button>
-                  <div v-if="comboOpen" class="combo-panel is-open" role="listbox">
-                    <input v-model="comboSearch" type="text" class="combo-search"
-                           placeholder="Rechercher un intitulé…" autocomplete="off" @click.stop />
-                    <div class="combo-list">
+                  <div v-if="comboOpen" class="ea-combo-panel" role="listbox">
+                    <input v-model="comboSearch" type="text" class="ea-combo-search"
+                           placeholder="Rechercher…" autocomplete="off" @click.stop />
+                    <div class="ea-combo-list">
                       <button v-for="role in filteredRoles" :key="role.label"
-                              type="button" class="combo-opt"
+                              type="button" class="ea-combo-opt"
                               :class="{ 'is-selected': form.intitulePoste === role.label }"
+                              role="option" :aria-selected="form.intitulePoste === role.label"
                               @click="selectRole(role.label)">
-                        <span>{{ role.label }}</span>
-                        <span class="num">{{ String(role.num).padStart(2, '0') }}</span>
+                        {{ role.label }}
                       </button>
-                      <div v-if="filteredRoles.length === 0" class="combo-empty">Aucun résultat</div>
+                      <div v-if="filteredRoles.length === 0" class="ea-combo-empty">Aucun résultat</div>
                     </div>
                   </div>
                 </div>
-                <span class="field__error">{{ errors.intitulePoste || "Sélectionnez un intitulé de poste" }}</span>
-                <div v-if="form.intitulePoste === 'Autre'" class="precision is-visible"
-                     :class="{ 'field--error': errors.intitulePosteAutre }">
-                  <input v-model="form.intitulePosteAutre" class="ctrl" type="text" maxlength="60"
-                         placeholder="Précisez l'intitulé (60 caractères max)"
+                <div v-if="form.intitulePoste === 'Autre'" class="tprecision">
+                  <input v-model="form.intitulePosteAutre" class="tinput" type="text" maxlength="60"
+                         placeholder="Précisez l’intitulé du poste (60 caractères max)"
+                         :class="{ 'is-error': errors.intitulePosteAutre }"
                          @blur="onBlur('intitulePosteAutre')" @input="clearError('intitulePosteAutre')" />
-                  <span v-if="errors.intitulePosteAutre" class="field__error" style="margin-top: 6px;">
-                    {{ errors.intitulePosteAutre }}
-                  </span>
+                  <p v-if="errors.intitulePosteAutre" class="terror">{{ errors.intitulePosteAutre }}</p>
                 </div>
+                <p class="terror">{{ errors.intitulePoste || 'Sélectionnez un intitulé de poste.' }}</p>
               </div>
 
-              <div class="field" :class="{ 'field--error': errors.seniorite }">
-                <span class="field__label">Niveau de séniorité <span class="req">*</span></span>
-                <div class="radio-group" role="radiogroup">
+              <!-- Séniorité -->
+              <div class="tfield" :class="{ 'is-error': errors.seniorite }">
+                <span class="tlabel">Séniorité visée <span class="treq">*</span></span>
+                <div class="ttiles ttiles--4" role="radiogroup">
                   <label v-for="opt in [
-                    { v: 'Junior 0-2 ans', main: 'Junior', sub: '0-2 ans' },
-                    { v: 'Confirmé 2-5 ans', main: 'Confirmé', sub: '2-5 ans' },
-                    { v: 'Senior 5-8 ans', main: 'Senior', sub: '5-8 ans' },
-                    { v: 'Lead 8+ ans', main: 'Lead', sub: '8+ ans' },
-                  ]" :key="opt.v" class="radio">
-                    <input v-model="form.seniorite" type="radio" name="seniorite-eval" :value="opt.v"
+                    { v: 'Junior 0-2 ans', title: 'Junior', sub: '0-2 ans' },
+                    { v: 'Confirmé 2-5 ans', title: 'Confirmé', sub: '2-5 ans' },
+                    { v: 'Senior 5-8 ans', title: 'Senior', sub: '5-8 ans' },
+                    { v: 'Lead 8+ ans', title: 'Lead', sub: '8+ ans' },
+                  ]" :key="opt.v" class="ttile">
+                    <input v-model="form.seniorite" type="radio" name="ea-seniorite" :value="opt.v"
                            @change="clearError('seniorite')" />
-                    <span class="radio__main">{{ opt.main }}</span>
-                    <span class="radio__sub">{{ opt.sub }}</span>
+                    <span class="ttile-title">{{ opt.title }}</span>
+                    <span class="ttile-sub">{{ opt.sub }}</span>
                   </label>
                 </div>
-                <span class="field__error">{{ errors.seniorite || 'Sélectionnez un niveau de séniorité' }}</span>
+                <p class="terror">{{ errors.seniorite || 'Sélectionnez une séniorité.' }}</p>
               </div>
 
-              <div class="field" :class="{ 'field--error': errors.typeCycle }">
-                <label class="field__label" for="typeCycle">Type de cycle <span class="req">*</span></label>
-                <select id="typeCycle" v-model="form.typeCycle" class="ctrl"
-                        :data-empty="!form.typeCycle ? 'true' : 'false'"
-                        @change="clearError('typeCycle')">
-                  <option value="" disabled>Sélectionnez un type de cycle</option>
-                  <option v-for="c in CYCLES" :key="c" :value="c">{{ c }}</option>
-                </select>
-                <span class="field__error">{{ errors.typeCycle || 'Sélectionnez un type de cycle' }}</span>
-                <div v-if="form.typeCycle === 'Autre'" class="precision is-visible"
-                     :class="{ 'field--error': errors.typeCycleAutre }">
-                  <input v-model="form.typeCycleAutre" class="ctrl" type="text" maxlength="60"
+              <!-- Type de cycle commercial -->
+              <div class="tfield" :class="{ 'is-error': errors.typeCycle }">
+                <label class="tlabel" for="ea-cycle">Type de cycle commercial <span class="treq">*</span></label>
+                <div class="tselect-wrap">
+                  <select id="ea-cycle" v-model="form.typeCycle" class="tselect"
+                          :class="{ 'is-empty': !form.typeCycle }"
+                          @change="clearError('typeCycle')">
+                    <option value="" disabled hidden>Sélectionnez un type de cycle</option>
+                    <option v-for="c in CYCLES" :key="c" :value="c">{{ c }}</option>
+                  </select>
+                </div>
+                <div v-if="form.typeCycle === 'Autre'" class="tprecision">
+                  <input v-model="form.typeCycleAutre" class="tinput" type="text" maxlength="60"
                          placeholder="Précisez le type de cycle (60 caractères max)"
+                         :class="{ 'is-error': errors.typeCycleAutre }"
                          @blur="onBlur('typeCycleAutre')" @input="clearError('typeCycleAutre')" />
-                  <span v-if="errors.typeCycleAutre" class="field__error" style="margin-top: 6px;">
-                    {{ errors.typeCycleAutre }}
-                  </span>
+                  <p v-if="errors.typeCycleAutre" class="terror">{{ errors.typeCycleAutre }}</p>
                 </div>
+                <p class="terror">{{ errors.typeCycle || 'Sélectionnez un type de cycle.' }}</p>
               </div>
 
-              <div class="field" :class="{ 'field--error': errors.modaliteTravail }">
-                <span class="field__label">Modalité de travail <span class="req">*</span></span>
-                <div class="radio-group radio-group--2" role="radiogroup">
-                  <label v-for="m in MODALITES" :key="m" class="radio">
-                    <input v-model="form.modaliteTravail" type="radio" name="modalite-eval" :value="m"
-                           @change="clearError('modaliteTravail')" />
-                    <span class="radio__main">{{ m }}</span>
+              <!-- Modalité de travail -->
+              <div class="tfield" :class="{ 'is-error': errors.modaliteTravail }">
+                <span class="tlabel">Modalité de travail <span class="treq">*</span></span>
+                <div class="ttiles ttiles--4" role="radiogroup">
+                  <label class="ttile">
+                    <input v-model="form.modaliteTravail" type="radio" name="ea-modalite"
+                           value="Full remote" @change="clearError('modaliteTravail')" />
+                    <span class="ttile-title">Full remote</span>
+                    <span class="ttile-sub">&nbsp;</span>
+                  </label>
+                  <label class="ttile">
+                    <input v-model="form.modaliteTravail" type="radio" name="ea-modalite"
+                           value="Hybride flexible (1-2 jours bureau / sem)" @change="clearError('modaliteTravail')" />
+                    <span class="ttile-title">Hybride flexible</span>
+                    <span class="ttile-sub">1-2 j bureau/sem</span>
+                  </label>
+                  <label class="ttile">
+                    <input v-model="form.modaliteTravail" type="radio" name="ea-modalite"
+                           value="Hybride équilibré (3 jours bureau / sem)" @change="clearError('modaliteTravail')" />
+                    <span class="ttile-title">Hybride équilibré</span>
+                    <span class="ttile-sub">3 j bureau/sem</span>
+                  </label>
+                  <label class="ttile">
+                    <input v-model="form.modaliteTravail" type="radio" name="ea-modalite"
+                           value="Présentiel (4-5 jours bureau / sem)" @change="clearError('modaliteTravail')" />
+                    <span class="ttile-title">Présentiel</span>
+                    <span class="ttile-sub">4-5 j bureau/sem</span>
                   </label>
                 </div>
-                <span class="field__error">{{ errors.modaliteTravail || 'Sélectionnez une modalité' }}</span>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.descriptionMissions }">
-                <label class="field__label" for="missions">Missions principales <span class="req">*</span></label>
-                <textarea id="missions" v-model="form.descriptionMissions" class="ctrl"
-                          maxlength="1000" rows="9"
-                          placeholder="Décrivez en quelques lignes ce que ce Sales fera concrètement : type de cycle, taille de comptes, périmètre géographique, ratios chasse/farming, contexte équipe…"
-                          @blur="onBlur('descriptionMissions')" @input="clearError('descriptionMissions')" />
-                <div class="ta-foot">
-                  <p class="ta-foot__hint">Min. 50 caractères, max. 1000. Plus c'est riche, plus l'évaluation sera précise.</p>
-                  <span class="counter" :class="counterClass">{{ missionsLen }} / 1000</span>
-                </div>
-                <span class="field__error">{{ errors.descriptionMissions || 'Champ obligatoire' }}</span>
-              </div>
-
-              <div class="grid grid--2">
-                <div class="field" :class="{ 'field--error': errors.packageFixe }">
-                  <label class="field__label" for="packageFixe">Fixe annuel brut (€) <span class="req">*</span></label>
-                  <div class="num-wrap">
-                    <input id="packageFixe" v-model="form.packageFixe" class="ctrl" type="text" inputmode="numeric"
-                           placeholder="60000"
-                           @blur="onBlur('packageFixe')" @input="clearError('packageFixe')" />
-                    <span class="num-wrap__suffix">€</span>
-                  </div>
-                  <span class="field__error">{{ errors.packageFixe || 'Le fixe doit être entre 15 000 € et 500 000 €' }}</span>
-                </div>
-                <div class="field" :class="{ 'field--error': errors.packageOte }">
-                  <label class="field__label" for="packageOte">OTE total cible (€) <span class="req">*</span></label>
-                  <div class="num-wrap">
-                    <input id="packageOte" v-model="form.packageOte" class="ctrl" type="text" inputmode="numeric"
-                           placeholder="100000"
-                           @blur="onBlur('packageOte')" @input="clearError('packageOte')" />
-                    <span class="num-wrap__suffix">€</span>
-                  </div>
-                  <span class="field__error">{{ errors.packageOte || "L'OTE doit être entre 0 € et 800 000 €" }}</span>
-                </div>
-                <p class="field__hint grid__full" style="margin-top: 4px;">
-                  OTE = Fixe + Variable cible à 100% d'atteinte des objectifs.
-                </p>
+                <p class="terror">{{ errors.modaliteTravail || 'Sélectionnez une modalité de travail.' }}</p>
               </div>
             </div>
           </section>
 
-          <!-- BLOC RGPD -->
-          <section class="block" style="margin-bottom: 32px;">
-            <div class="rgpd" :class="{ 'field--error': errors.rgpd }">
-              <label class="rgpd__row">
-                <span class="rgpd__check">
-                  <input v-model="form.rgpd" type="checkbox" @change="clearError('rgpd')" />
-                  <span class="rgpd__box" aria-hidden="true" />
-                </span>
-                <span class="rgpd__text">
-                  J'accepte la <NuxtLink to="/politique-confidentialite" target="_blank" rel="noopener">politique de confidentialité</NuxtLink>
-                  et le traitement de mes données personnelles par Mariell.
-                </span>
-              </label>
+          <!-- 04 Description des missions -->
+          <section class="tblock">
+            <div class="tblock-head">
+              <span class="tblock-num">04</span>
+              <h2 class="tblock-title">Description des missions</h2>
+              <span class="tblock-rule" aria-hidden="true" />
             </div>
-            <p v-if="errors.rgpd" class="field__error" style="display: block; margin-top: 8px;">{{ errors.rgpd }}</p>
+            <div class="tfield" :class="{ 'is-error': errors.descriptionMissions }">
+              <label class="tlabel" for="ea-missions">Description des missions <span class="treq">*</span></label>
+              <div class="ttextarea-wrap">
+                <textarea id="ea-missions" v-model="form.descriptionMissions" class="ttextarea"
+                          maxlength="1000" rows="9"
+                          placeholder="Décrivez en quelques lignes ce que ce Sales fera concrètement : type de cycle, taille de comptes, périmètre géographique, ratios chasse/farming, contexte équipe, stack outils, trajectoire d’évolution… Vous pouvez aussi coller un extrait de votre fiche de poste."
+                          @blur="onBlur('descriptionMissions')" @input="clearError('descriptionMissions')" />
+                <span class="ttextarea-counter" :class="counterClass">{{ missionsLen }}&nbsp;/ 1000</span>
+              </div>
+              <div class="ta-foot">
+                <p class="thelper">Plus la description est précise, plus l’évaluation sera fine. Mentionnez les éléments structurants : ratio inbound/outbound, taille des comptes, stack outils, trajectoire d’évolution.</p>
+              </div>
+              <p class="terror">{{ errors.descriptionMissions || 'Champ obligatoire.' }}</p>
+            </div>
+          </section>
+
+          <!-- 05 Package proposé -->
+          <section class="tblock">
+            <div class="tblock-head">
+              <span class="tblock-num">05</span>
+              <h2 class="tblock-title">Package proposé</h2>
+              <span class="tblock-rule" aria-hidden="true" />
+            </div>
+            <div class="tfields--2">
+              <div class="tfield" :class="{ 'is-error': errors.packageFixe }">
+                <label class="tlabel" for="ea-fixe">Fixe annuel brut (€) <span class="treq">*</span></label>
+                <div class="num-wrap">
+                  <input id="ea-fixe" v-model="form.packageFixe" class="tinput" type="text" inputmode="numeric"
+                         placeholder="55000"
+                         @blur="onBlur('packageFixe')" @input="clearError('packageFixe')" />
+                  <span class="num-suffix" aria-hidden="true">€</span>
+                </div>
+                <p class="terror">{{ errors.packageFixe || 'Montant invalide.' }}</p>
+              </div>
+              <div class="tfield" :class="{ 'is-error': errors.packageOte }">
+                <label class="tlabel" for="ea-ote">OTE total cible (€) <span class="treq">*</span></label>
+                <div class="num-wrap">
+                  <input id="ea-ote" v-model="form.packageOte" class="tinput" type="text" inputmode="numeric"
+                         placeholder="100000"
+                         @blur="onBlur('packageOte')" @input="clearError('packageOte')" />
+                  <span class="num-suffix" aria-hidden="true">€</span>
+                </div>
+                <p class="terror">{{ errors.packageOte || 'Montant invalide.' }}</p>
+              </div>
+            </div>
+            <p class="thelper" style="margin-top: 14px;">OTE = Fixe + Variable cible à 100%&nbsp;d’atteinte des objectifs.</p>
+          </section>
+
+          <!-- RGPD -->
+          <section class="tblock" style="margin-bottom: 8px;">
+            <label class="tcheck" :class="{ 'is-error': errors.rgpd }">
+              <input v-model="form.rgpd" type="checkbox" @change="clearError('rgpd')" />
+              <span class="tcheck-box" aria-hidden="true" />
+              <span class="tcheck-text">
+                J’accepte la
+                <NuxtLink to="/politique-confidentialite" target="_blank" rel="noopener">politique de confidentialité</NuxtLink>
+                et le traitement de mes données personnelles par Mariell.
+              </span>
+            </label>
+            <p v-if="errors.rgpd" class="terror" style="display: block; margin-top: 8px;">{{ errors.rgpd }}</p>
           </section>
 
           <div v-if="hasTurnstile" class="cf-mount">
             <NuxtTurnstile ref="turnstile" v-model="turnstileToken" />
           </div>
 
-          <div class="submit" :class="{ 'is-ready': isFormReady, 'is-loading': isLoading }">
-            <button type="submit" class="cta-submit" :class="{ 'is-loading': isLoading }"
+          <div class="tsubmit-area" :class="{ 'is-ready': isFormReady }">
+            <button type="submit" class="tsubmit" :class="{ 'is-loading': isLoading, 'is-disabled': !isFormReady }"
                     :disabled="!isFormReady || isLoading">
-              <span class="cta-submit__label">Évaluer mon offre</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              <span class="tspinner" aria-hidden="true" />
+              <span class="tsubmit-idle">Évaluer mon offre</span>
+              <span class="tsubmit-loading" aria-live="polite">Évaluation en cours…</span>
+              <svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
-              <span class="cta-submit__loader" aria-live="polite">Évaluation en cours…</span>
             </button>
-            <p class="submit__hint">Renseignez tous les champs obligatoires pour activer l'évaluation.</p>
-            <p class="submit__loading-note">
-              Notre IA analyse votre offre sur les <em>4 dimensions clés.</em><br />
-              Cela peut prendre 1 à 2 minutes — merci de ne pas fermer cette page.
-            </p>
+            <p class="submit-hint">Renseignez tous les champs obligatoires pour activer l’évaluation.</p>
           </div>
 
-          <footer class="form-foot">
-            <span class="form-foot__caption">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 3l8 4v6c0 4.5-3.4 7.5-8 8-4.6-.5-8-3.5-8-8V7l8-4z"
-                      stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+          <div class="tfoot" style="align-items: center; text-align: center;">
+            <span class="tcf">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width: 13px; height: 13px; display: inline-block; vertical-align: middle; margin-right: 5px;">
+                <path d="M12 3l8 4v6c0 4.5-3.4 7.5-8 8-4.6-.5-8-3.5-8-8V7l8-4z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               Protégé par Cloudflare Turnstile
             </span>
-            <span class="form-foot__sig">Recruter n'est pas un pari.</span>
-          </footer>
+            <span class="tfoot-2">Recruter n’est pas un pari.</span>
+          </div>
         </form>
       </div>
-    </main>
-  </LabToolShell>
 </template>
 
 <style scoped>
-.page { position: relative; z-index: 1; padding: 64px 20px 96px; }
-@media (min-width: 768px) { .page { padding: 80px 40px 120px; } }
-.shell { width: 100%; max-width: 760px; margin: 0 auto; }
+.cf-mount { display: none; }
 
-.header { text-align: center; margin-bottom: 56px; }
-.header__eyebrow { margin-bottom: 28px; }
-.eyebrow-cyan {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-family: var(--font-grotesk);
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: #5ee7e7;
+/* Combobox spécifique outil 3 (préfixe ea- pour éviter collision) */
+.ea-combo { position: relative; }
+.ea-combo-trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; text-align: left; border-radius: 10px;
 }
-.eyebrow-cyan::before { content: ""; width: 32px; height: 1px; background: currentColor; }
-.header__title {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(36px, 5.2vw, 60px);
-  line-height: 1.08; letter-spacing: -0.035em;
-  color: #fff; margin: 0 0 20px; text-wrap: balance;
-}
-.header__title em {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  padding-right: 0.12em;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.06em;
-}
-.header__sub {
-  font-size: 17px; line-height: 1.6;
-  color: rgba(255,255,255,0.65); max-width: 580px;
-  margin: 0 auto;
-}
-.header__meta {
-  margin-top: 28px;
-  display: inline-flex; align-items: center; gap: 14px;
-  padding: 8px 18px; border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 9999px; background: rgba(255,255,255,0.02);
-}
-.header__meta .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #5ee7e7; box-shadow: 0 0 12px rgba(94,231,231,0.8);
-}
-.header__meta span {
-  font-family: ui-monospace, monospace;
-  font-size: 11px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.65);
-}
-@media (min-width: 768px) { .header { margin-bottom: 80px; } }
-
-.quality-notice {
-  max-width: 760px; margin: 0 auto 56px;
-  display: flex; align-items: flex-start; gap: 16px;
-  padding: 20px 22px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-left: 2px solid #5ee7e7;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(0,255,255,0.035), rgba(255,0,255,0.02));
-}
-.quality-notice__icon {
-  flex-shrink: 0; width: 22px; height: 22px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: #5ee7e7; margin-top: 2px;
-}
-.quality-notice__icon svg { width: 20px; height: 20px; }
-.quality-notice__body {
-  font-family: var(--font-grotesk);
-  font-size: 14.5px; line-height: 1.6;
-  color: rgba(255,255,255,0.9);
-}
-.quality-notice__body strong { color: #fff; font-weight: 600; }
-.quality-notice__body em {
-  font-style: normal;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  font-weight: 600;
-}
-
-.block { position: relative; margin-bottom: 56px; }
-.block__head {
-  display: flex; align-items: baseline; gap: 16px;
-  margin-bottom: 28px; padding-bottom: 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.block__num {
-  font-family: ui-monospace, monospace;
-  font-size: 11px; letter-spacing: 0.22em;
-  color: #5ee7e7;
-}
-.block__title {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(22px, 2.6vw, 28px);
-  line-height: 1.2; letter-spacing: -0.035em;
-  color: #fff; margin: 0;
-}
-@media (min-width: 768px) { .block { margin-bottom: 72px; } .block__head { padding-bottom: 22px; margin-bottom: 32px; } }
-
-.grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-@media (min-width: 640px) { .grid--2 { grid-template-columns: 1fr 1fr; } }
-.grid__full { grid-column: 1 / -1; }
-
-.field { display: flex; flex-direction: column; gap: 8px; }
-.field__label {
-  display: flex; align-items: center; gap: 6px;
-  font-family: var(--font-grotesk); font-weight: 500;
-  font-size: 13px; letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.9);
-}
-.field__label .req { color: #e85eff; font-size: 11px; }
-.field__hint { font-family: var(--font-grotesk); font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
-.field__error { display: none; font-family: var(--font-grotesk); font-size: 12px; color: #ff8aa6; line-height: 1.5; }
-.field--error .field__error { display: block; }
-
-.ctrl {
-  appearance: none; -webkit-appearance: none; width: 100%;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-family: var(--font-grotesk); font-weight: 400;
-  font-size: 15px; color: #fff; line-height: 1.4;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.ctrl::placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-.ctrl:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.ctrl:focus, .ctrl:focus-visible {
-  outline: none;
-  border-color: rgba(94,231,231,0.7);
-  background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
-}
-.field--error .ctrl { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-textarea.ctrl { resize: vertical; min-height: 220px; line-height: 1.55; }
-
-select.ctrl {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.55' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat; background-position: right 16px center;
-  padding-right: 44px; cursor: pointer;
-}
-select.ctrl option { background: #0a0a0a; color: #fff; }
-select.ctrl[data-empty="true"] { color: rgba(255,255,255,0.32); }
-
-.radio-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-@media (min-width: 720px) { .radio-group { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 720px) { .radio-group--2 { grid-template-columns: repeat(2, 1fr); } }
-.radio-group--2 .radio { min-height: 56px; justify-content: center; }
-.radio {
-  position: relative;
-  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
-  padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.02);
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-}
-.radio:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.035); }
-.radio input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.radio__main { font-family: var(--font-grotesk); font-weight: 600; font-size: 14px; color: #fff; }
-.radio__sub { font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); }
-.radio:has(input:checked) {
-  border-color: rgba(94,231,231,0.55);
-  background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,0,255,0.06));
-  box-shadow: 0 0 0 1px rgba(94,231,231,0.25), 0 8px 24px -16px rgba(0,255,255,0.4);
-}
-.radio:has(input:checked) .radio__sub { color: #5ee7e7; }
-
-.num-wrap { position: relative; }
-.num-wrap .ctrl { padding-right: 44px; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
-.num-wrap__suffix {
-  position: absolute; top: 50%; right: 16px;
-  transform: translateY(-50%);
-  font-family: var(--font-grotesk); font-size: 14px;
-  color: rgba(255,255,255,0.45); pointer-events: none;
-}
-
-.ta-foot { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-top: 4px; }
-.ta-foot__hint { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; flex: 1; }
-.counter {
-  flex: 0 0 auto;
-  font-family: ui-monospace, monospace;
-  font-size: 11px; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.45);
-  padding: 4px 10px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.02);
-}
-.counter--warn { color: #ffb86b; border-color: rgba(255,184,107,0.4); background: rgba(255,184,107,0.05); }
-.counter--alert { color: #ff8aa6; border-color: rgba(255,138,166,0.5); background: rgba(255,138,166,0.06); }
-
-.tel-wrap {
-  display: flex;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px; overflow: hidden;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.tel-wrap:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.tel-wrap:focus-within {
-  border-color: rgba(94,231,231,0.7); background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
-}
-.field--error .tel-wrap { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.tel-cc { position: relative; flex-shrink: 0; border-right: 1px solid rgba(255,255,255,0.08); }
-.tel-cc select {
-  height: 100%; background: transparent; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 14px;
-  padding: 14px 32px 14px 16px; border: 0;
-  appearance: none; -webkit-appearance: none; cursor: pointer;
-}
-.tel-cc::after {
-  content: ''; position: absolute;
-  right: 14px; top: 50%; width: 6px; height: 6px;
-  border-right: 1.5px solid rgba(255,255,255,0.55);
-  border-bottom: 1.5px solid rgba(255,255,255,0.55);
-  transform: translateY(-65%) rotate(45deg);
-  pointer-events: none;
-}
-.tel-cc select option { background: #0a0a0a; color: #fff; }
-.tel-input {
-  flex: 1; background: transparent; border: 0;
-  padding: 14px 16px; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 15px;
-}
-.tel-input:focus { outline: none; }
-.tel-input::placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-
-.combo { position: relative; }
-.combo-trigger {
-  width: 100%;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 14px 16px; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 15px;
-  text-align: left; cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.combo-trigger:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.combo-trigger:focus, .combo-trigger.is-open {
-  outline: none; border-color: rgba(94,231,231,0.7);
-  background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
-}
-.field--error .combo-trigger { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.combo-trigger .placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-.combo-trigger .chevron {
-  width: 8px; height: 8px;
-  border-right: 1.5px solid rgba(255,255,255,0.55);
-  border-bottom: 1.5px solid rgba(255,255,255,0.55);
-  transform: rotate(45deg);
+.ea-combo-trigger .ea-combo-value { color: var(--fg-on-ink-4); flex: 1; }
+.ea-combo-trigger.has-value .ea-combo-value { color: var(--fg-on-ink-1); }
+.ea-combo-chevron {
+  flex-shrink: 0; width: 8px; height: 8px;
+  border-right: 1.5px solid var(--fg-on-ink-4);
+  border-bottom: 1.5px solid var(--fg-on-ink-4);
+  transform: rotate(45deg); margin-top: -3px;
   transition: transform 0.2s;
-  margin-top: -3px;
 }
-.combo-trigger.is-open .chevron { transform: rotate(-135deg); margin-top: 2px; border-color: #5ee7e7; }
-.combo-panel {
-  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
-  z-index: 30;
-  background: #0a0a0c;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
+.ea-combo-trigger.is-open .ea-combo-chevron {
+  transform: rotate(-135deg); margin-top: 2px;
+  border-color: var(--cyan);
+}
+.ea-combo-panel {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+  z-index: 40;
+  background: var(--ink-800);
+  border: 1px solid var(--border-on-ink);
+  border-radius: 10px; overflow: hidden;
   box-shadow: 0 24px 60px -20px rgba(0,0,0,0.8);
-  overflow: hidden;
 }
-.combo-search {
-  width: 100%; background: transparent; border: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding: 14px 18px; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 14px;
+.ea-combo-search {
+  width: 100%; box-sizing: border-box;
+  background: var(--ink-700); border: none;
+  border-bottom: 1px solid var(--border-on-ink);
+  color: var(--fg-on-ink-1); font: inherit; font-size: 14px;
+  padding: 11px 14px;
 }
-.combo-search:focus { outline: none; border-bottom-color: rgba(94,231,231,0.5); }
-.combo-list { max-height: 280px; overflow-y: auto; padding: 6px 0; }
-.combo-opt {
-  width: 100%; background: transparent; border: 0;
-  text-align: left; padding: 10px 18px;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 14px;
-  color: rgba(255,255,255,0.9); cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+.ea-combo-search:focus { outline: none; }
+.ea-combo-list { max-height: 240px; overflow-y: auto; }
+.ea-combo-opt {
+  display: block; width: 100%; background: transparent; border: none;
+  text-align: left; padding: 11px 14px;
+  font: inherit; font-size: 14px;
+  color: var(--fg-on-ink-2); cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
-.combo-opt:hover { background: rgba(94,231,231,0.06); color: #fff; }
-.combo-opt .num { font-family: ui-monospace, monospace; font-size: 11px; color: rgba(255,255,255,0.4); }
-.combo-opt.is-selected { color: #5ee7e7; }
-.combo-empty { padding: 18px; color: rgba(255,255,255,0.45); font-size: 13px; text-align: center; }
+.ea-combo-opt:hover { background: rgba(127,231,225,0.10); color: var(--fg-on-ink-1); }
+.ea-combo-opt.is-selected { color: var(--cyan); }
+.ea-combo-empty { padding: 14px; color: var(--fg-on-ink-3); font-size: 13px; text-align: center; }
 
-.precision { display: none; margin-top: 10px; }
-.precision.is-visible { display: block; animation: slideIn 0.25s; }
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* Precision (reveal sous "Autre") */
+.tprecision { margin-top: 12px; animation: tprec-in 0.22s; }
+@keyframes tprec-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-.rgpd {
-  margin-top: 8px; padding: 18px 20px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px; background: rgba(255,255,255,0.015);
-}
-.rgpd.field--error { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.rgpd__row { display: flex; align-items: flex-start; gap: 14px; cursor: pointer; }
-.rgpd__check { flex: 0 0 auto; position: relative; width: 20px; height: 20px; margin-top: 1px; }
-.rgpd__check input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.rgpd__box {
-  display: block; width: 20px; height: 20px;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 5px; background: rgba(255,255,255,0.02);
-  transition: all 0.2s;
-}
-.rgpd__check input:checked + .rgpd__box {
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  border-color: transparent;
-}
-.rgpd__check input:checked + .rgpd__box::after {
-  content: ""; position: absolute;
-  top: 4px; left: 7px; width: 5px; height: 9px;
-  border: solid #000; border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-.rgpd__text { font-family: var(--font-grotesk); font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.65); }
-.rgpd__text :deep(a) {
-  color: rgba(255,255,255,0.9);
-  text-decoration: underline;
-  text-decoration-color: rgba(94,231,231,0.6);
-  text-underline-offset: 3px;
-}
+/* Compteur textarea */
+.ttextarea-counter.is-warn { color: var(--warn, #c98a2a); }
+.ttextarea-counter.is-danger { color: var(--danger, #e05252); }
 
-.cf-mount { display: none; }
-.submit { margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.cta-submit {
-  position: relative;
-  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-  width: 100%; max-width: 440px;
-  padding: 20px 36px; border: 0; border-radius: 9999px;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  color: #000;
-  font-family: var(--font-grotesk); font-weight: 600;
-  font-size: 15px; letter-spacing: 0.01em;
-  cursor: pointer;
-  box-shadow: 0 20px 60px -15px rgba(255,0,255,0.55), 0 8px 30px -10px rgba(0,255,255,0.4);
-  transition: transform 0.3s, box-shadow 0.3s, filter 0.2s, opacity 0.25s;
+/* Num suffix */
+.num-wrap { position: relative; }
+.num-suffix {
+  position: absolute; right: 15px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--fg-on-ink-3); font-size: 15px; pointer-events: none;
 }
-.cta-submit:hover:not(:disabled):not(.is-loading) {
-  transform: translateY(-2px); filter: brightness(1.08);
-}
-.cta-submit svg { width: 18px; height: 18px; transition: transform 0.25s; }
-.cta-submit:hover:not(:disabled):not(.is-loading) svg { transform: translateX(3px); }
-.cta-submit:disabled {
-  cursor: not-allowed;
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.32);
-  box-shadow: none; filter: none;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.cta-submit.is-loading { pointer-events: none; color: transparent !important; }
-.cta-submit.is-loading .cta-submit__label, .cta-submit.is-loading svg { opacity: 0; }
-.cta-submit__loader {
-  display: none; position: absolute; inset: 0;
-  align-items: center; justify-content: center; gap: 12px;
-  color: #000;
-  font-family: var(--font-grotesk); font-weight: 600;
-  font-size: 14px; letter-spacing: 0.02em;
-}
-.cta-submit.is-loading .cta-submit__loader { display: inline-flex; }
-.cta-submit__loader::before {
-  content: ""; width: 16px; height: 16px;
-  border: 2px solid rgba(0,0,0,0.25);
-  border-top-color: #000; border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.submit__hint {
-  font-family: var(--font-grotesk); font-size: 12px;
-  color: rgba(255,255,255,0.45);
-  text-align: center; line-height: 1.5;
-  transition: opacity 0.2s;
-}
-.submit.is-ready .submit__hint { opacity: 0; height: 0; margin: 0; }
-.submit__loading-note { display: none; font-family: var(--font-grotesk); font-size: 13px; color: rgba(255,255,255,0.65); text-align: center; line-height: 1.5; }
-.submit.is-loading .submit__loading-note { display: block; }
-.submit__loading-note em {
-  font-style: italic;
-  background: linear-gradient(135deg, #5ee7e7 0%, #e85eff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  padding-right: 0.08em;
-}
+.num-wrap .tinput { padding-right: 34px; }
 
-.form-foot {
-  margin-top: 36px; padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex; flex-direction: column; gap: 16px;
-  align-items: center; text-align: center;
-}
-.form-foot__caption {
-  font-family: ui-monospace, monospace;
-  font-size: 10.5px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
-  display: inline-flex; align-items: center; gap: 10px;
-}
-.form-foot__caption svg { width: 12px; height: 12px; color: rgba(255,255,255,0.45); }
-.form-foot__sig {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-style: italic; font-size: 14px;
-  color: rgba(255,255,255,0.55);
-}
-
-.global-alert {
-  display: flex; gap: 16px; padding: 22px 24px;
+/* Alert globale */
+.galert {
+  display: flex; gap: 14px; padding: 18px 20px;
   border: 1px solid rgba(232,94,255,0.35);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(232,94,255,0.06), rgba(232,94,255,0.02));
-  margin-bottom: 32px; position: relative; overflow: hidden;
+  border-radius: 14px;
+  background: rgba(232,94,255,0.05);
+  margin-bottom: 28px;
 }
-.global-alert::before {
-  content: ""; position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232,94,255,0.5), transparent);
-}
-.global-alert__mark {
-  width: 32px; height: 32px; flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(232,94,255,0.35);
-  background: rgba(232,94,255,0.08);
-  display: flex; align-items: center; justify-content: center;
+.galert__icon {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
   color: #e85eff;
 }
-.global-alert__mark svg { width: 14px; height: 14px; }
-.global-alert__body { display: flex; flex-direction: column; gap: 6px; }
-.global-alert__title { font-family: var(--font-grotesk); font-weight: 800; font-size: 17px; letter-spacing: -0.015em; color: #fff; margin: 0; }
-.global-alert__text { font-family: var(--font-grotesk); font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.9); line-height: 1.6; margin: 0; }
-.global-alert__text :deep(a) { color: #5ee7e7; text-decoration: none; border-bottom: 1px solid rgba(94,231,231,0.3); }
-.alert-fade-enter-active, .alert-fade-leave-active { transition: opacity 0.25s, transform 0.25s; }
-.alert-fade-enter-from, .alert-fade-leave-to { opacity: 0; transform: translateY(-6px); }
+.galert__icon svg { width: 100%; height: 100%; }
+.galert__body { display: flex; flex-direction: column; gap: 4px; }
+.galert__title { font-family: var(--font-display, var(--font-grotesk)); font-weight: 600; font-size: 15px; color: var(--fg-on-ink-1); margin: 0; }
+.galert__text { font-size: 14px; color: var(--fg-on-ink-2); line-height: 1.55; margin: 0; }
+.galert__text :deep(a) { color: var(--cyan); }
+.alert-fade-enter-active, .alert-fade-leave-active { transition: opacity 0.22s, transform 0.22s; }
+.alert-fade-enter-from, .alert-fade-leave-to { opacity: 0; transform: translateY(-5px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .ctrl, .radio, .combo-trigger, .cta-submit, .cta-submit svg, .precision { transition: none; animation: none; }
+  .ea-combo-chevron, .ea-combo-opt, .tprecision { transition: none; animation: none; }
+}
+
+/* ---- Mobile / responsive ---- */
+@media (max-width: 900px) {
+  /* Séniorité + modalité tiles: 2-up on tablet */
+  .ttiles--4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Combobox panel stays full-width (already position: absolute, left/right 0) */
+}
+
+@media (max-width: 560px) {
+  /* Phone row: stack country code + number */
+  :deep(.tphone) { flex-direction: column; align-items: stretch; }
+  :deep(.tphone .tselect-wrap) { width: 100%; }
+  :deep(.tphone .tinput) { width: 100%; }
+
+  /* Tiles: 2-up */
+  .ttiles--4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Combobox options: min tap target */
+  .ea-combo-opt { min-height: 44px; display: flex; align-items: center; }
+  .ea-combo-search { min-height: 44px; }
+
+  /* Combobox panel: full-width and within viewport */
+  .ea-combo-panel { position: static; margin-top: 4px; }
+
+  /* Submit CTA full-width */
+  .tsubmit { width: 100%; justify-content: center; }
+  .tsubmit-area { align-items: stretch; }
+
+  /* Alert */
+  .galert { flex-direction: row; gap: 10px; padding: 14px 16px; }
 }
 </style>

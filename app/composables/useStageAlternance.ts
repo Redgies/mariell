@@ -32,7 +32,7 @@ export function useStageAlternance() {
       const message =
         data?.message ||
         err?.message ||
-        "Une erreur technique s'est produite. Merci de réessayer."
+        "Une erreur technique s’est produite. Merci de réessayer."
       errorCode.value = code
       error.value = message
       return { success: false, code, message }

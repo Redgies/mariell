@@ -32,7 +32,7 @@ export function usePlanSourcing() {
       body: { ...payload, request_uuid: requestUuid },
     })
       .then(() => {
-        // success path — résultat est déjà persisté côté serveur, le polling l'attrapera
+        // success path — résultat est déjà persisté côté serveur, le polling l’attrapera
       })
       .catch((err: any) => {
         const data = err?.data

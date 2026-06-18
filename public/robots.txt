@@ -1,6 +1,34 @@
+# Mariell — robots.txt
+# Transient / generated pages are excluded (also noindex). Everything else is
+# crawlable, including by AI/generative engines (GEO).
+
 User-agent: *
+Allow: /
 Disallow: /lab/plan-de-sourcing/resultat/
 Disallow: /lab/evaluation-attractivite/resultat/
+Disallow: /lab/demande-stage-alternance/confirmation
 Disallow: /api/
+
+# AI / generative-engine crawlers — explicitly allowed (GEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 Sitemap: https://mariell.fr/sitemap.xml

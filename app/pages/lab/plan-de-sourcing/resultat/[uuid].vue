@@ -64,7 +64,7 @@ type PollStatus =
 
 const POLL_INTERVAL_MS = 3000
 const POLL_MAX_ATTEMPTS = 30 // 30 * 3s = 90s max
-const POLL_404_GRACE = 6 // 6 * 3s = 18s de tolérance avant d'abandonner (POST peut être en route)
+const POLL_404_GRACE = 6 // 6 * 3s = 18s de tolérance avant d’abandonner (POST peut être en route)
 let pollAborted = false
 
 async function pollStatus(): Promise<void> {
@@ -140,7 +140,7 @@ onMounted(async () => {
   }
 
   // 2. Submission en cours : le formulaire a posé un flag avant de naviguer.
-  //    On poll /status jusqu'à done/deferred/error.
+  //    On poll /status jusqu’à done/deferred/error.
   if (typeof sessionStorage !== 'undefined') {
     const pendingRaw = sessionStorage.getItem(`plan-sourcing-pending:${uuid.value}`)
     if (pendingRaw) {
@@ -165,7 +165,7 @@ onBeforeUnmount(() => {
   pollAborted = true
 })
 
-// ---------- Loading animation (raf-driven 33s timeline) ----------
+// ---------- Loading animation (raf-driven asymptotic curve) ----------
 
 const loaderPct = ref(0)
 const activeStepIdx = ref(0)
@@ -180,7 +180,6 @@ const STEPS = [
 ]
 // Asymptotic progress curve : pct = 100 * (1 - exp(-t/TAU)).
 // TAU=40 → ~78% à 60s, ~90% à 90s (1m30), ~95% à 120s (2min), ~99% seulement à ~3m30.
-// Le user voit toujours du mouvement, même si le LLM tarde.
 const PROGRESS_TAU = 40
 let loadStart: number | null = null
 let raf: number | null = null
@@ -205,16 +204,34 @@ function stopLoadingAnimation() {
 }
 onBeforeUnmount(() => stopLoadingAnimation())
 
-// ---------- Header actions (plan state) ----------
+// ---------- Copy buttons (plan state) ----------
 
-const copyState = ref<'idle' | 'copied'>('idle')
-async function onCopyLink() {
+const copyStates = reactive<Record<string, 'idle' | 'copied'>>({
+  link: 'idle',
+  bool: 'idle',
+  tpl1: 'idle',
+  tpl2: 'idle',
+})
+
+async function onCopy(key: string, getText: () => string) {
   try {
-    await navigator.clipboard.writeText(window.location.href)
-    copyState.value = 'copied'
-    setTimeout(() => { copyState.value = 'idle' }, 2000)
+    await navigator.clipboard.writeText(getText())
+    copyStates[key] = 'copied'
+    setTimeout(() => { copyStates[key] = 'idle' }, 1800)
   } catch {}
 }
+
+function onCopyLink() {
+  onCopy('link', () => window.location.href)
+}
+
+function onCopyBlock(key: string, elId: string) {
+  onCopy(key, () => {
+    const el = document.getElementById(elId)
+    return el?.textContent || ''
+  })
+}
+
 function onPrint() {
   window.print()
 }
@@ -237,140 +254,110 @@ async function onRetry() {
 </script>
 
 <template>
-  <div class="lab-tool-root" :data-state="state">
+  <div class="res-root" :data-state="state">
     <!-- Atmospheric background -->
-    <div class="ambient" aria-hidden="true">
-      <div class="blob-cy" />
-      <div class="blob-mg" />
-    </div>
-    <div class="grain-fx" aria-hidden="true" />
+    <div class="tool-bg" aria-hidden="true" />
 
-    <!-- ============= LOADING / ERROR / DEFERRED HEADER ============= -->
-    <header v-if="state !== 'plan'" class="load-header">
-      <div class="inner">
-        <NuxtLink to="/" class="brand" aria-label="Mariell">
-          <img src="/logo.svg" alt="Mariell" />
-        </NuxtLink>
-        <span class="divider" aria-hidden="true" />
-        <div class="meta">
-          <span class="label">Plan de sourcing LinkedIn</span>
-          <span v-if="planMetadata?.posteRecherche" class="title">{{ planMetadata.posteRecherche }}</span>
-          <span v-else class="title">Génération en cours…</span>
+    <!-- ===== STICKY BAR (plan state only) ===== -->
+    <div v-if="state === 'plan'" class="tresult-bar">
+      <div class="tresult-bar-inner">
+        <div class="res-bar-left">
+          <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell" style="font-size: 18px;">
+            <span class="chromatic chromatic--glitch">
+              <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
+              <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
+              <span class="chromatic__base">Mariell</span>
+            </span>
+          </NuxtLink>
+          <span class="res-bar-meta">
+            Plan de sourcing
+            <template v-if="planMetadata?.posteRecherche"> · {{ planMetadata.posteRecherche }}</template>
+          </span>
+        </div>
+        <div class="res-bar-actions">
+          <button class="btn-pill btn-ghost" type="button" @click="onPrint">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6,9 6,2 18,2 18,9" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Imprimer
+          </button>
+          <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">
+            Prendre rendez-vous
+          </a>
         </div>
       </div>
-    </header>
+    </div>
 
-    <!-- ============= PLAN HEADER (sticky, with actions) ============= -->
-    <header v-else class="res-header">
-      <div class="inner">
-        <div class="left">
-          <NuxtLink to="/" class="brand" aria-label="Mariell">
-            <img src="/logo.svg" alt="Mariell" />
-          </NuxtLink>
-          <span class="divider" aria-hidden="true" />
-          <div class="plan-meta">
-            <span class="label">Plan de sourcing LinkedIn</span>
-            <span class="title">{{ planMetadata?.posteRecherche || '' }}</span>
-          </div>
-        </div>
-        <div class="right">
-          <button class="icon-btn" type="button" aria-label="Imprimer" @click="onPrint">
-            <span class="icon-default" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6,9 6,2 18,2 18,9"/>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                <rect x="6" y="14" width="12" height="8"/>
-              </svg>
-            </span>
-            <span class="label-default">Imprimer</span>
-          </button>
-          <button class="icon-btn" type="button" aria-label="Copier le lien"
-                  :class="{ 'is-copied': copyState === 'copied' }" @click="onCopyLink">
-            <span v-if="copyState !== 'copied'" class="icon-default" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-              </svg>
-            </span>
-            <span v-else class="icon-copied" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            </span>
-            <span class="label-default">{{ copyState === 'copied' ? 'Copié !' : 'Copier le lien' }}</span>
-          </button>
-          <a class="cta-pill" :href="calendlyUrl" target="_blank" rel="noopener" aria-label="Prendre rendez-vous">
-            <span class="cta-pill__lbl">Prendre rendez-vous</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-          </a>
+    <!-- ===== MINIMAL HEADER (loading / error / deferred) ===== -->
+    <header v-else class="load-header">
+      <div class="load-header__inner">
+        <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell" style="font-size: 20px;">
+          <span class="chromatic chromatic--glitch">
+            <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
+            <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
+            <span class="chromatic__base">Mariell</span>
+          </span>
+        </NuxtLink>
+        <span class="load-header__divider" aria-hidden="true" />
+        <div class="load-header__meta">
+          <span class="load-header__label">Plan de sourcing LinkedIn</span>
+          <span class="load-header__status">
+            {{ state === 'loading' ? 'Génération en cours…' : (planMetadata?.posteRecherche || '') }}
+          </span>
         </div>
       </div>
     </header>
 
     <main>
-      <!-- ============= STATE: LOADING ============= -->
+      <!-- ===== STATE: LOADING ===== -->
       <section v-if="state === 'loading'" class="state-loading">
-        <div class="loading-stage">
-          <div class="loader" aria-hidden="true">
-            <svg viewBox="0 0 220 220">
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#00ffff" />
-                  <stop offset="100%" stop-color="#ff00ff" />
-                </linearGradient>
-                <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#5ee7e7" />
-                  <stop offset="100%" stop-color="#e85eff" />
-                </linearGradient>
-              </defs>
-              <circle class="ring ring-bg" cx="110" cy="110" r="98" />
-              <circle class="ring ring-1"  cx="110" cy="110" r="98" />
-              <circle class="ring ring-bg" cx="110" cy="110" r="74" />
-              <circle class="ring ring-2"  cx="110" cy="110" r="74" />
-              <circle class="ring ring-bg" cx="110" cy="110" r="50" />
-              <circle class="ring ring-3"  cx="110" cy="110" r="50" />
-            </svg>
-            <div class="center">
-              <span class="pct">{{ loaderPct }}</span>
-              <span class="pct-label">Génération</span>
-            </div>
+        <div class="tool-shell" style="text-align: center; padding-top: 80px; padding-bottom: 80px;">
+          <div class="tool-eyebrow">Le Lab Mariell</div>
+          <div class="tool-title" style="margin-left: auto; margin-right: auto;">
+            Votre plan de sourcing, <em>en construction.</em>
           </div>
-
-          <span class="eyebrow-cyan">Le Lab Mariell</span>
-          <h1>Votre plan de sourcing, <em>en construction.</em></h1>
-
-          <div class="step-stack" role="status" aria-live="polite">
+          <div class="load-counter" aria-hidden="true">
+            {{ loaderPct }}<span class="load-counter__pct">%</span>
+          </div>
+          <div class="load-bar">
+            <div class="load-bar__fill" :style="{ width: loaderPct + '%' }" />
+          </div>
+          <div class="step-stack" role="status" aria-live="polite"
+               style="max-width: 420px; margin-left: auto; margin-right: auto; text-align: left;">
             <div v-for="(step, i) in [
-              'Analyse de votre contexte...',
-              'Identification des entreprises cibles...',
-              'Construction de la requête booléenne...',
-              'Élaboration de la stratégie en 4 phases...',
-              'Compilation du tableau de scoring...',
-              'Finalisation du plan...',
-            ]" :key="step" class="step" :class="{ 'is-active': i === activeStepIdx }">
+              'Analyse de votre contexte…',
+              'Identification des entreprises cibles…',
+              'Construction de la requête booléenne…',
+              'Élaboration de la stratégie en 4 phases…',
+              'Compilation du tableau de scoring…',
+              'Finalisation du plan…',
+            ]" :key="step"
+            class="step"
+            :class="{
+              'is-active': i === activeStepIdx,
+              'is-done': i < activeStepIdx,
+            }">
               {{ step }}
             </div>
           </div>
-
           <p class="reassure">
-            Cette opération prend en général 1 à 2 minutes. Merci de ne pas fermer cette fenêtre.
+            Cette opération prend en général 30 à 60 secondes. Merci de ne pas fermer cette fenêtre.
           </p>
         </div>
       </section>
 
-      <!-- ============= STATE: PLAN ============= -->
+      <!-- ===== STATE: PLAN ===== -->
       <section v-else-if="state === 'plan'" class="state-plan">
-        <div class="read">
-          <article class="prose" v-html="renderedHtml" />
-
+        <div class="read" style="padding-top: 48px; padding-bottom: 80px;">
+          <article class="prose-res" v-html="renderedHtml" />
           <aside class="final-cta">
-            <h2>Recruter n'est pas un pari. <em>Parlons-en.</em></h2>
+            <h2>Recruter n’est pas un pari. <em>Parlons-en.</em></h2>
             <p>Un échange de 30 minutes pour caler le plan sur votre contexte précis et lancer la chasse cette semaine.</p>
             <a class="cta-gradient-lg" :href="calendlyUrl" target="_blank" rel="noopener">
               <span>Prendre rendez-vous</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
             </a>
@@ -378,653 +365,542 @@ async function onRetry() {
         </div>
       </section>
 
-      <!-- ============= STATE: ERROR ============= -->
+      <!-- ===== STATE: ERROR ===== -->
       <section v-else-if="state === 'error'" class="state-error">
-        <div class="err-stage">
-          <div class="err-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 8v5" />
-              <circle cx="12" cy="16.5" r="0.6" fill="currentColor" />
-              <circle cx="12" cy="12" r="9" />
-            </svg>
-          </div>
-          <span class="eyebrow-cyan">Génération interrompue</span>
-          <h1>Une erreur <em>est survenue.</em></h1>
-          <p>{{ errorMessage }}</p>
-          <div class="err-actions">
-            <button class="cta-pill" type="button" @click="onRetry">
-              <span>Réessayer</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14M13 6l6 6-6 6" />
+        <div class="tcenter">
+          <div class="tstate">
+            <div class="err-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 8v5" />
+                <circle cx="12" cy="16.5" r="0.6" fill="currentColor" />
+                <circle cx="12" cy="12" r="9" />
               </svg>
-            </button>
-            <NuxtLink class="link" to="/lab/plan-de-sourcing">Retour au formulaire</NuxtLink>
+            </div>
+            <div class="tool-eyebrow">Génération interrompue</div>
+            <div class="tool-title" style="font-size: clamp(28px, 4vw, 40px);">
+              Une erreur <em>est survenue.</em>
+            </div>
+            <p class="tool-subtitle" style="margin-left: auto; margin-right: auto;">
+              {{ errorMessage || 'Réessayons. Vos informations sont conservées, vous n\'avez rien à ressaisir.' }}
+            </p>
+            <div class="err-actions">
+              <button class="tsubmit" type="button" @click="onRetry">
+                <span class="tsubmit-idle">Réessayer la génération</span>
+                <svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+              <NuxtLink class="nav-link" to="/lab/plan-de-sourcing">Retour au formulaire</NuxtLink>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ============= STATE: DEFERRED ============= -->
+      <!-- ===== STATE: DEFERRED ===== -->
       <section v-else-if="state === 'deferred'" class="state-deferred">
-        <div class="err-stage">
-          <div class="err-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9" />
-              <polyline points="12 7 12 12 15 14" />
-            </svg>
-          </div>
-          <span class="eyebrow-cyan">Service personnalisé</span>
-          <h1>Votre demande sera <em>traitée manuellement.</em></h1>
-          <p>
-            Notre équipe a bien reçu votre demande et la traitera sous 24h&nbsp;ouvrées.
-            Vous recevrez votre plan de sourcing par email
-            <template v-if="deferredEmail">
-              à l'adresse <span class="email">{{ deferredEmail }}</span>
-            </template>
-            dès qu'il sera prêt.
-          </p>
-          <div class="err-actions">
-            <NuxtLink class="btn-ghost" to="/lab">
-              <span>Retour au Lab Mariell</span>
+        <div class="tcenter">
+          <div class="tstate">
+            <div class="err-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <polyline points="12 7 12 12 15 14" />
+              </svg>
+            </div>
+            <div class="tool-eyebrow">Service personnalisé</div>
+            <div class="tool-title" style="font-size: clamp(28px, 4vw, 40px);">
+              Votre demande sera <em>traitée manuellement.</em>
+            </div>
+            <p class="tool-subtitle" style="margin-left: auto; margin-right: auto;">
+              Notre équipe a bien reçu votre demande et la traitera sous 24&nbsp;h.
+              Vous recevrez votre plan de sourcing par email
+              <template v-if="deferredEmail">
+                à l’adresse <span class="deferred-email">{{ deferredEmail }}</span>
+              </template>
+              dès qu’il sera prêt.
+            </p>
+            <NuxtLink class="btn-pill btn-ghost" to="/lab">
+              Retour au Lab Mariell
             </NuxtLink>
           </div>
         </div>
       </section>
     </main>
 
+    <!-- Footer (plan state only) -->
     <footer v-if="state === 'plan'" class="res-footer">
-      <div class="tag">Recruter n'est pas un pari.</div>
-      <div class="legal">Mariell · Plan généré et accessible 90 jours</div>
+      <span class="res-footer__tag">Recruter n’est pas un pari.</span>
+      <span class="res-footer__legal">Mariell · Plan généré et accessible 90 jours</span>
     </footer>
   </div>
 </template>
 
 <style scoped>
-.lab-tool-root {
+/* ---- Root ---- */
+.res-root {
   position: relative;
   min-height: 100vh;
-  background: #000;
-  color: #fff;
-  font-family: var(--font-grotesk);
-}
-a { color: inherit; }
-
-/* ----- Ambient background ----- */
-.ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.blob-cy {
-  position: absolute; top: -260px; left: -220px;
-  width: 760px; height: 760px;
-  background: radial-gradient(circle, rgba(0,255,255,0.18), transparent 60%);
-  filter: blur(120px); opacity: 0.5;
-  animation: drift 38s ease-in-out infinite alternate;
-}
-.blob-mg {
-  position: absolute; bottom: -320px; right: -260px;
-  width: 860px; height: 860px;
-  background: radial-gradient(circle, rgba(255,0,255,0.14), transparent 60%);
-  filter: blur(120px); opacity: 0.5;
-  animation: drift 32s ease-in-out infinite alternate-reverse;
-}
-@keyframes drift {
-  0% { transform: translate3d(0,0,0) scale(1); }
-  100% { transform: translate3d(3%,-2%,0) scale(1.07); }
-}
-.grain-fx {
-  position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  opacity: 0.05; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background: var(--ink-900);
+  color: var(--fg-on-ink-1);
+  font-family: var(--font-text);
 }
 
-main { position: relative; z-index: 2; }
+/* ---- Tool title italic accent ---- */
+.tool-title em {
+  font-style: italic;
+  color: inherit;
+}
 
-/* ----- Loading header ----- */
+/* ---- Load header (non-plan states) ---- */
 .load-header {
-  position: sticky; top: 0; z-index: 30;
-  height: 72px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  background: rgba(11, 13, 16, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-on-ink);
 }
-.load-header .inner {
-  height: 100%; width: 100%; max-width: 1200px;
-  margin: 0 auto; padding: 0 28px;
-  display: flex; align-items: center; gap: 22px;
+.load-header__inner {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
-.load-header .brand { display: inline-flex; align-items: center; text-decoration: none; flex-shrink: 0; }
-.load-header .brand img { height: 22px; display: block; }
-.load-header .divider { width: 1px; height: 26px; background: rgba(255,255,255,0.10); flex-shrink: 0; }
-.load-header .meta { display: flex; flex-direction: column; line-height: 1.15; gap: 4px; min-width: 0; }
-.load-header .meta .label {
-  font-family: var(--font-grotesk); font-weight: 600; font-size: 10px;
-  letter-spacing: 0.32em; text-transform: uppercase; color: #5ee7e7;
+.load-header__divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border-on-ink);
+  flex-shrink: 0;
 }
-.load-header .meta .title {
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 15px;
-  color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.load-header__meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  gap: 2px;
+  min-width: 0;
 }
-@media (max-width: 560px) {
-  .load-header .inner { padding: 0 18px; gap: 16px; }
-  .load-header .meta .title { font-size: 13px; }
+.load-header__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
 }
-
-/* ----- Sticky plan header ----- */
-.res-header {
-  position: sticky; top: 0; z-index: 30;
-  height: 72px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  background: rgba(0,0,0,0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transform: translateY(-100%);
-  animation: slideDown 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
-}
-@keyframes slideDown { to { transform: translateY(0); } }
-.res-header .inner {
-  height: 100%; width: 100%; max-width: 1200px;
-  margin: 0 auto; padding: 0 20px;
-  display: flex; align-items: center; gap: 20px;
-}
-.res-header .left { display: flex; align-items: center; gap: 18px; flex: 1; min-width: 0; }
-.res-header .brand img { height: 22px; display: block; width: auto; }
-.res-header .divider { width: 1px; height: 22px; background: rgba(255,255,255,0.10); flex-shrink: 0; }
-.res-header .plan-meta { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-.res-header .plan-meta .label {
-  font-family: ui-monospace, "SF Mono", monospace; font-size: 10px;
-  letter-spacing: 0.18em; text-transform: uppercase; color: #5ee7e7;
-}
-.res-header .plan-meta .title {
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 14px;
-  color: rgba(255,255,255,0.9);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-top: 3px;
-}
-.res-header .right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-.icon-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 14px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.02);
-  color: rgba(255,255,255,0.9);
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 13px;
-  cursor: pointer; text-decoration: none;
-  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
-}
-.icon-btn:hover {
-  border-color: rgba(255,255,255,0.4);
-  background: rgba(255,255,255,0.04);
-  color: #fff;
-  transform: translateY(-1px);
-}
-.icon-btn svg { width: 14px; height: 14px; }
-.icon-btn.is-copied {
-  border-color: rgba(94,231,231,0.5);
-  background: rgba(94,231,231,0.08);
-  color: #5ee7e7;
+.load-header__status {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-on-ink-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.cta-pill {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 11px 18px; border-radius: 9999px; border: 0;
-  font-family: var(--font-grotesk); font-weight: 600; font-size: 13px;
-  color: #000;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  cursor: pointer; text-decoration: none;
-  transition: transform 0.3s, box-shadow 0.3s, filter 0.2s;
+/* ---- Sticky result bar ---- */
+.res-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
 }
-.cta-pill:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.08);
-  box-shadow: 0 20px 60px -15px rgba(255,0,255,0.55);
-}
-.cta-pill svg { width: 14px; height: 14px; }
-
-@media (max-width: 880px) {
-  .res-header .plan-meta .title { display: none; }
-  .icon-btn .label-default { display: none; }
-  .icon-btn { padding: 9px 11px; }
+.res-bar-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-on-ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 @media (max-width: 640px) {
-  .res-header .divider { display: none; }
-  .res-header .inner { padding: 0 16px; gap: 12px; }
-  .cta-pill { padding: 10px 14px; font-size: 12px; }
-  .cta-pill .cta-pill__lbl { display: none; }
-}
-@media (max-width: 460px) {
-  .res-header .icon-btn { display: none; }
+  .res-bar-meta { display: none; }
 }
 
-/* ----- Reading column ----- */
-.read { max-width: 760px; margin: 0 auto; padding: 64px 22px 96px; }
-@media (min-width: 768px) { .read { padding: 88px 32px 128px; } }
+/* ---- Loading state ---- */
+.state-loading { position: relative; z-index: 1; }
 
-/* ----- LOADING STATE ----- */
-.loading-stage {
-  min-height: 80vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 80px 22px;
+.load-counter {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(58px, 9vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--cyan);
+  margin: 34px 0 6px;
+  text-shadow: 0 0 28px rgba(127, 231, 225, 0.35);
+  animation: counterPulse 1.8s ease-in-out infinite;
 }
-.loader { position: relative; width: 220px; height: 220px; margin-bottom: 56px; }
-.loader svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.loader .ring { fill: none; stroke-linecap: round; }
-.loader .ring-bg { stroke: rgba(255,255,255,0.06); stroke-width: 1; }
-.loader .ring-1 {
-  stroke: url(#g1); stroke-width: 1.5;
-  stroke-dasharray: 220 600;
-  transform-origin: center;
-  animation: arc-spin-1 4.5s cubic-bezier(0.4,0,0.6,1) infinite;
+.load-counter__pct {
+  font-size: 0.38em;
+  color: var(--fg-on-ink-3);
+  margin-left: 5px;
+  letter-spacing: 0;
+  text-shadow: none;
 }
-.loader .ring-2 {
-  stroke: url(#g2); stroke-width: 1.5;
-  stroke-dasharray: 130 600;
-  transform-origin: center;
-  animation: arc-spin-2 6s cubic-bezier(0.4,0,0.6,1) infinite reverse;
-}
-.loader .ring-3 {
-  stroke: rgba(94,231,231,0.55); stroke-width: 1;
-  stroke-dasharray: 60 600;
-  transform-origin: center;
-  animation: arc-spin-3 3.8s cubic-bezier(0.4,0,0.6,1) infinite;
-}
-@keyframes arc-spin-1 { to { transform: rotate(360deg); } }
-@keyframes arc-spin-2 { to { transform: rotate(360deg); } }
-@keyframes arc-spin-3 { to { transform: rotate(-360deg); } }
-
-.loader .center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 6px;
-}
-.loader .center .pct {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: 36px;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  line-height: 1; letter-spacing: -0.035em;
-}
-.loader .center .pct-label {
-  font-family: ui-monospace, monospace;
-  font-size: 10px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.45);
+@keyframes counterPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.72; }
 }
 
-.eyebrow-cyan {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-family: var(--font-grotesk);
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: #5ee7e7;
+.load-bar {
+  width: min(320px, 80%);
+  height: 3px;
+  border-radius: 999px;
+  background: var(--ink-700);
+  margin: 6px auto 0;
+  overflow: hidden;
 }
-.eyebrow-cyan::before { content: ""; width: 32px; height: 1px; background: currentColor; }
-
-.loading-stage .eyebrow-cyan { margin-bottom: 16px; }
-.loading-stage h1 {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(28px, 4vw, 40px);
-  letter-spacing: -0.035em; line-height: 1.1;
-  margin: 0 0 14px; color: #fff;
-}
-.loading-stage h1 em {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  /* Anti-coupure italique : étend la zone de gradient pour que les glyphes
-     inclinés (ex. intitulé de poste dynamique) ne soient pas tronqués par
-     background-clip:text. */
-  display: inline-block;
-  padding-left: 0.08em;
-  padding-right: 0.12em;
-  padding-bottom: 0.15em;
-  margin-bottom: -0.15em;
+.load-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  transition: width 120ms linear;
 }
 
 .step-stack {
-  position: relative; height: 28px; width: 100%;
-  max-width: 560px; margin: 0 auto; overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 36px 0 0;
 }
 .step {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  font-family: var(--font-grotesk); font-weight: 400;
-  font-size: 16px; color: rgba(255,255,255,0.9);
-  opacity: 0; transform: translateY(8px);
-  transition: opacity 0.5s, transform 0.5s;
+  font-size: 15px;
+  color: var(--fg-on-ink-4);
+  padding-left: 26px;
+  position: relative;
+  transition: color 300ms;
 }
-.step.is-active { opacity: 1; transform: translateY(0); }
 .step::before {
-  content: ""; width: 6px; height: 6px;
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #5ee7e7;
-  box-shadow: 0 0 12px rgba(94,231,231,0.7);
-  animation: pulse-dot 1.6s ease-in-out infinite;
+  border: 1.5px solid var(--fg-on-ink-4);
+  transition: border-color 300ms, background 300ms;
 }
-@keyframes pulse-dot {
-  0%, 100% { opacity: 0.5; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.15); }
-}
+.step.is-active { color: var(--cyan); }
+.step.is-active::before { border-color: var(--cyan); background: var(--cyan); }
+.step.is-done { color: var(--fg-on-ink-2); }
+.step.is-done::before { border-color: var(--cyan); background: var(--cyan); }
 
 .reassure {
-  margin-top: 48px; padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  width: 100%; max-width: 560px;
-  font-family: var(--font-grotesk);
-  font-style: italic; font-size: 14px;
-  color: rgba(255,255,255,0.45);
-  line-height: 1.6; text-align: center;
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--fg-on-ink-3);
 }
 
-/* ----- PLAN STATE ----- */
-.state-plan { animation: planFade 0.7s cubic-bezier(0.22,1,0.36,1); }
+/* ---- Plan state ---- */
+.state-plan { position: relative; z-index: 1; animation: planFade 0.6s var(--ease-out); }
 @keyframes planFade {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.prose {
-  font-family: var(--font-grotesk);
-  font-weight: 300;
-  color: rgba(255,255,255,0.9);
+/* ---- Prose styles for rendered markdown ---- */
+.prose-res :deep(h1) {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: var(--fg-on-ink-1);
 }
-.prose :deep(h1) {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(36px, 5.2vw, 56px);
-  line-height: 1.05; letter-spacing: -0.035em;
-  color: #fff; margin: 0 0 18px; text-wrap: pretty;
-}
-.prose :deep(h1 em) {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  /* padding-left ajouté en plus du -right : protège les intitulés de poste
-     dynamiques qui peuvent commencer par une italique (ex. "_AE Senior_…"). */
-  padding-left: 0.08em;
-  padding-right: 0.12em;
-  padding-bottom: 0.18em;
-  margin-bottom: -0.18em;
-}
-.prose :deep(h2) {
-  margin: 88px 0 28px;
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(26px, 3.2vw, 36px);
-  line-height: 1.15; letter-spacing: -0.035em;
-  color: #fff;
-}
-.prose :deep(h2 em) {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  padding-right: 0.12em;
-  padding-bottom: 0.15em;
-  margin-bottom: -0.15em;
-}
-.prose :deep(h3) {
+.prose-res :deep(h2) {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(26px, 3.4vw, 38px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
   margin: 44px 0 16px;
-  font-family: var(--font-grotesk); font-weight: 700;
-  font-size: 22px; line-height: 1.25; letter-spacing: -0.025em;
-  color: #fff;
+  color: var(--fg-on-ink-1);
 }
-.prose :deep(h3 em) {
-  font-style: italic; color: #e85eff; opacity: 0.95;
-  display: inline-block;
-  padding-right: 0.1em;
+.prose-res :deep(h3) {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 20px;
+  margin: 28px 0 8px;
+  color: var(--fg-on-ink-1);
 }
-.prose :deep(p), .prose :deep(ul), .prose :deep(ol) {
-  font-size: 17px; line-height: 1.75;
-  color: rgba(255,255,255,0.65);
-  margin: 0 0 22px; max-width: 68ch;
+.prose-res :deep(h4) {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0 0 6px;
+  color: var(--fg-on-ink-1);
 }
-.prose :deep(strong) { color: #fff; font-weight: 600; }
-.prose :deep(a) {
-  color: #5ee7e7;
-  text-decoration: underline;
-  text-decoration-color: rgba(94,231,231,0.4);
-  text-underline-offset: 3px;
+.prose-res :deep(h2 em),
+.prose-res :deep(h3 em) {
+  font-style: normal;
+  color: inherit;
 }
-.prose :deep(em) { font-style: italic; }
-.prose :deep(hr) {
-  border: 0; height: 1px;
-  margin: 56px 0;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255,255,255,0.10) 30%,
-    rgba(0,255,255,0.30) 50%,
-    rgba(255,255,255,0.10) 70%,
-    transparent 100%);
+.prose-res :deep(p) {
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--fg-on-ink-2);
+  margin: 0 0 16px;
 }
-.prose :deep(ul), .prose :deep(ol) { padding-left: 0; list-style: none; }
-.prose :deep(ul li), .prose :deep(ol li) {
-  position: relative; padding-left: 28px; margin-bottom: 14px;
+.prose-res :deep(strong) { color: var(--fg-on-ink-1); }
+.prose-res :deep(a) { color: var(--cyan); }
+.prose-res :deep(ul),
+.prose-res :deep(ol) {
+  margin: 0 0 18px;
+  padding-left: 0;
+  list-style: none;
 }
-.prose :deep(ul > li::before) {
-  content: ""; position: absolute;
-  left: 0; top: 0.7em;
-  width: 12px; height: 1px;
-  background: #5ee7e7; opacity: 0.7;
+.prose-res :deep(li) {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-on-ink-2);
+  padding-left: 24px;
+  position: relative;
+  margin-bottom: 9px;
 }
-.prose :deep(ol) { counter-reset: ord; }
-.prose :deep(ol > li) { counter-increment: ord; }
-.prose :deep(ol > li::before) {
-  content: counter(ord, decimal-leading-zero);
-  position: absolute; left: 0; top: 0;
-  font-family: ui-monospace, monospace;
-  font-size: 11px; letter-spacing: 0.18em;
-  color: #5ee7e7; line-height: 1.9;
+.prose-res :deep(ul > li::before) {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
 }
-.prose :deep(pre) {
-  margin: 28px 0 32px; padding: 20px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  background: rgba(255,255,255,0.025);
+.prose-res :deep(ol) { counter-reset: n; }
+.prose-res :deep(ol li) { counter-increment: n; padding-left: 26px; }
+.prose-res :deep(ol li::before) {
+  content: counter(n);
+  background: none;
+  width: auto;
+  height: auto;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan);
+  border-radius: 0;
+}
+.prose-res :deep(hr) {
+  border: none;
+  border-top: 1px solid var(--border-on-ink);
+  margin: 32px 0;
+}
+.prose-res :deep(pre) {
+  margin: 0;
+  padding: 16px;
   overflow-x: auto;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px; line-height: 1.7;
-  color: rgba(255,255,255,0.9);
-  letter-spacing: 0.01em;
 }
-.prose :deep(code) {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+.prose-res :deep(pre code) {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--cyan);
+  white-space: pre;
+}
+.prose-res :deep(code) {
+  font-family: var(--font-mono);
   font-size: 0.9em;
+  color: var(--cyan);
 }
-.prose :deep(blockquote) {
-  border-left: 2px solid #e85eff;
+.prose-res :deep(blockquote) {
+  border-left: 2px solid var(--border-on-ink-strong);
   padding: 8px 16px;
   margin: 22px 0;
-  background: rgba(232,94,255,0.04);
-  border-radius: 0 8px 8px 0;
-  color: rgba(255,255,255,0.85);
+  color: var(--fg-on-ink-2);
 }
-.prose :deep(table) {
-  width: 100%; border-collapse: collapse;
-  font-family: var(--font-grotesk); font-size: 14px;
-  margin: 28px 0 32px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px; overflow: hidden;
-}
-.prose :deep(th) {
-  text-align: left; padding: 14px 18px;
-  font-weight: 600; font-size: 11px;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  color: #5ee7e7;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  background: rgba(94,231,231,0.04);
-}
-.prose :deep(td) {
-  padding: 14px 18px;
-  color: rgba(255,255,255,0.9);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.prose :deep(tr:nth-child(even) td) { background: rgba(255,255,255,0.015); }
-
-/* Final CTA */
-.final-cta {
-  margin-top: 56px;
-  padding: 40px 32px;
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005));
-  position: relative; overflow: hidden;
-  text-align: center;
-}
-.final-cta::before {
-  content: ""; position: absolute; inset: 0;
-  background: radial-gradient(60% 50% at 50% 0%, rgba(232,94,255,0.10), transparent 70%);
-  pointer-events: none;
-}
-.final-cta > * { position: relative; }
-.final-cta h2 {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(24px, 3vw, 32px);
-  line-height: 1.15; letter-spacing: -0.035em;
-  color: #fff; margin: 0 0 12px;
-}
-.final-cta h2 em {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  padding-right: 0.12em;
-  padding-bottom: 0.15em;
-  margin-bottom: -0.15em;
-}
-.final-cta p {
-  color: rgba(255,255,255,0.65);
-  font-size: 16px; line-height: 1.65;
-  max-width: 520px; margin: 0 auto 26px;
-}
-.cta-gradient-lg {
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 18px 30px; border-radius: 9999px;
-  background: linear-gradient(135deg, #5ee7e7 0%, #e85eff 100%);
-  color: #0b0b12;
-  font-family: var(--font-grotesk); font-weight: 600; font-size: 15px;
-  text-decoration: none;
-  box-shadow: 0 20px 60px -20px rgba(232,94,255,0.45);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.cta-gradient-lg:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 28px 80px -20px rgba(232,94,255,0.6);
-}
-.cta-gradient-lg svg { width: 16px; height: 16px; }
-
-/* ----- ERROR + DEFERRED ----- */
-.err-stage {
-  min-height: 78vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 80px 22px;
-  max-width: 560px; margin: 0 auto;
-}
-.err-mark {
-  width: 64px; height: 64px;
-  margin-bottom: 28px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.02);
-  position: relative;
-}
-.err-mark::before {
-  content: ''; position: absolute; inset: -1px;
-  border-radius: 50%; padding: 1px;
-  background: linear-gradient(135deg, rgba(94,231,231,0.5), transparent 50%, rgba(232,94,255,0.5));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  pointer-events: none;
-}
-.err-mark svg { width: 24px; height: 24px; }
-.err-stage .eyebrow-cyan { margin-bottom: 18px; }
-.err-stage h1 {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(28px, 4vw, 40px);
-  line-height: 1.1; letter-spacing: -0.035em;
-  color: #fff; margin: 0 0 14px;
-}
-.err-stage h1 em {
-  font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  /* Italique en gradient : sans inline-block + padding-right, le glyphe final
-     (ex. "traitée") est tronqué par background-clip:text. */
-  display: inline-block;
-  padding-right: 0.14em;
-  padding-bottom: 0.18em;
-  margin-bottom: -0.18em;
-}
-.err-stage p {
-  font-size: 16px; line-height: 1.65;
-  color: rgba(255,255,255,0.65);
-  margin: 0 0 32px; max-width: 480px;
-}
-.err-stage p .email {
-  color: #5ee7e7;
-  font-family: ui-monospace, monospace;
+.prose-res :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 14px;
+  min-width: 420px;
 }
-.err-actions { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-.btn-ghost {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 24px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: transparent; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 14px;
-  text-decoration: none; cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+.prose-res :deep(th) {
+  text-align: left;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-on-ink-3);
+  border-bottom: 1px solid var(--border-on-ink);
 }
-.btn-ghost:hover {
-  border-color: rgba(255,255,255,0.4);
-  background: rgba(255,255,255,0.04);
-  transform: translateY(-1px);
+.prose-res :deep(td) {
+  padding: 12px 14px;
+  color: var(--fg-on-ink-2);
+  border-bottom: 1px solid var(--border-on-ink);
 }
-.link {
-  font-family: var(--font-grotesk); font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  text-decoration: underline;
-  text-decoration-color: rgba(255,255,255,0.2);
-  text-underline-offset: 4px;
-  transition: color 0.2s;
-}
-.link:hover { color: #fff; }
 
-/* ----- Footer ----- */
-.res-footer {
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding: 32px 22px 40px;
+/* ---- Final CTA card ---- */
+.final-cta {
+  margin: 56px auto 0;
+  max-width: 760px;
+  background: var(--ink-800);
+  border: 1px solid var(--border-on-ink);
+  border-radius: 16px;
+  padding: 36px 40px;
   text-align: center;
-  position: relative; z-index: 2;
 }
-.res-footer .tag {
-  font-family: var(--font-grotesk);
-  font-style: italic; font-size: 14px;
-  color: rgba(255,255,255,0.45);
-  margin-bottom: 8px;
+.final-cta h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  color: var(--fg-on-ink-1);
 }
-.res-footer .legal {
-  font-family: ui-monospace, monospace;
-  font-size: 10px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
+.final-cta h2 em { font-style: normal; color: inherit; }
+.final-cta p {
+  font-size: 15px;
+  color: var(--fg-on-ink-2);
+  margin: 0 0 22px;
 }
 
-/* ----- Print ----- */
+/* ---- Error / Deferred states ---- */
+.state-error,
+.state-deferred { position: relative; z-index: 1; }
+
+.err-mark {
+  width: 48px;
+  height: 48px;
+  color: var(--cyan);
+  margin: 0 auto 4px;
+}
+.err-mark svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.err-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.deferred-email {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* ---- Footer ---- */
+.res-footer {
+  border-top: 1px solid var(--border-on-ink);
+  padding: 28px 22px 36px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+}
+.res-footer__tag {
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--fg-on-ink-3);
+}
+.res-footer__legal {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-on-ink-4);
+}
+
+/* ---- Print ---- */
 @media print {
-  .ambient, .grain-fx, .res-header, .load-header, .res-footer,
+  .tresult-bar,
+  .load-header,
+  .res-footer,
+  .tool-bg,
   .final-cta .cta-gradient-lg { display: none !important; }
-  body { background: #fff !important; }
-  .lab-tool-root { background: #fff !important; color: #000 !important; }
-  .prose, .prose :deep(*) { color: #000 !important; -webkit-text-fill-color: #000 !important; background: none !important; }
-  .read { max-width: none; padding: 0; }
+  .res-root { background: #fff !important; color: #000 !important; }
+  .prose-res :deep(*) { color: #000 !important; }
 }
 
+/* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
-  .blob-cy, .blob-mg, .loader .ring-1, .loader .ring-2, .loader .ring-3,
-  .step::before, .res-header, .state-plan { animation: none; transform: none; }
+  .load-counter { animation: none; }
+  .load-bar__fill { transition: none; }
+  .step, .step::before { transition: none; }
+  .state-plan { animation: none; }
+}
+
+/* ---- Mobile / responsive ---- */
+@media (max-width: 900px) {
+  /* Sticky result bar: allow wrapping, reduce padding */
+  .tresult-bar-inner { padding: 10px 16px; gap: 10px; }
+  .res-bar-actions { gap: 8px; }
+
+  /* Loading header */
+  .load-header__inner { padding: 0 16px; gap: 12px; }
+
+  /* Result reading column */
+  .read { padding-left: 20px; padding-right: 20px; }
+
+  /* Markdown tables: horizontally scrollable */
+  .prose-res :deep(table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+  }
+
+  /* Final CTA */
+  .final-cta { padding: 28px 22px; }
+}
+
+@media (max-width: 560px) {
+  /* Sticky result bar: single column, actions below brand */
+  .tresult-bar-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .res-bar-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+  .res-bar-actions .btn-pill { flex: 1 1 auto; justify-content: center; text-align: center; }
+
+  /* Load header meta truncation */
+  .load-header__status { font-size: 13px; }
+
+  /* Loading counter size */
+  .load-counter { font-size: clamp(46px, 14vw, 72px); margin: 20px 0 4px; }
+
+  /* Step stack padding */
+  .step-stack { margin-top: 24px; }
+  .step { font-size: 14px; }
+
+  /* Reading column tighter */
+  .read { padding-left: 16px; padding-right: 16px; }
+
+  /* Prose headings */
+  .prose-res :deep(h1) { font-size: clamp(24px, 7vw, 34px); }
+  .prose-res :deep(h2) { font-size: clamp(20px, 5.5vw, 28px); }
+
+  /* Markdown tables: horizontally scrollable */
+  .prose-res :deep(table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+  }
+
+  /* Final CTA */
+  .final-cta { padding: 24px 16px; }
+  .final-cta h2 { font-size: 20px; }
 }
 </style>

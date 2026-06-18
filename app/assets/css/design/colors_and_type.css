@@ -1,0 +1,271 @@
+/* ============================================================
+   MARIELL — Foundations
+   Sales executive search, for VC/PE-backed growth companies.
+   ============================================================ */
+
+/* --- Webfonts ------------------------------------------------- */
+/* Geist + DM Mono are self-hosted at build time via @nuxtjs/google-fonts
+   (see nuxt.config.ts > googleFonts). No runtime @import here. */
+
+/* Tiempos Headline — self-hosted, Medium 500 only (the licensed cut). */
+@font-face {
+  font-family: 'Tiempos Headline';
+  src: url('/fonts/tiempos-headline-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ============================================================
+     COLOR — Foundations
+     Mariell pairs Hunt Club's structural calm (deep ink + warm cream)
+     with its own signature: a cyan/magenta chromatic edge lifted
+     from the wordmark. Cream is the default page; ink is the
+     "statement" surface; cyan is the primary accent.
+     ============================================================ */
+
+  /* Ink — primary deep surface */
+  --ink-1000: #060708;          /* near-pure black; full-bleed dark sections */
+  --ink-900:  #0B0D10;          /* default dark background */
+  --ink-800:  #14171C;          /* raised dark surface, cards on ink */
+  --ink-700:  #1E2329;          /* hairline on ink, hover surface */
+  --ink-600:  #2A2F36;          /* divider on ink */
+
+  /* Paper — primary light surface */
+  --paper-50:  #FBF8F1;         /* lightest cream */
+  --paper-100: #F4EFE3;         /* DEFAULT page background (warm cream) */
+  --paper-200: #ECE6D7;         /* raised surface on cream */
+  --paper-300: #DDD5C2;         /* divider on cream */
+  --paper-400: #B8B0A0;         /* mid neutral */
+
+  /* Foreground */
+  --fg-on-ink-1:   #F4EFE3;     /* primary text on ink */
+  --fg-on-ink-2:   rgba(244,239,227,0.72);
+  --fg-on-ink-3:   rgba(244,239,227,0.50);
+  --fg-on-ink-4:   rgba(244,239,227,0.32);
+
+  --fg-on-paper-1: #0B0D10;     /* primary text on cream */
+  --fg-on-paper-2: #3A3D43;
+  --fg-on-paper-3: #6B6E74;
+  --fg-on-paper-4: #9A9CA1;
+
+  /* Accents — the chromatic pair */
+  --cyan:      #7FE7E1;         /* primary accent */
+  --cyan-dim:  #4EBDB7;         /* hover / smaller */
+  --cyan-soft: #C9F2EF;         /* tint on cream */
+
+  --magenta:      #E68BE8;      /* secondary accent (use sparingly) */
+  --magenta-dim:  #B85FBB;
+  --magenta-soft: #F4CDF5;
+
+  /* Editorial accent — used for body link, success badges */
+  --moss:      #2F6E55;         /* alt accent if cyan feels too cold */
+  --moss-dim:  #1F4D3A;
+
+  /* Semantic */
+  --success: #2F6E55;
+  --warn:    #C98A2A;
+  --danger:  #C7503E;
+  --info:    var(--cyan-dim);
+
+  /* Borders */
+  --border-on-paper: rgba(11,13,16,0.10);
+  --border-on-paper-strong: rgba(11,13,16,0.22);
+  --border-on-ink:   rgba(244,239,227,0.10);
+  --border-on-ink-strong: rgba(244,239,227,0.22);
+
+  /* ============================================================
+     TYPE — Foundations
+     Two families do the heavy lifting:
+       Display:  Bodoni Moda — high-contrast Didone, matches the
+                 Mariell wordmark. Use for headlines and pull-quotes.
+       Text:    Geist — neutral modern grotesque. Body and UI.
+       Mono:    Geist Mono — small labels, eyebrows, code, data.
+     Italics in Bodoni are deliberately literary; use them on the
+     pivot word in a headline ("There's someone you /should/ meet.").
+     ============================================================ */
+
+  --font-display: "Tiempos Headline", Georgia, "Times New Roman", serif;
+  --font-text:    "Geist", -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:    "Geist", -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Scale — type ramp (px / line-height) */
+  --t-display-xl: 112px;        /* hero, 1-2 words @kind font */
+  --t-display-l:  84px;         /* H1 hero @kind font */
+  --t-display-m:  64px;         /* H1 secondary @kind font */
+  --t-display-s:  48px;         /* H2 @kind font */
+
+  --t-h1:        56px;          /* @kind font */
+  --t-h2:        40px;          /* @kind font */
+  --t-h3:        28px;          /* @kind font */
+  --t-h4:        22px;          /* @kind font */
+  --t-h5:        18px;          /* @kind font */
+
+  --t-body-l:    20px;          /* @kind font */
+  --t-body:      17px;          /* default body @kind font */
+  --t-body-s:    15px;          /* @kind font */
+  --t-caption:   13px;          /* @kind font */
+  --t-eyebrow:   12px;          /* uppercase mono labels @kind font */
+
+  --lh-tight:    1.04;          /* @kind font */
+  --lh-snug:     1.16;          /* @kind font */
+  --lh-normal:   1.42;          /* @kind font */
+  --lh-loose:    1.6;           /* @kind font */
+
+  /* Tracking */
+  --tr-tight:    -0.02em;       /* display @kind font */
+  --tr-tighter:  -0.03em;       /* @kind font */
+  --tr-normal:   0;             /* @kind font */
+  --tr-eyebrow:  0.14em;        /* uppercase mono @kind font */
+
+  /* ============================================================
+     SPACING & RADII
+     ============================================================ */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+  --s-32: 128px;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Shadows — minimal; Mariell prefers borders over shadows on cream */
+  --shadow-sm:  0 1px 2px rgba(11,13,16,0.06);
+  --shadow-md:  0 6px 24px rgba(11,13,16,0.08), 0 1px 2px rgba(11,13,16,0.04);
+  --shadow-lg:  0 24px 64px rgba(11,13,16,0.18), 0 2px 6px rgba(11,13,16,0.06);
+  --shadow-ink: 0 24px 64px rgba(0,0,0,0.50);
+
+  /* Motion */
+  --ease-out:     cubic-bezier(0.16, 1, 0.30, 1);  /* @kind other */
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);  /* @kind other */
+  --dur-fast:     140ms;        /* @kind other */
+  --dur-base:     220ms;        /* @kind other */
+  --dur-slow:     420ms;        /* @kind other */
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES — opt-in via .mariell scope
+   ============================================================ */
+
+.mariell {
+  font-family: var(--font-text);
+  color: var(--fg-on-paper-1);
+  background: var(--paper-100);
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.mariell--ink {
+  background: var(--ink-900);
+  color: var(--fg-on-ink-1);
+}
+
+.mariell h1, .mariell .h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-display-l);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-tight);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.mariell h2, .mariell .h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-display-s);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-tight);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.mariell h3, .mariell .h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-h3);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-tight);
+  margin: 0;
+}
+
+.mariell h4, .mariell .h4 {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: var(--t-h4);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-tight);
+  margin: 0;
+}
+
+.mariell h5, .mariell .h5 {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: var(--t-h5);
+  line-height: var(--lh-snug);
+  margin: 0;
+}
+
+.mariell p {
+  font-family: var(--font-text);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  margin: 0;
+  color: inherit;
+  text-wrap: pretty;
+}
+
+.mariell .eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--t-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-on-paper-3);
+}
+
+.mariell--ink .eyebrow { color: var(--fg-on-ink-3); }
+
+.mariell .display-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.mariell .accent-cyan    { color: var(--cyan-dim); }
+.mariell--ink .accent-cyan { color: var(--cyan); }
+.mariell .accent-magenta { color: var(--magenta-dim); }
+.mariell--ink .accent-magenta { color: var(--magenta); }
+
+.mariell a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.mariell a:hover { opacity: 0.65; }
+
+.mariell code, .mariell .mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}

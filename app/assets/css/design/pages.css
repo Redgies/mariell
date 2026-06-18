@@ -1,0 +1,194 @@
+/* ============================================================
+   Mariell — static pages (SEO-first): nav, footer, editorial layout
+   Pure-CSS mega-menu (no JS needed → content in HTML source).
+   ============================================================ */
+
+/* ---- Static top nav ---- */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  padding: 18px 40px;
+  background: rgba(11,13,16,0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(244,239,227,0.08);
+}
+.site-nav__inner {
+  max-width: 1360px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 40px;
+}
+.site-nav__brand {
+  font-family: var(--font-display); font-weight: 600; font-size: 22px;
+  letter-spacing: 0.01em; color: var(--paper-100); text-decoration: none;
+  position: relative; line-height: 1;
+}
+.site-nav__links { display: flex; align-items: center; gap: 32px; }
+.nav-item { position: static; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: rgba(244,239,227,0.88); text-decoration: none;
+  font-size: 15px; font-weight: 500; letter-spacing: -0.005em; padding: 8px 0;
+  transition: color 160ms var(--ease-out);
+}
+.nav-link:hover { color: var(--cyan); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 20px; border-radius: 999px;
+  background: var(--cyan); color: var(--ink-900);
+  background-image: linear-gradient(100deg, var(--cyan) 0%, var(--cyan) 38%, var(--magenta) 100%);
+  background-size: 200% 100%; background-position: 0% 50%;
+  font-size: 14px; font-weight: 500; text-decoration: none;
+  transition: background-position 400ms var(--ease-out);
+}
+.nav-cta:hover { background-position: 100% 50%; }
+
+/* Mega-menu — CSS hover. Panel anchors UNDER its own trigger (position:relative
+   on the item) and abuts it (top:100% = item bottom) with a padding-only bridge,
+   so the cursor never crosses a dead gap. */
+.has-mega { position: relative; }
+.mega {
+  position: absolute; top: 100%; right: 50%; left: auto;
+  transform: translateX(50%) translateY(-4px);
+  display: flex; justify-content: flex-start; padding-top: 14px;
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity 280ms var(--ease-out), transform 200ms var(--ease-out), visibility 280ms;
+  pointer-events: none;
+  z-index: 200;
+}
+.has-mega:hover .mega { opacity: 1; visibility: visible; transform: translateX(50%) translateY(0); pointer-events: auto; }
+/* Wide Expertises panel: centered on the VIEWPORT (fixed) so it never overflows,
+   with a negative-margin + padding bridge that reaches the trigger for hover. */
+.mega--wide {
+  position: fixed; top: 70px; left: 50%; right: auto;
+  transform: translateX(-50%) translateY(-4px);
+  margin-top: -20px; padding-top: 20px;
+}
+.has-mega:hover .mega--wide { transform: translateX(-50%) translateY(0); }
+/* Full-width invisible hover bridge: the wide panel is viewport-centered but the
+   "Expertises" trigger sits right of centre, so a diagonal cursor path crosses a
+   dead gap and drops .has-mega:hover. This bridge is a descendant of .has-mega,
+   so the cursor stays "inside" it the whole way down. Only active while shown
+   (inherits visibility:hidden when the panel is hidden). */
+.mega--wide::before {
+  content: ""; position: fixed; top: 56px; left: 0; right: 0; height: 30px;
+  background: transparent;
+}
+.mega__panel {
+  background: var(--ink-800); border: 1px solid rgba(244,239,227,0.10);
+  border-radius: 12px; padding: 28px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  display: grid; grid-template-columns: repeat(4, minmax(200px, 1fr));
+  column-gap: 32px; align-items: start;
+  max-width: 1100px; width: calc(100vw - 80px);
+}
+.mega__head {
+  font-family: var(--font-mono); font-weight: 500; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(244,239,227,0.5); padding: 0 14px; margin-bottom: 12px;
+}
+.mega__link {
+  display: block; padding: 9px 14px; border-radius: 8px;
+  color: rgba(244,239,227,0.86); text-decoration: none; font-size: 13.5px; font-weight: 500;
+  transition: background 140ms var(--ease-out);
+}
+.mega__link:hover { background: rgba(244,239,227,0.06); }
+.mega__sep { height: 1px; background: rgba(250,250,250,0.10); margin: 24px 14px; }
+
+/* ---- Page scaffold ---- */
+.page-main { padding-top: 72px; } /* clear fixed nav */
+.page-hero {
+  background: var(--ink-900); color: var(--fg-on-ink-1);
+  padding: 120px 40px 88px;
+}
+.page-hero__inner { max-width: 1240px; margin: 0 auto; }
+.breadcrumb {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(244,239,227,0.45); margin-bottom: 22px;
+}
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--cyan); }
+
+/* Editorial body */
+.prose { max-width: 760px; }
+.prose p { font-size: 17px; line-height: 1.6; color: var(--fg-on-paper-2); margin: 0 0 20px; text-wrap: pretty; }
+.prose h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(28px,3.4vw,40px); letter-spacing: -0.02em; line-height: 1.12; margin: 48px 0 18px; color: var(--fg-on-paper-1); text-wrap: balance; }
+.prose h3 { font-family: var(--font-text); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; margin: 32px 0 10px; color: var(--fg-on-paper-1); }
+.prose strong { color: var(--fg-on-paper-1); font-weight: 600; }
+.prose ul { margin: 0 0 20px; padding-left: 0; list-style: none; }
+.prose li { font-size: 16px; line-height: 1.55; color: var(--fg-on-paper-2); padding-left: 26px; position: relative; margin-bottom: 10px; }
+.prose li::before { content: ""; position: absolute; left: 4px; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--moss); }
+
+/* Generic content section */
+.section-pad { padding: 80px 40px; }
+.eyebrow-m { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-on-paper-3); }
+.section--ink .eyebrow-m { color: var(--fg-on-ink-3); }
+
+/* Card grid (resources / articles / roles) */
+.grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.grid-cards--2 { grid-template-columns: repeat(2, 1fr); }
+.ucard {
+  display: flex; flex-direction: column; gap: 10px;
+  background: #fff; border: 1px solid var(--border-on-paper); border-radius: 12px;
+  padding: 26px 26px 24px; text-decoration: none; color: inherit;
+  transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.ucard:hover { border-color: var(--border-on-paper-strong); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.ucard__tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-on-paper-3); }
+.ucard__title { font-family: var(--font-text); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; line-height: 1.25; }
+.ucard__excerpt { font-size: 14.5px; line-height: 1.5; color: var(--fg-on-paper-2); }
+
+/* Stat row */
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.stat__num { font-family: var(--font-display); font-weight: 500; font-size: clamp(44px,5vw,64px); letter-spacing: -0.02em; line-height: 1; color: var(--cyan); }
+.section--paper .stat__num { color: var(--moss); }
+.stat__label { font-size: 14px; line-height: 1.45; margin-top: 10px; color: var(--fg-on-ink-2); }
+.section--paper .stat__label { color: var(--fg-on-paper-2); }
+
+/* CTA strip */
+.cta-strip { background: var(--ink-900); color: var(--fg-on-ink-1); border-radius: 16px; padding: 40px 44px; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.btn-pill { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; border: none; cursor: pointer; transition: all 200ms var(--ease-out); }
+.btn-cyan { background: var(--cyan); color: var(--ink-900); background-image: linear-gradient(100deg, var(--cyan) 0%, var(--cyan) 38%, var(--magenta) 100%); background-size: 200% 100%; background-position: 0% 50%; transition: background-position 400ms var(--ease-out); }
+.btn-cyan:hover { background-position: 100% 50%; }
+.btn-ghost { background: transparent; color: var(--fg-on-ink-1); border: 1px solid rgba(244,239,227,0.4); }
+.btn-ghost:hover { background: var(--fg-on-ink-1); color: var(--ink-900); }
+
+@media (max-width: 900px) {
+  .grid-cards, .grid-cards--2, .stat-row { grid-template-columns: 1fr; }
+  .site-nav__links { display: none; }
+}
+
+/* Links inside cream sections: unify to moss green underlined (was cyan, low
+   contrast on cream). Overrides inline cyan styles via !important. */
+.section--paper a[style*="--cyan"] {
+  color: var(--moss) !important;
+  border-bottom-color: rgba(47,110,85,0.4) !important;
+}
+
+/* ── Print: faithful full-length PDF (match the on-screen page exactly) ── */
+@media print {
+  @page { size: 1280px 1810px; margin: 0; }
+  html, body { background: var(--ink-900) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+    animation-delay: -99s !important; animation-duration: .001s !important;
+    animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+    transition-duration: 0s !important;
+  }
+  /* keep the nav visible once at the top (fixed → static so it prints in flow) */
+  .site-nav { position: static !important; }
+  .page-main { padding-top: 0 !important; }
+  .ucard:hover { box-shadow: none !important; transform: none !important; }
+}
+
+/* Sober titles: neutralize all italic accent words across tool, result and
+   article pages (the brand's italic signature was dropped). */
+.doc-h1 em,
+.tool-title em,
+.ed-section h2 em,
+.final-cta h2 em,
+.prose-res h2 em,
+.prose-res h3 em,
+.verdict__level em,
+.tfoot-2,
+.submit-loading-note em,
+.t-italic-accent,
+.italic { font-style: normal; }

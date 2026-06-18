@@ -34,7 +34,10 @@ export default defineNuxtConfig({
 
   googleFonts: {
     families: {
-      'Inter': [300, 400, 500, 600, 800],
+      // Body / UI grotesque + mono labels. Display (Tiempos Headline) is
+      // self-hosted via @font-face in app/assets/css/design/colors_and_type.css.
+      'Geist': [400, 500, 600],
+      'DM Mono': [400, 500],
     },
     display: 'swap',
     preload: true,
@@ -71,6 +74,16 @@ export default defineNuxtConfig({
     preset: 'vercel',
     // Outil 2 génère le plan via Claude Haiku — call serveur ~30s.
     // Vercel preset standard tolère jusqu'à 300s ; vercel-edge serait coupé à 25s.
+    prerender: {
+      // Prégénère le HTML complet de toutes les pages de contenu (title, meta,
+      // H1, corps, liens internes, JSON-LD visibles dans la source brute).
+      // crawlLinks suit les NuxtLink depuis / et le sitemap pour découvrir les
+      // 47 routes ; les routes dynamiques (résultats outils [uuid]) restent en
+      // SSR à la demande. failOnError:false → une page KO ne casse pas le build.
+      crawlLinks: true,
+      routes: ['/', '/sitemap.xml', '/robots.txt'],
+      failOnError: false,
+    },
   },
 
   app: {
@@ -85,9 +98,12 @@ export default defineNuxtConfig({
           content:
             "Mariell recrute les meilleurs Sales pour les meilleures entreprises. Des Sales qui chassent d'autres Sales.",
         },
-        { name: 'theme-color', content: '#000000' },
+        { name: 'theme-color', content: '#F4EFE3' },
       ],
       link: [
+        // Préchargement de la police d'affichage critique (titres au-dessus de
+        // la ligne de flottaison) pour accélérer le LCP et limiter le CLS.
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/tiempos-headline-medium.woff2', crossorigin: '' },
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
         { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },

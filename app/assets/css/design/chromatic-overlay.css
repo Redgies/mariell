@@ -1,0 +1,114 @@
+/* ============================================================
+   Chromatic overlay — opt-in via .chromatic-mode wrapper.
+   Retrofits the brand's cyan/magenta signature onto the
+   existing homepage A components without modifying their source.
+   ============================================================ */
+
+/* Italic pivot words — chromatic split REMOVED from titles per request.
+   The italics keep their accent color but no longer carry the cyan/magenta
+   text-shadow. The brand chromatic signal now lives in buttons, chips,
+   dividers and the process frieze. */
+.chromatic-mode .italic {
+  text-shadow: none;
+  font-style: normal;
+}
+
+/* Hero's italic "you" — fully sober: inherit ink text color, no accent, no split. */
+.chromatic-mode .section--ink .h-display .italic,
+.chromatic-mode .h-display--xl .italic {
+  color: var(--fg-on-ink-1) !important;
+  text-shadow: none;
+}
+
+/* Light-section italics — base ink color, no split. */
+.chromatic-mode .section--paper .h-display .italic {
+  color: var(--fg-on-paper-1);
+  text-shadow: none;
+}
+
+/* Subtle chromatic gradient rule used as a section divider.
+   1px tall, fades cyan → ink/paper → magenta. */
+.chromatic-rule {
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(127,231,225,0.7) 20%,
+    rgba(127,231,225,0.3) 45%,
+    rgba(230,139,232,0.3) 55%,
+    rgba(230,139,232,0.7) 80%,
+    transparent 100%);
+  margin: 0;
+  border: none;
+}
+.chromatic-rule--ink {
+  background: linear-gradient(to right,
+    transparent 0%,
+    var(--cyan) 22%,
+    rgba(127,231,225,0.5) 50%,
+    rgba(230,139,232,0.5) 50%,
+    var(--magenta) 78%,
+    transparent 100%);
+  opacity: 0.85;
+}
+
+/* Quote marks in testimonials — keep neutral. Testimonials zone is intentionally
+   chromatic-free per design call; the brand signal lives in italic pivot words
+   throughout the rest of the page. */
+/* (no testimonial-specific chromatic rules) */
+
+/* ============================================================
+   CTA buttons — chromatic gradient on hover
+   At rest the primary pill stays clean (solid cyan on ink, solid ink
+   on cream). On hover the fill sweeps cyan → magenta so the brand's
+   chromatic pair becomes the interaction signal.
+   ============================================================ */
+
+.chromatic-mode .btn--primary,
+.chromatic-mode .btn--primary-paper {
+  position: relative;
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  transition: background-position 320ms var(--ease-out), color 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+
+/* Cyan→magenta sweep on ink-section primary pills */
+.chromatic-mode .btn--primary {
+  background-image: linear-gradient(
+    100deg,
+    var(--cyan) 0%,
+    var(--cyan) 38%,
+    var(--magenta) 100%
+  );
+  color: var(--ink-900);
+}
+.chromatic-mode .btn--primary:hover {
+  background-position: 100% 50%;
+  color: var(--ink-900);
+  box-shadow:
+    0 0 0 1px rgba(127,231,225,0.35),
+    0 8px 24px rgba(230,139,232,0.18);
+}
+
+/* On cream, the primary is the ink pill — the chromatic sweep lives in a
+   thin ring around it on hover instead of as the fill. */
+.chromatic-mode .btn--primary-paper {
+  background-image: none;
+  background: var(--ink-900);
+  color: var(--paper-100);
+  box-shadow: 0 0 0 0 rgba(127,231,225,0);
+}
+.chromatic-mode .btn--primary-paper:hover {
+  background: var(--ink-900);
+  color: var(--cyan);
+  box-shadow:
+    0 0 0 1.5px var(--cyan),
+    4px 0 0 1.5px var(--magenta);
+}
+
+/* Pain-point chips: alternate the dot color cyan / moss / magenta so the
+   chip wall reads as part of the brand instead of generic green. */
+.chromatic-mode .chip:nth-child(3n+1) .chip__dot { background: var(--moss); }
+.chromatic-mode .chip:nth-child(3n+2) .chip__dot { background: var(--cyan-dim); }
+.chromatic-mode .chip:nth-child(3n+3) .chip__dot { background: var(--magenta-dim); }
+
+/* Avatars in testimonials — leave the default teal gradient. No chromatic in this zone. */

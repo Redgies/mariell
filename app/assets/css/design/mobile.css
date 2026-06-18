@@ -1,0 +1,268 @@
+/* ============================================================
+   Mariell — Mobile / responsive pass (mobile-first indexing surface)
+   ------------------------------------------------------------
+   Targets the design-system classes (site.css / pages.css / tools.css).
+   Desktop appearance is unchanged; these rules only apply at <= breakpoints.
+   Breakpoints: 900px (tablet/mobile switch, matches the nav), 560px (phone).
+   Content parity is mandatory — nothing here removes content, only reflows it.
+   ============================================================ */
+
+/* Guard against any horizontal overflow on small screens. */
+@media (max-width: 900px) {
+  html, body { overflow-x: hidden; max-width: 100%; }
+}
+
+/* ============================================================
+   SECTION PADDING
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .section          { padding: 56px 20px; }
+  .section-pad      { padding: 56px 20px; }
+  .page-hero        { padding: 80px 20px 60px; }
+  .page-hero__inner { max-width: 100%; }
+}
+
+@media (max-width: 560px) {
+  .section          { padding: 44px 16px; }
+  .section-pad      { padding: 44px 16px; }
+  .page-hero        { padding: 64px 16px 48px; }
+}
+
+/* ============================================================
+   CONTAINER SIDE PADDING
+   (max-width stays; only add horizontal breathing room)
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .container,
+  .container--wide {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .container,
+  .container--wide {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ============================================================
+   GRID STACKING
+   pages.css already has a 900px rule for .grid-cards, .grid-cards--2,
+   .stat-row → 1 column. Reinforce here and add phone pass.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .grid-cards,
+  .grid-cards--2,
+  .stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid-cards,
+  .grid-cards--2,
+  .stat-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ============================================================
+   CTA STRIP — stack vertically, full-width buttons
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .cta-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .cta-strip {
+    padding: 28px 20px;
+    gap: 20px;
+  }
+
+  /* Make the inline flex button-groups inside .cta-strip stack and stretch */
+  .cta-strip > div[style*="display:flex"],
+  .cta-strip > div[style*="display: flex"] {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-strip .btn-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   BUTTONS & TAP TARGETS
+   Ensure 44px minimum touch target on all interactive elements.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .btn {
+    min-height: 44px;
+    padding: 11px 20px;
+  }
+
+  .btn-pill {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+
+  .nav-cta {
+    min-height: 44px;
+    padding: 12px 18px;
+  }
+
+  .arrow-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .mega__link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ============================================================
+   PROSE — readable line-length and body size on mobile
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .prose {
+    max-width: 100%;
+  }
+
+  .prose p {
+    font-size: 16px;
+  }
+
+  .prose h2 {
+    margin-top: 36px;
+    margin-bottom: 14px;
+  }
+
+  .prose h3 {
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .prose p  { font-size: 16px; line-height: 1.6; }
+  .prose li { font-size: 15.5px; }
+}
+
+/* ============================================================
+   BREADCRUMB — wraps cleanly on narrow viewports
+   ============================================================ */
+
+@media (max-width: 560px) {
+  .breadcrumb {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+}
+
+/* ============================================================
+   TYPOGRAPHY — reduce oversized bottom margins at section level
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .h-display--xl { margin-bottom: 0; }
+  .h-display--l  { margin-bottom: 0; }
+  .h-display--m  { margin-bottom: 0; }
+  .h-display--s  { margin-bottom: 0; }
+}
+
+/* ============================================================
+   TOOLS (tools.css) — reinforce tool-shell padding on mobile
+   tools.css already handles <=760px; add the 900-760 band here.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .tool-shell {
+    padding: 104px 24px 80px;
+  }
+
+  .tfields--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .ttiles--4,
+  .ttiles--3 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tresult-bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .tool-shell {
+    padding: 88px 16px 64px;
+  }
+
+  .ttiles--4,
+  .ttiles--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .tsubmit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tcenter {
+    padding: 80px 16px;
+  }
+}
+
+/* ============================================================
+   NAV — site-nav side padding on mobile
+   (links are already hidden via pages.css; keep consistent padding)
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .site-nav {
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-nav {
+    padding: 12px 16px;
+  }
+}
+
+/* ============================================================
+   LOGO MARQUEE — tighten cells on phone so the marquee stays
+   scrollable without layout-breaking overflow
+   ============================================================ */
+
+@media (max-width: 560px) {
+  .logo-cell {
+    min-width: 130px;
+    padding: 0 24px;
+  }
+}

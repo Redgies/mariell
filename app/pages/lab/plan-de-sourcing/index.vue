@@ -1,14 +1,5 @@
 <script setup lang="ts">
-useHead({
-  title: 'Plan de sourcing LinkedIn personnalisé — Mariell · Le Lab',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Une stratégie de chasse complète, calibrée sur votre contexte. Générée en moins de 60 secondes par l\'IA Mariell.',
-    },
-  ],
-})
+definePageMeta({ layout: 'tool' })
 
 const config = useRuntimeConfig()
 const hasTurnstile = computed(() => {
@@ -62,7 +53,7 @@ const form = reactive({
     | 'Gestion portefeuille clients'
     | 'Développement et chasse'
     | 'Ouverture de nouvelle verticale'
-    | "Création et management d'équipe"
+    | "Création et management d’équipe"
     | '',
   localisation: '',
   remote: false,
@@ -145,7 +136,7 @@ function validateField(key: FieldKey): string | null {
     case 'posteRecherche': return form.posteRecherche ? null : "Sélectionnez un intitulé de poste."
     case 'posteAutre':
       if (form.posteRecherche !== 'Autre') return null
-      return t(form.posteAutre) ? null : "Précisez l'intitulé du poste."
+      return t(form.posteAutre) ? null : "Précisez l’intitulé du poste."
     case 'seniorite': return form.seniorite ? null : 'Sélectionnez un niveau de séniorité.'
     case 'objectif': return form.objectif ? null : 'Sélectionnez un objectif.'
     case 'localisation': return t(form.localisation).length >= 2 ? null : 'Champ obligatoire.'
@@ -162,9 +153,9 @@ function validateField(key: FieldKey): string | null {
     case 'ote': {
       const n = stripNumber(form.ote)
       if (n === null) return 'Champ obligatoire.'
-      if (n < 0 || n > 800000) return "L'OTE doit être entre 0 € et 800 000 €."
+      if (n < 0 || n > 800000) return "L’OTE doit être entre 0 € et 800 000 €."
       const f = stripNumber(form.fixe)
-      if (f !== null && n < f) return "L'OTE doit être supérieur ou égal au fixe."
+      if (f !== null && n < f) return "L’OTE doit être supérieur ou égal au fixe."
       return null
     }
     case 'siteEntreprise': {
@@ -204,8 +195,8 @@ watch(() => form.secteur, (v) => {
 const fichePosteLen = computed(() => form.contenuFichePoste.length)
 const counterClass = computed(() => {
   const n = fichePosteLen.value
-  if (n >= 5000) return 'counter--alert'
-  if (n >= 4500) return 'counter--warn'
+  if (n >= 5000) return 'is-danger'
+  if (n >= 4500) return 'is-warn'
   return ''
 })
 
@@ -261,9 +252,9 @@ const ALERT_BY_CODE: Record<string, AlertConfig> = {
     text: 'Merci de rafraîchir la page et réessayer.',
   },
   INTERNAL_ERROR: {
-    title: "Une erreur technique s'est produite.",
+    title: "Une erreur technique s’est produite.",
     text:
-      "Votre demande n'a pas pu être enregistrée. Merci de réessayer dans quelques minutes, ou de nous contacter directement à <a href=\"mailto:bonjour@mariell.fr\">bonjour@mariell.fr</a>.",
+      "Votre demande n’a pas pu être enregistrée. Merci de réessayer dans quelques minutes, ou de nous contacter directement à <a href=\"mailto:bonjour@mariell.fr\">bonjour@mariell.fr</a>.",
   },
 }
 
@@ -275,7 +266,7 @@ async function onSubmit() {
   if (hasErrors) {
     globalAlert.value = null
     if (typeof window !== 'undefined') {
-      const firstError = document.querySelector('.field--error')
+      const firstError = document.querySelector('.tfield.is-error')
       firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
     return
@@ -295,7 +286,7 @@ async function onSubmit() {
       | 'Gestion portefeuille clients'
       | 'Développement et chasse'
       | 'Ouverture de nouvelle verticale'
-      | "Création et management d'équipe",
+      | "Création et management d’équipe",
     localisation: form.localisation.trim(),
     remotePossible: form.remote,
     secteur: form.secteur as (typeof SECTORS)[number],
@@ -319,7 +310,7 @@ async function onSubmit() {
     return
   }
 
-  // Marqueur "submission en cours" pour que la page résultat sache qu'elle doit poller.
+  // Marqueur "submission en cours" pour que la page résultat sache qu’elle doit poller.
   if (typeof sessionStorage !== 'undefined') {
     sessionStorage.setItem(`plan-sourcing-pending:${uuid}`, JSON.stringify({
       submittedAt: Date.now(),
@@ -332,934 +323,585 @@ async function onSubmit() {
 </script>
 
 <template>
-  <LabToolShell>
-    <main class="page">
-      <div class="shell">
-        <Transition name="alert-fade">
-          <div v-if="globalAlert" class="global-alert" role="alert">
-            <span class="global-alert__mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="8" x2="12" y2="13" />
-                <line x1="12" y1="16.5" x2="12" y2="17" />
-              </svg>
-            </span>
-            <div class="global-alert__body">
-              <h3 class="global-alert__title">{{ globalAlert.title }}</h3>
-              <p class="global-alert__text" v-html="globalAlert.text" />
+  <div class="tool-body">
+    <div class="tool-bg" aria-hidden="true" />
+
+    <nav class="site-nav">
+      <div class="site-nav__inner">
+        <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell, accueil">
+          <span class="chromatic chromatic--glitch" style="font-size: 22px;">
+            <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
+            <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
+            <span class="chromatic__base">Mariell</span>
+          </span>
+        </NuxtLink>
+        <NuxtLink to="/lab" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Retour au Lab
+        </NuxtLink>
+      </div>
+    </nav>
+
+    <main class="tool-shell">
+      <!-- Global alert -->
+      <Transition name="talert-fade">
+        <div v-if="globalAlert" class="talert is-show" role="alert">
+          <div class="talert-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="8" x2="12" y2="13" />
+              <line x1="12" y1="16.5" x2="12" y2="17" />
+            </svg>
+          </div>
+          <div>
+            <p class="talert-title">{{ globalAlert.title }}</p>
+            <p class="talert-text" v-html="globalAlert.text" />
+          </div>
+        </div>
+      </Transition>
+
+      <!-- Header -->
+      <header style="text-align: center;">
+        <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>
+        <h1 class="tool-title" style="margin-left: auto; margin-right: auto;">
+          Plan de sourcing LinkedIn <em>personnalisé.</em>
+        </h1>
+        <p class="tool-subtitle" style="margin-left: auto; margin-right: auto;">
+          Une stratégie de chasse complète, calibrée sur votre contexte. Générée en moins de 60 secondes.
+        </p>
+        <div class="meta-badge">
+          <span class="meta-badge__dot" aria-hidden="true" />
+          Gratuit · Sans inscription · &lt; 60 secondes
+        </div>
+      </header>
+
+      <!-- Form -->
+      <form novalidate @submit.prevent="onSubmit">
+
+        <!-- 01 Identité -->
+        <section class="tblock">
+          <div class="tblock-head">
+            <span class="tblock-num">01</span>
+            <h2 class="tblock-title">Identité</h2>
+            <span class="tblock-rule" />
+          </div>
+          <div class="tfields--2">
+            <div class="tfield" :class="{ 'is-error': errors.prenom }">
+              <label class="tlabel" for="prenom">Prénom <span class="treq">*</span></label>
+              <input id="prenom" v-model="form.prenom" class="tinput" type="text"
+                     autocomplete="given-name" placeholder="Marie"
+                     @blur="onBlur('prenom')" @input="clearError('prenom')" />
+              <p class="terror">{{ errors.prenom || 'Ce champ est requis.' }}</p>
+            </div>
+            <div class="tfield" :class="{ 'is-error': errors.nom }">
+              <label class="tlabel" for="nom">Nom <span class="treq">*</span></label>
+              <input id="nom" v-model="form.nom" class="tinput" type="text"
+                     autocomplete="family-name" placeholder="Dupont"
+                     @blur="onBlur('nom')" @input="clearError('nom')" />
+              <p class="terror">{{ errors.nom || 'Ce champ est requis.' }}</p>
             </div>
           </div>
-        </Transition>
-
-        <!-- ============= PAGE HEADER ============= -->
-        <section class="header">
-          <div class="header__eyebrow">
-            <span class="eyebrow-cyan">Le Lab Mariell</span>
-          </div>
-          <h1 class="header__title">
-            Plan de sourcing LinkedIn <em>personnalisé.</em>
-          </h1>
-          <p class="header__sub">
-            Une stratégie de chasse complète, calibrée sur votre contexte. Générée en moins de 60 secondes.
-          </p>
-          <div class="header__meta">
-            <span class="dot" aria-hidden="true" />
-            <span>Gratuit · Sans inscription · &lt; 60 secondes</span>
+          <div class="tfields" style="margin-top: 24px;">
+            <div class="tfield" :class="{ 'is-error': errors.email }">
+              <label class="tlabel" for="email">Adresse mail <span class="treq">*</span></label>
+              <input id="email" v-model="form.email" class="tinput" type="email"
+                     inputmode="email" autocomplete="email" placeholder="marie.dupont@entreprise.com"
+                     @blur="onBlur('email')" @input="clearError('email')" />
+              <p class="terror">{{ errors.email || "Format d’email invalide." }}</p>
+            </div>
+            <div class="tfield" :class="{ 'is-error': errors.phone }">
+              <label class="tlabel" for="phone">Numéro de téléphone <span class="treq">*</span></label>
+              <div class="tphone">
+                <div class="tselect-wrap">
+                  <select v-model="form.phoneCc" class="tselect" aria-label="Indicatif pays">
+                    <option value="+33">FR +33</option>
+                    <option value="+32">BE +32</option>
+                    <option value="+41">CH +41</option>
+                    <option value="+44">UK +44</option>
+                    <option value="+49">DE +49</option>
+                    <option value="+34">ES +34</option>
+                    <option value="+39">IT +39</option>
+                    <option value="+31">NL +31</option>
+                    <option value="+352">LU +352</option>
+                    <option value="+351">PT +351</option>
+                    <option value="+353">IE +353</option>
+                  </select>
+                </div>
+                <input id="phone" v-model="form.phoneNumber" class="tinput" type="tel"
+                       inputmode="tel" autocomplete="tel-national" placeholder="06 12 34 56 78"
+                       @blur="onBlur('phone')" @input="clearError('phone')" />
+              </div>
+              <p class="terror">{{ errors.phone || 'Numéro invalide.' }}</p>
+            </div>
+            <div class="tfield" :class="{ 'is-error': errors.entreprise }">
+              <label class="tlabel" for="entreprise">Entreprise <span class="treq">*</span></label>
+              <input id="entreprise" v-model="form.entreprise" class="tinput" type="text"
+                     autocomplete="organization" placeholder="Nom de votre entreprise"
+                     @blur="onBlur('entreprise')" @input="clearError('entreprise')" />
+              <p class="terror">{{ errors.entreprise || 'Ce champ est requis.' }}</p>
+            </div>
           </div>
         </section>
 
-        <!-- ============= QUALITY NOTICE ============= -->
-        <aside class="quality-notice" role="note" aria-label="Conseil avant de remplir">
-          <span class="quality-notice__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9.5" />
-              <path d="M12 8v5" />
-              <circle cx="12" cy="16.2" r="0.7" fill="currentColor" stroke="none" />
-            </svg>
-          </span>
-          <p class="quality-notice__body">
-            <strong>La qualité de la réponse dépend de votre formulaire.</strong>
-            Veillez à partager <em>un maximum d'informations avec précision</em> pour obtenir le meilleur résultat.
-          </p>
-        </aside>
-
-        <!-- ============= FORM ============= -->
-        <form novalidate @submit.prevent="onSubmit">
-
-          <!-- BLOC 1 — Identité -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">01</span>
-              <h2 class="block__title">Identité</h2>
-            </header>
-            <div class="grid grid--2">
-              <div class="field" :class="{ 'field--error': errors.prenom }">
-                <label class="field__label" for="prenom">Prénom <span class="req">*</span></label>
-                <input id="prenom" v-model="form.prenom" class="ctrl" type="text"
-                       autocomplete="given-name" placeholder="Marie"
-                       @blur="onBlur('prenom')" @input="clearError('prenom')" />
-                <span class="field__error">{{ errors.prenom || 'Champ obligatoire' }}</span>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.nom }">
-                <label class="field__label" for="nom">Nom <span class="req">*</span></label>
-                <input id="nom" v-model="form.nom" class="ctrl" type="text"
-                       autocomplete="family-name" placeholder="Dupont"
-                       @blur="onBlur('nom')" @input="clearError('nom')" />
-                <span class="field__error">{{ errors.nom || 'Champ obligatoire' }}</span>
-              </div>
-
-              <div class="field grid__full" :class="{ 'field--error': errors.email }">
-                <label class="field__label" for="email">Adresse mail <span class="req">*</span></label>
-                <input id="email" v-model="form.email" class="ctrl" type="email"
-                       autocomplete="email" placeholder="marie.dupont@entreprise.com"
-                       @blur="onBlur('email')" @input="clearError('email')" />
-                <span class="field__error">{{ errors.email || 'Email invalide' }}</span>
-              </div>
-
-              <div class="field grid__full" :class="{ 'field--error': errors.phone }">
-                <label class="field__label" for="phone">Numéro de téléphone <span class="req">*</span></label>
-                <div class="tel-wrap">
-                  <div class="tel-cc">
-                    <select v-model="form.phoneCc" aria-label="Indicatif pays">
-                      <option value="+33">FR +33</option>
-                      <option value="+32">BE +32</option>
-                      <option value="+41">CH +41</option>
-                      <option value="+44">UK +44</option>
-                      <option value="+49">DE +49</option>
-                      <option value="+34">ES +34</option>
-                      <option value="+39">IT +39</option>
-                      <option value="+31">NL +31</option>
-                      <option value="+352">LU +352</option>
-                      <option value="+351">PT +351</option>
-                      <option value="+353">IE +353</option>
-                    </select>
+        <!-- 02 Le poste à pourvoir -->
+        <section class="tblock">
+          <div class="tblock-head">
+            <span class="tblock-num">02</span>
+            <h2 class="tblock-title">Le poste à pourvoir</h2>
+            <span class="tblock-rule" />
+          </div>
+          <div class="tfields">
+            <!-- Combobox intitulé de poste -->
+            <div class="tfield" :class="{ 'is-error': errors.posteRecherche }">
+              <span class="tlabel">Poste recherché <span class="treq">*</span></span>
+              <div id="jobtitle-combo" class="combo-wrap">
+                <button type="button" class="tinput combo-trigger"
+                        :class="{ 'has-value': !!form.posteRecherche }"
+                        :aria-expanded="comboOpen"
+                        @click="comboOpen = !comboOpen">
+                  <span class="combo-value">
+                    {{ form.posteRecherche || 'Sélectionnez un intitulé…' }}
+                  </span>
+                  <span class="combo-chevron" :class="{ 'is-open': comboOpen }" aria-hidden="true" />
+                </button>
+                <div v-if="comboOpen" class="combo-panel is-open" role="listbox">
+                  <input v-model="comboSearch" type="text" class="combo-search"
+                         placeholder="Rechercher…" autocomplete="off"
+                         @click.stop />
+                  <div class="combo-list">
+                    <div v-for="role in filteredRoles" :key="role.label"
+                         class="combo-opt"
+                         :class="{ 'is-active': form.posteRecherche === role.label }"
+                         role="option"
+                         :aria-selected="form.posteRecherche === role.label"
+                         @click="selectRole(role.label)">
+                      {{ role.label }}
+                    </div>
+                    <div v-if="filteredRoles.length === 0" class="combo-empty">Aucun résultat</div>
                   </div>
-                  <input id="phone" v-model="form.phoneNumber" class="tel-input" type="tel"
-                         autocomplete="tel-national" placeholder="06 12 34 56 78"
-                         @blur="onBlur('phone')" @input="clearError('phone')" />
                 </div>
-                <span class="field__error">{{ errors.phone || 'Numéro de téléphone invalide.' }}</span>
               </div>
-
-              <div class="field grid__full" :class="{ 'field--error': errors.entreprise }">
-                <label class="field__label" for="entreprise">Entreprise <span class="req">*</span></label>
-                <input id="entreprise" v-model="form.entreprise" class="ctrl" type="text"
-                       autocomplete="organization" placeholder="Nom de votre entreprise"
-                       @blur="onBlur('entreprise')" @input="clearError('entreprise')" />
-                <span class="field__error">{{ errors.entreprise || 'Champ obligatoire' }}</span>
+              <p class="terror">{{ errors.posteRecherche || "Sélectionnez un intitulé de poste." }}</p>
+              <div v-if="form.posteRecherche === 'Autre'" class="precision is-show">
+                <input v-model="form.posteAutre" class="tinput" type="text" maxlength="60"
+                       placeholder="Précisez l’intitulé du poste (60 caractères max)"
+                       @blur="onBlur('posteAutre')" @input="clearError('posteAutre')" />
+                <p v-if="errors.posteAutre" class="terror" style="display: block; margin-top: 6px;">
+                  {{ errors.posteAutre }}
+                </p>
               </div>
             </div>
-          </section>
 
-          <!-- BLOC 2 — Le poste -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">02</span>
-              <h2 class="block__title">Le poste à pourvoir</h2>
-            </header>
-            <div class="grid">
-              <div class="field" :class="{ 'field--error': errors.posteRecherche }">
-                <label class="field__label">Poste recherché <span class="req">*</span></label>
-                <div id="jobtitle-combo" class="combo">
-                  <button type="button" class="combo-trigger" :class="{ 'is-open': comboOpen }"
-                          :aria-expanded="comboOpen" @click="comboOpen = !comboOpen">
-                    <span :class="{ placeholder: !form.posteRecherche }" class="combo-value">
-                      {{ form.posteRecherche || 'Sélectionnez un intitulé' }}
-                    </span>
-                    <span class="chevron" />
-                  </button>
-                  <div v-if="comboOpen" class="combo-panel is-open" role="listbox">
-                    <input v-model="comboSearch" type="text" class="combo-search"
-                           placeholder="Rechercher un intitulé…" autocomplete="off"
-                           @click.stop />
-                    <div class="combo-list">
-                      <button v-for="role in filteredRoles" :key="role.label"
-                              type="button" class="combo-opt"
-                              :class="{ 'is-selected': form.posteRecherche === role.label }"
-                              @click="selectRole(role.label)">
-                        <span>{{ role.label }}</span>
-                        <span class="num">{{ String(role.num).padStart(2, '0') }}</span>
-                      </button>
-                      <div v-if="filteredRoles.length === 0" class="combo-empty">Aucun résultat</div>
-                    </div>
-                  </div>
-                </div>
-                <span class="field__error">{{ errors.posteRecherche || "Sélectionnez un intitulé de poste" }}</span>
-
-                <div v-if="form.posteRecherche === 'Autre'" class="precision is-visible"
-                     :class="{ 'field--error': errors.posteAutre }">
-                  <input v-model="form.posteAutre" class="ctrl" type="text" maxlength="60"
-                         placeholder="Précisez l'intitulé du poste (60 caractères max)"
-                         @blur="onBlur('posteAutre')" @input="clearError('posteAutre')" />
-                  <span v-if="errors.posteAutre" class="field__error" style="margin-top: 6px;">
-                    {{ errors.posteAutre }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.seniorite }">
-                <span class="field__label">Séniorité visée <span class="req">*</span></span>
-                <div class="radio-group" role="radiogroup">
-                  <label v-for="opt in [
-                    { v: 'Junior', sub: '0–2 ans' },
-                    { v: 'Confirmé', sub: '2–5 ans' },
-                    { v: 'Senior', sub: '5–8 ans' },
-                    { v: 'Lead-Manager', sub: '8+ ans' },
-                  ]" :key="opt.v" class="radio">
-                    <input v-model="form.seniorite" type="radio" name="seniorite" :value="opt.v"
-                           @change="clearError('seniorite')" />
-                    <span class="radio__main">{{ opt.v }}</span>
-                    <span class="radio__sub">{{ opt.sub }}</span>
-                  </label>
-                </div>
-                <span class="field__error">{{ errors.seniorite || 'Sélectionnez un niveau de séniorité' }}</span>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.objectif }">
-                <span class="field__label">Objectifs du poste <span class="req">*</span></span>
-                <div class="radio-group radio-group--2" role="radiogroup">
-                  <label v-for="opt in [
-                    'Gestion portefeuille clients',
-                    'Développement et chasse',
-                    'Ouverture de nouvelle verticale',
-                    `Création et management d'équipe`,
-                  ]" :key="opt" class="radio">
-                    <input v-model="form.objectif" type="radio" name="objectif" :value="opt"
-                           @change="clearError('objectif')" />
-                    <span class="radio__main">{{ opt }}</span>
-                  </label>
-                </div>
-                <span class="field__error">{{ errors.objectif || 'Sélectionnez un objectif' }}</span>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.localisation }">
-                <label class="field__label" for="localisation">Localisation principale <span class="req">*</span></label>
-                <input id="localisation" v-model="form.localisation" class="ctrl" type="text"
-                       maxlength="100" placeholder="Paris, Lyon…"
-                       @blur="onBlur('localisation')" @input="clearError('localisation')" />
-                <span class="field__error">{{ errors.localisation || 'Champ obligatoire' }}</span>
-
-                <label class="check-chip">
-                  <input v-model="form.remote" type="checkbox" />
-                  <span class="check-chip__box" aria-hidden="true">
-                    <svg viewBox="0 0 14 14" fill="none">
-                      <polyline points="2,7 6,11 12,3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </span>
-                  <span class="check-chip__label">Remote possible</span>
+            <!-- Séniorité -->
+            <div class="tfield" :class="{ 'is-error': errors.seniorite }">
+              <span class="tlabel">Séniorité visée <span class="treq">*</span></span>
+              <div class="ttiles ttiles--4" role="radiogroup">
+                <label v-for="opt in [
+                  { v: 'Junior', sub: '0–2 ans' },
+                  { v: 'Confirmé', sub: '2–5 ans' },
+                  { v: 'Senior', sub: '5–8 ans' },
+                  { v: 'Lead-Manager', sub: '8+ ans' },
+                ]" :key="opt.v" class="ttile">
+                  <input v-model="form.seniorite" type="radio" name="seniorite" :value="opt.v"
+                         @change="clearError('seniorite')" />
+                  <span class="ttile-title">{{ opt.v }}</span>
+                  <span class="ttile-sub">{{ opt.sub }}</span>
                 </label>
               </div>
+              <p class="terror">{{ errors.seniorite || 'Sélectionnez une séniorité.' }}</p>
             </div>
-          </section>
 
-          <!-- BLOC 3 — Le contexte -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">03</span>
-              <h2 class="block__title">Le contexte</h2>
-            </header>
-            <div class="grid grid--2">
-              <div class="field grid__full" :class="{ 'field--error': errors.secteur }">
-                <label class="field__label" for="secteur">Secteur de votre entreprise <span class="req">*</span></label>
-                <select id="secteur" v-model="form.secteur" class="ctrl"
-                        :data-empty="!form.secteur ? 'true' : 'false'"
+            <!-- Objectifs -->
+            <div class="tfield" :class="{ 'is-error': errors.objectif }">
+              <span class="tlabel">Objectifs du poste <span class="treq">*</span></span>
+              <div class="ttiles" style="grid-template-columns: repeat(2, 1fr);" role="radiogroup">
+                <label v-for="opt in [
+                  'Gestion portefeuille clients',
+                  'Développement et chasse',
+                  'Ouverture de nouvelle verticale',
+                  `Création et management d’équipe`,
+                ]" :key="opt" class="ttile ttile--row">
+                  <input v-model="form.objectif" type="radio" name="objectif" :value="opt"
+                         @change="clearError('objectif')" />
+                  <span class="ttile-title">{{ opt }}</span>
+                </label>
+              </div>
+              <p class="terror">{{ errors.objectif || 'Sélectionnez un objectif.' }}</p>
+            </div>
+
+            <!-- Localisation -->
+            <div class="tfield" :class="{ 'is-error': errors.localisation }">
+              <label class="tlabel" for="localisation">Localisation principale <span class="treq">*</span></label>
+              <input id="localisation" v-model="form.localisation" class="tinput" type="text"
+                     maxlength="100" placeholder="Paris, Lyon, remote…"
+                     @blur="onBlur('localisation')" @input="clearError('localisation')" />
+              <label class="chip-check">
+                <input v-model="form.remote" type="checkbox" />
+                <span class="chip-box" aria-hidden="true" />
+                <span class="chip-label">Remote possible</span>
+              </label>
+              <p class="terror">{{ errors.localisation || 'Ce champ est requis.' }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 Le contexte -->
+        <section class="tblock">
+          <div class="tblock-head">
+            <span class="tblock-num">03</span>
+            <h2 class="tblock-title">Le contexte</h2>
+            <span class="tblock-rule" />
+          </div>
+          <div class="tfields">
+            <div class="tfield" :class="{ 'is-error': errors.secteur }">
+              <label class="tlabel" for="secteur">Secteur de votre entreprise <span class="treq">*</span></label>
+              <div class="tselect-wrap">
+                <select id="secteur" v-model="form.secteur" class="tselect"
+                        :class="{ 'is-empty': !form.secteur }"
                         @change="clearError('secteur')">
-                  <option value="" disabled>Sélectionnez un secteur</option>
+                  <option value="" disabled hidden>Sélectionnez un secteur</option>
                   <option v-for="s in SECTORS" :key="s" :value="s">{{ s }}</option>
                 </select>
-                <span class="field__error">{{ errors.secteur || 'Sélectionnez un secteur' }}</span>
-
-                <div v-if="form.secteur === 'Autre'" class="precision is-visible"
-                     :class="{ 'field--error': errors.secteurAutre }">
-                  <input v-model="form.secteurAutre" class="ctrl" type="text" maxlength="60"
-                         placeholder="Précisez votre secteur (60 caractères max)"
-                         @blur="onBlur('secteurAutre')" @input="clearError('secteurAutre')" />
-                  <span v-if="errors.secteurAutre" class="field__error" style="margin-top: 6px;">
-                    {{ errors.secteurAutre }}
-                  </span>
-                </div>
               </div>
-
-              <div class="field" :class="{ 'field--error': errors.fixe }">
-                <label class="field__label" for="fixe">Fixe annuel brut (€) <span class="req">*</span></label>
+              <p class="terror">{{ errors.secteur || 'Sélectionnez un secteur.' }}</p>
+              <div v-if="form.secteur === 'Autre'" class="precision is-show">
+                <input v-model="form.secteurAutre" class="tinput" type="text" maxlength="60"
+                       placeholder="Précisez votre secteur (60 caractères max)"
+                       @blur="onBlur('secteurAutre')" @input="clearError('secteurAutre')" />
+                <p v-if="errors.secteurAutre" class="terror" style="display: block; margin-top: 6px;">
+                  {{ errors.secteurAutre }}
+                </p>
+              </div>
+            </div>
+            <div class="tfields--2">
+              <div class="tfield" :class="{ 'is-error': errors.fixe }">
+                <label class="tlabel" for="fixe">Fixe annuel brut (€) <span class="treq">*</span></label>
                 <div class="num-wrap">
-                  <input id="fixe" v-model="form.fixe" class="ctrl" type="text" inputmode="numeric"
-                         placeholder="55000"
+                  <input id="fixe" v-model="form.fixe" class="tinput" type="text" inputmode="numeric"
+                         placeholder="55 000"
                          @blur="onBlur('fixe')" @input="clearError('fixe')" />
-                  <span class="num-wrap__suffix">€</span>
+                  <span class="num-suffix">€</span>
                 </div>
-                <span class="field__error">{{ errors.fixe || 'Le fixe doit être entre 15 000 € et 500 000 €' }}</span>
+                <p class="terror">{{ errors.fixe || 'Montant invalide.' }}</p>
               </div>
-
-              <div class="field" :class="{ 'field--error': errors.ote }">
-                <label class="field__label" for="ote">OTE total cible (€) <span class="req">*</span></label>
+              <div class="tfield" :class="{ 'is-error': errors.ote }">
+                <label class="tlabel" for="ote">OTE total cible (€) <span class="treq">*</span></label>
                 <div class="num-wrap">
-                  <input id="ote" v-model="form.ote" class="ctrl" type="text" inputmode="numeric"
-                         placeholder="100000"
+                  <input id="ote" v-model="form.ote" class="tinput" type="text" inputmode="numeric"
+                         placeholder="100 000"
                          @blur="onBlur('ote')" @input="clearError('ote')" />
-                  <span class="num-wrap__suffix">€</span>
+                  <span class="num-suffix">€</span>
                 </div>
-                <span class="field__error">{{ errors.ote || "L'OTE doit être entre 0 € et 800 000 €" }}</span>
+                <p class="terror">{{ errors.ote || 'Montant invalide.' }}</p>
               </div>
-
-              <p class="field__hint grid__full" style="margin-top: 4px;">
-                OTE = Fixe + Variable cible à 100% d'atteinte des objectifs.
-              </p>
             </div>
-          </section>
+            <p class="thelper">OTE = Fixe + Variable cible à 100% d’atteinte des objectifs.</p>
+          </div>
+        </section>
 
-          <!-- BLOC 4 — Pour aller plus loin -->
-          <section class="block">
-            <header class="block__head">
-              <span class="block__num">04</span>
-              <h2 class="block__title">Pour aller plus loin</h2>
-            </header>
-            <p class="block__sub">Plus le contexte est riche, plus le plan sera précis.</p>
-            <div class="grid">
-              <div class="field" :class="{ 'field--error': errors.siteEntreprise }">
-                <label class="field__label" for="website">Site de l'entreprise</label>
-                <input id="website" v-model="form.siteEntreprise" class="ctrl" type="url"
-                       inputmode="url" placeholder="https://votre-entreprise.com"
-                       @blur="onBlur('siteEntreprise')" @input="clearError('siteEntreprise')" />
-                <span class="field__error">{{ errors.siteEntreprise || 'URL invalide' }}</span>
-              </div>
-
-              <div class="field" :class="{ 'field--error': errors.contenuFichePoste }">
-                <label class="field__label" for="jobspec">Contenu de la fiche de poste</label>
-                <textarea id="jobspec" v-model="form.contenuFichePoste" class="ctrl"
-                          maxlength="5000" rows="9"
-                          placeholder="Collez ici le contenu de votre fiche de poste, si vous l'avez."
+        <!-- 04 Pour aller plus loin -->
+        <section class="tblock">
+          <div class="tblock-head">
+            <span class="tblock-num">04</span>
+            <h2 class="tblock-title">Pour aller plus loin</h2>
+            <span class="tblock-rule" />
+          </div>
+          <div class="tfields">
+            <div class="tfield" :class="{ 'is-error': errors.siteEntreprise }">
+              <label class="tlabel" for="siteurl">Site de l’entreprise</label>
+              <input id="siteurl" v-model="form.siteEntreprise" class="tinput" type="url"
+                     inputmode="url" placeholder="https://votre-entreprise.com"
+                     @blur="onBlur('siteEntreprise')" @input="clearError('siteEntreprise')" />
+              <p class="terror">{{ errors.siteEntreprise || 'URL invalide.' }}</p>
+            </div>
+            <div class="tfield" :class="{ 'is-error': errors.contenuFichePoste }">
+              <label class="tlabel" for="jobdesc">Contenu de la fiche de poste</label>
+              <div class="ttextarea-wrap">
+                <textarea id="jobdesc" v-model="form.contenuFichePoste" class="ttextarea"
+                          maxlength="5000" rows="7"
+                          placeholder="Collez ici la fiche de poste si vous en avez une, cela affine considérablement le plan."
                           @blur="onBlur('contenuFichePoste')" @input="clearError('contenuFichePoste')" />
-                <div class="ta-foot">
-                  <p class="ta-foot__hint">Plus le contenu est riche, plus le plan sera précis. Maximum 5000 caractères.</p>
-                  <span class="counter" :class="counterClass">{{ fichePosteLen }} / 5000</span>
-                </div>
+                <span class="ttextarea-counter" :class="counterClass">{{ fichePosteLen }} / 5000</span>
               </div>
+              <p class="terror">{{ errors.contenuFichePoste || '5000 caractères maximum.' }}</p>
             </div>
-          </section>
-
-          <!-- BLOC RGPD -->
-          <section class="block" style="margin-bottom: 32px;">
-            <div class="rgpd" :class="{ 'field--error': errors.rgpd }">
-              <label class="rgpd__row">
-                <span class="rgpd__check">
-                  <input v-model="form.rgpd" type="checkbox" @change="clearError('rgpd')" />
-                  <span class="rgpd__box" aria-hidden="true" />
-                </span>
-                <span class="rgpd__text">
-                  J'accepte la <NuxtLink to="/politique-confidentialite" target="_blank" rel="noopener">politique de confidentialité</NuxtLink>
-                  et le traitement de mes données personnelles par Mariell.
-                </span>
-              </label>
-            </div>
-            <p v-if="errors.rgpd" class="field__error" style="display: block; margin-top: 8px;">{{ errors.rgpd }}</p>
-          </section>
-
-          <!-- Honeypot Turnstile mount (invisible) -->
-          <div v-if="hasTurnstile" class="cf-mount">
-            <NuxtTurnstile ref="turnstile" v-model="turnstileToken" />
           </div>
+          <p class="thelper" style="margin-top: 14px;">Plus le contexte est riche, plus le plan sera précis.</p>
+        </section>
 
-          <!-- Submit -->
-          <div class="submit" :class="{ 'is-ready': isFormReady, 'is-loading': isLoading }">
-            <button type="submit" class="cta-submit" :class="{ 'is-loading': isLoading }"
-                    :disabled="!isFormReady || isLoading">
-              <span class="cta-submit__label">Générer mon plan de sourcing</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <span class="cta-submit__loader" aria-live="polite">Génération en cours…</span>
-            </button>
-
-            <p class="submit__hint">Renseignez tous les champs obligatoires pour activer la génération.</p>
-
-            <p class="submit__loading-note">
-              Notre IA construit votre stratégie de sourcing sur les <em>8 livrables clés.</em><br />
-              Cela peut prendre 1 à 2 minutes — merci de ne pas fermer cette page.
-            </p>
-          </div>
-
-          <!-- Form footer -->
-          <footer class="form-foot">
-            <span class="form-foot__caption">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 3l8 4v6c0 4.5-3.4 7.5-8 8-4.6-.5-8-3.5-8-8V7l8-4z"
-                      stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              Protégé par Cloudflare Turnstile
+        <!-- RGPD -->
+        <section class="tblock" style="margin-bottom: 8px;">
+          <label class="tcheck" :class="{ 'is-error': errors.rgpd }">
+            <input v-model="form.rgpd" id="rgpd" type="checkbox" @change="clearError('rgpd')" />
+            <span class="tcheck-box" aria-hidden="true" />
+            <span class="tcheck-text">
+              J’accepte la
+              <NuxtLink to="/politique-confidentialite" target="_blank" rel="noopener">politique de confidentialité</NuxtLink>
+              et le traitement de mes données personnelles par Mariell.
             </span>
-            <span class="form-foot__sig">Recruter n'est pas un pari.</span>
-          </footer>
-        </form>
-      </div>
+          </label>
+          <p v-if="errors.rgpd" class="terror" style="display: block; margin-top: 8px; padding-left: 32px;">
+            {{ errors.rgpd }}
+          </p>
+        </section>
+
+        <!-- Honeypot Turnstile mount (invisible) -->
+        <div v-if="hasTurnstile" style="display: none;">
+          <NuxtTurnstile ref="turnstile" v-model="turnstileToken" />
+        </div>
+
+        <!-- Submit -->
+        <div class="tsubmit-area" :class="{ 'is-ready': isFormReady, 'is-loading': isLoading }">
+          <button type="submit" class="tsubmit"
+                  :class="{ 'is-disabled': !isFormReady || isLoading, 'is-loading': isLoading }"
+                  :disabled="!isFormReady || isLoading">
+            <span class="tspinner" aria-hidden="true" />
+            <span class="tsubmit-idle">Générer mon plan de sourcing</span>
+            <span class="tsubmit-loading">Génération en cours…</span>
+            <svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+          <p class="submit-hint">Renseignez tous les champs obligatoires pour activer la génération.</p>
+          <p class="submit-loading-note">
+            Notre IA construit votre stratégie de sourcing sur les <em>8 livrables clés.</em><br />
+            Cela peut prendre jusqu’à 60 secondes. Merci de ne pas fermer cette page.
+          </p>
+        </div>
+
+        <!-- Form footer -->
+        <div class="tfoot" style="align-items: center; text-align: center;">
+          <span class="tcf">&#8987; Protégé par Cloudflare Turnstile</span>
+          <span class="tfoot-2">Recruter n’est pas un pari.</span>
+        </div>
+      </form>
     </main>
-  </LabToolShell>
+  </div>
 </template>
 
 <style scoped>
-/* ===== shared tokens (assumed in main.css globally) ===== */
-.page { position: relative; z-index: 1; padding: 64px 20px 96px; }
-@media (min-width: 768px) { .page { padding: 80px 40px 120px; } }
-.shell { width: 100%; max-width: 740px; margin: 0 auto; }
-
-/* ----- Page header ----- */
-.header { text-align: center; margin-bottom: 56px; }
-.header__eyebrow { margin-bottom: 28px; }
-.eyebrow-cyan {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-family: var(--font-grotesk);
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: #5ee7e7;
-}
-.eyebrow-cyan::before {
-  content: ""; width: 32px; height: 1px; background: currentColor;
-}
-.header__title {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(36px, 5.2vw, 60px);
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  color: #fff;
-  margin: 0 0 20px;
-  text-wrap: balance;
-}
-.header__title em {
+/* ---- Tool title italic accent ---- */
+.tool-title em {
   font-style: italic;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  /* Anti-coupure italique : extension à droite + descente pour les glyphes
-     inclinés (background-clip:text tronque sinon le dernier caractère). */
+  color: inherit;
+}
+
+/* ---- Meta badge ---- */
+.meta-badge {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-on-ink-3);
+  border: 1px solid var(--border-on-ink);
+  border-radius: 999px;
+  padding: 7px 16px;
+}
+.meta-badge__dot {
   display: inline-block;
-  padding-right: 0.12em;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.06em;
-}
-.header__sub {
-  font-size: 17px; line-height: 1.6;
-  color: rgba(255,255,255,0.65); max-width: 580px;
-  margin: 0 auto;
-}
-.header__meta {
-  margin-top: 28px;
-  display: inline-flex; align-items: center; gap: 14px;
-  padding: 8px 18px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 9999px;
-  background: rgba(255,255,255,0.02);
-}
-.header__meta .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #5ee7e7; box-shadow: 0 0 12px rgba(94,231,231,0.8);
-}
-.header__meta span {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.65);
-}
-@media (min-width: 768px) { .header { margin-bottom: 80px; } }
-
-/* ----- Quality notice ----- */
-.quality-notice {
-  max-width: 760px; margin: 0 auto 56px;
-  display: flex; align-items: flex-start; gap: 16px;
-  padding: 20px 22px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-left: 2px solid #5ee7e7;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(0,255,255,0.035), rgba(255,0,255,0.02));
-}
-.quality-notice__icon {
-  flex-shrink: 0; width: 22px; height: 22px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: #5ee7e7; margin-top: 2px;
-}
-.quality-notice__icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
-.quality-notice__body {
-  font-family: var(--font-grotesk);
-  font-size: 14.5px; line-height: 1.6;
-  color: rgba(255,255,255,0.9);
-}
-.quality-notice__body strong { color: #fff; font-weight: 600; }
-.quality-notice__body em {
-  font-style: normal;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  font-weight: 600;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  flex-shrink: 0;
 }
 
-/* ----- Block ----- */
-.block { position: relative; margin-bottom: 56px; }
-.block__head {
-  display: flex; align-items: baseline; gap: 16px;
-  margin-bottom: 28px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.block__num {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px; letter-spacing: 0.22em;
-  color: #5ee7e7;
-}
-.block__title {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: clamp(22px, 2.6vw, 28px);
-  line-height: 1.2; letter-spacing: -0.035em;
-  color: #fff; margin: 0;
-}
-.block__sub { margin: -8px 0 28px; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,0.55); }
-@media (min-width: 768px) {
-  .block { margin-bottom: 72px; }
-  .block__head { padding-bottom: 22px; margin-bottom: 32px; }
-}
-
-/* ----- Grid + field ----- */
-.grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-@media (min-width: 640px) { .grid--2 { grid-template-columns: 1fr 1fr; } }
-.grid__full { grid-column: 1 / -1; }
-
-.field { display: flex; flex-direction: column; gap: 8px; }
-.field__label {
-  display: flex; align-items: center; gap: 6px;
-  font-family: var(--font-grotesk); font-weight: 500;
-  font-size: 13px; letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.9);
-}
-.field__label .req { color: #e85eff; font-size: 11px; }
-.field__hint { font-family: var(--font-grotesk); font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
-.field__error {
-  display: none;
-  font-family: var(--font-grotesk); font-size: 12px;
-  color: #ff8aa6; line-height: 1.5;
-}
-.field--error .field__error { display: block; }
-
-/* ----- Inputs ----- */
-.ctrl {
-  appearance: none; -webkit-appearance: none; width: 100%;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-family: var(--font-grotesk); font-weight: 400;
-  font-size: 15px; color: #fff; line-height: 1.4;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.ctrl::placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-.ctrl:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.ctrl:focus, .ctrl:focus-visible {
-  outline: none;
-  border-color: rgba(94,231,231,0.7);
-  background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
-}
-.field--error .ctrl {
-  border-color: rgba(255,138,166,0.55);
-  background: rgba(255,80,110,0.04);
-}
-textarea.ctrl { resize: vertical; min-height: 220px; line-height: 1.55; }
-@media (max-width: 640px) { textarea.ctrl { min-height: 200px; } }
-
-select.ctrl {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.55' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 44px;
-  cursor: pointer;
-}
-select.ctrl option { background: #0a0a0a; color: #fff; }
-select.ctrl[data-empty="true"] { color: rgba(255,255,255,0.32); }
-
-/* ----- Radio cards ----- */
-.radio-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-@media (min-width: 720px) { .radio-group { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 720px) { .radio-group--2 { grid-template-columns: repeat(2, 1fr); } }
-.radio-group--2 .radio { min-height: 56px; justify-content: center; }
-.radio {
-  position: relative;
-  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
-  padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.02);
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-}
-.radio:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.035); }
-.radio input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.radio__main { font-family: var(--font-grotesk); font-weight: 600; font-size: 14px; color: #fff; }
-.radio__sub { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); }
-.radio:has(input:checked) {
-  border-color: rgba(94,231,231,0.55);
-  background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,0,255,0.06));
-  box-shadow: 0 0 0 1px rgba(94,231,231,0.25), 0 8px 24px -16px rgba(0,255,255,0.4);
-}
-.radio:has(input:checked) .radio__sub { color: #5ee7e7; }
-
-/* ----- check-chip (Remote possible) ----- */
-.check-chip {
-  display: inline-flex; align-items: center; gap: 10px;
-  margin-top: 4px; padding: 10px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 9999px;
-  background: rgba(255,255,255,0.02);
-  cursor: pointer; align-self: flex-start;
-  position: relative;
-  transition: border-color 0.2s, background 0.2s;
-}
-.check-chip:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.035); }
-.check-chip input { position: absolute; opacity: 0; pointer-events: none; }
-.check-chip__box {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 16px; height: 16px;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 4px;
-  background: rgba(255,255,255,0.02);
-  color: transparent;
-  transition: all 0.2s;
-}
-.check-chip__box svg { width: 10px; height: 10px; opacity: 0; transition: opacity 0.15s; }
-.check-chip__label { font-family: var(--font-grotesk); font-size: 13px; color: rgba(255,255,255,0.9); }
-.check-chip:has(input:checked) {
-  border-color: rgba(94,231,231,0.55);
-  background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,0,255,0.06));
-}
-.check-chip:has(input:checked) .check-chip__box {
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  border-color: transparent;
-  color: #000;
-}
-.check-chip:has(input:checked) .check-chip__box svg { opacity: 1; }
-
-/* ----- Numeric field with € ----- */
-.num-wrap { position: relative; }
-.num-wrap .ctrl { padding-right: 44px; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
-.num-wrap__suffix {
-  position: absolute; top: 50%; right: 16px;
-  transform: translateY(-50%);
-  font-family: var(--font-grotesk); font-size: 14px;
-  color: rgba(255,255,255,0.45); pointer-events: none;
-}
-
-/* ----- Textarea counter ----- */
-.ta-foot {
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-  margin-top: 4px;
-}
-.ta-foot__hint { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; flex: 1; }
-.counter {
-  flex: 0 0 auto;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.45);
-  padding: 4px 10px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.02);
-}
-.counter--warn { color: #ffb86b; border-color: rgba(255,184,107,0.4); background: rgba(255,184,107,0.05); }
-.counter--alert { color: #ff8aa6; border-color: rgba(255,138,166,0.5); background: rgba(255,138,166,0.06); }
-
-/* ----- Phone field ----- */
-.tel-wrap {
-  display: flex;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.tel-wrap:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.tel-wrap:focus-within {
-  border-color: rgba(94,231,231,0.7);
-  background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
-}
-.field--error .tel-wrap { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.tel-cc { position: relative; flex-shrink: 0; border-right: 1px solid rgba(255,255,255,0.08); }
-.tel-cc select {
-  height: 100%; background: transparent; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 500; font-size: 14px;
-  padding: 14px 32px 14px 16px; border: 0;
-  appearance: none; -webkit-appearance: none; cursor: pointer;
-}
-.tel-cc::after {
-  content: ''; position: absolute;
-  right: 14px; top: 50%;
-  width: 6px; height: 6px;
-  border-right: 1.5px solid rgba(255,255,255,0.55);
-  border-bottom: 1.5px solid rgba(255,255,255,0.55);
-  transform: translateY(-65%) rotate(45deg);
-  pointer-events: none;
-}
-.tel-cc select option { background: #0a0a0a; color: #fff; }
-.tel-input {
-  flex: 1; background: transparent; border: 0;
-  padding: 14px 16px; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 15px;
-}
-.tel-input:focus { outline: none; }
-.tel-input::placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-
-/* ----- Combobox ----- */
-.combo { position: relative; }
+/* ---- Combobox ---- */
+.combo-wrap { position: relative; }
 .combo-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
   width: 100%;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 14px 16px;
-  color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 15px;
-  text-align: left; cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.combo-trigger:hover { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.035); }
-.combo-trigger:focus, .combo-trigger.is-open {
-  outline: none;
-  border-color: rgba(94,231,231,0.7);
-  background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 0 3px rgba(0,255,255,0.10);
+.combo-trigger .combo-value { color: var(--fg-on-ink-4); }
+.combo-trigger.has-value .combo-value { color: var(--fg-on-ink-1); }
+.combo-chevron {
+  width: 9px;
+  height: 9px;
+  border-right: 1.6px solid var(--fg-on-ink-3);
+  border-bottom: 1.6px solid var(--fg-on-ink-3);
+  transform: rotate(45deg) translateY(-3px);
+  transition: transform 160ms;
+  flex-shrink: 0;
 }
-.field--error .combo-trigger { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.combo-trigger .placeholder { color: rgba(255,255,255,0.32); font-weight: 300; }
-.combo-trigger .chevron {
-  width: 8px; height: 8px;
-  border-right: 1.5px solid rgba(255,255,255,0.55);
-  border-bottom: 1.5px solid rgba(255,255,255,0.55);
-  transform: rotate(45deg);
-  transition: transform 0.2s;
-  margin-top: -3px;
+.combo-chevron.is-open {
+  transform: rotate(-135deg) translateY(-3px);
+  border-color: var(--cyan);
 }
-.combo-trigger.is-open .chevron { transform: rotate(-135deg); margin-top: 2px; border-color: #5ee7e7; }
 .combo-panel {
-  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
-  z-index: 30;
-  background: #0a0a0c;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
-  box-shadow: 0 24px 60px -20px rgba(0,0,0,0.8);
+  margin-top: 8px;
+  background: var(--ink-800);
+  border: 1px solid var(--border-on-ink);
+  border-radius: 10px;
   overflow: hidden;
 }
 .combo-search {
-  width: 100%; background: transparent; border: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding: 14px 18px; color: #fff;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ink-700);
+  border: none;
+  border-bottom: 1px solid var(--border-on-ink);
+  color: var(--fg-on-ink-1);
+  font: inherit;
+  font-size: 14px;
+  padding: 11px 14px;
 }
-.combo-search:focus { outline: none; border-bottom-color: rgba(94,231,231,0.5); }
-.combo-list { max-height: 280px; overflow-y: auto; padding: 6px 0; }
+.combo-search:focus { outline: none; }
+.combo-list { max-height: 240px; overflow-y: auto; }
 .combo-opt {
-  width: 100%; background: transparent; border: 0;
-  text-align: left; padding: 10px 18px;
-  font-family: var(--font-grotesk); font-weight: 400; font-size: 14px;
-  color: rgba(255,255,255,0.9); cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  transition: background 0.15s, color 0.15s;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--fg-on-ink-2);
+  cursor: pointer;
 }
-.combo-opt:hover { background: rgba(94,231,231,0.06); color: #fff; }
-.combo-opt .num { font-family: ui-monospace, monospace; font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
-.combo-opt.is-selected { color: #5ee7e7; }
-.combo-empty { padding: 18px; color: rgba(255,255,255,0.45); font-size: 13px; text-align: center; }
-
-/* ----- Conditional precision ----- */
-.precision { display: none; margin-top: 10px; }
-.precision.is-visible { display: block; animation: slideIn 0.25s; }
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+.combo-opt:hover,
+.combo-opt.is-active {
+  background: rgba(127, 231, 225, 0.10);
+  color: var(--fg-on-ink-1);
+}
+.combo-empty {
+  padding: 18px;
+  font-size: 13px;
+  color: var(--fg-on-ink-3);
+  text-align: center;
 }
 
-/* ----- RGPD ----- */
-.rgpd {
-  margin-top: 8px; padding: 18px 20px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  background: rgba(255,255,255,0.015);
+/* ---- Precision reveal ---- */
+.precision { display: none; margin-top: 12px; }
+.precision.is-show { display: block; }
+
+/* ---- Chip checkbox (remote) ---- */
+.chip-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  cursor: pointer;
+  position: relative;
 }
-.rgpd.field--error { border-color: rgba(255,138,166,0.55); background: rgba(255,80,110,0.04); }
-.rgpd__row { display: flex; align-items: flex-start; gap: 14px; cursor: pointer; }
-.rgpd__check {
-  flex: 0 0 auto; position: relative; width: 20px; height: 20px; margin-top: 1px;
+.chip-check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
-.rgpd__check input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.rgpd__box {
-  display: block; width: 20px; height: 20px;
-  border: 1px solid rgba(255,255,255,0.18);
+.chip-box {
+  width: 18px;
+  height: 18px;
   border-radius: 5px;
-  background: rgba(255,255,255,0.02);
-  transition: all 0.2s;
+  border: 1.6px solid var(--fg-on-ink-3);
+  position: relative;
+  transition: all 140ms;
+  flex-shrink: 0;
 }
-.rgpd__check input:checked + .rgpd__box {
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  border-color: transparent;
+.chip-check input:checked ~ .chip-box {
+  background: var(--cyan);
+  border-color: var(--cyan);
 }
-.rgpd__check input:checked + .rgpd__box::after {
-  content: ""; position: absolute;
-  top: 4px; left: 7px;
-  width: 5px; height: 9px;
-  border: solid #000; border-width: 0 2px 2px 0;
+.chip-check input:checked ~ .chip-box::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border-right: 2px solid var(--ink-900);
+  border-bottom: 2px solid var(--ink-900);
   transform: rotate(45deg);
 }
-.rgpd__text {
-  font-family: var(--font-grotesk); font-size: 13px;
-  line-height: 1.55; color: rgba(255,255,255,0.65);
+.chip-label {
+  font-size: 14px;
+  color: var(--fg-on-ink-2);
 }
-.rgpd__text :deep(a) {
-  color: rgba(255,255,255,0.9);
-  text-decoration: underline;
-  text-decoration-color: rgba(94,231,231,0.6);
-  text-underline-offset: 3px;
-}
-.rgpd__text :deep(a:hover) { color: #5ee7e7; text-decoration-color: #5ee7e7; }
 
-/* ----- Submit ----- */
-.cf-mount { display: none; }
+/* ---- Numeric field with € suffix ---- */
+.num-wrap { position: relative; }
+.num-wrap .tinput { padding-right: 34px; font-variant-numeric: tabular-nums; }
+.num-suffix {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--fg-on-ink-3);
+  font-size: 15px;
+  pointer-events: none;
+}
 
-.submit {
-  margin-top: 40px;
-  display: flex; flex-direction: column; align-items: center; gap: 18px;
+/* ---- Objective tiles row variant ---- */
+.ttile--row {
+  flex-direction: row;
+  align-items: center;
 }
-.cta-submit {
-  position: relative;
-  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-  width: 100%; max-width: 440px;
-  padding: 20px 36px;
-  border: 0;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  color: #000;
-  font-family: var(--font-grotesk); font-weight: 600;
-  font-size: 15px; letter-spacing: 0.01em;
-  cursor: pointer;
-  box-shadow: 0 20px 60px -15px rgba(255,0,255,0.55), 0 8px 30px -10px rgba(0,255,255,0.4);
-  transition: transform 0.3s, box-shadow 0.3s, filter 0.2s, opacity 0.25s;
-}
-.cta-submit:hover:not(:disabled):not(.is-loading) {
-  transform: translateY(-2px);
-  filter: brightness(1.08);
-}
-.cta-submit svg { width: 18px; height: 18px; transition: transform 0.25s; }
-.cta-submit:hover:not(:disabled):not(.is-loading) svg { transform: translateX(3px); }
-.cta-submit:disabled {
-  cursor: not-allowed;
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.32);
-  box-shadow: none; filter: none;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.cta-submit:disabled svg { stroke: rgba(255,255,255,0.32); }
-.cta-submit.is-loading { pointer-events: none; color: transparent !important; }
-.cta-submit.is-loading .cta-submit__label,
-.cta-submit.is-loading svg { opacity: 0; }
-.cta-submit__loader {
-  display: none; position: absolute; inset: 0;
-  align-items: center; justify-content: center; gap: 12px;
-  color: #000;
-  font-family: var(--font-grotesk); font-weight: 600;
-  font-size: 14px; letter-spacing: 0.02em;
-}
-.cta-submit.is-loading .cta-submit__loader { display: inline-flex; }
-.cta-submit__loader::before {
-  content: "";
-  width: 16px; height: 16px;
-  border: 2px solid rgba(0,0,0,0.25);
-  border-top-color: #000;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
 
-.submit__hint {
-  font-family: var(--font-grotesk); font-size: 12px;
-  color: rgba(255,255,255,0.45);
-  text-align: center; line-height: 1.5;
-  transition: opacity 0.2s;
-}
-.submit.is-ready .submit__hint { opacity: 0; height: 0; margin: 0; }
-
-.submit__loading-note {
+/* ---- Submit area states ---- */
+.submit-hint { font-size: 13px; color: var(--fg-on-ink-3); margin: 0; }
+.tsubmit-area.is-ready .submit-hint { display: none; }
+.submit-loading-note {
   display: none;
-  font-family: var(--font-grotesk); font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  text-align: center; line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-on-ink-3);
+  margin: 0;
 }
-.submit.is-loading .submit__loading-note { display: block; }
-.submit__loading-note em {
-  font-style: italic;
-  background: linear-gradient(135deg, #5ee7e7 0%, #e85eff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  display: inline-block;
-  padding-right: 0.08em;
+.submit-loading-note em {
+  font-family: var(--font-text);
+  font-style: normal;
+  color: var(--cyan);
 }
+.tsubmit-area.is-loading .submit-loading-note { display: block; }
 
-/* ----- Form footer ----- */
-.form-foot {
-  margin-top: 36px; padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex; flex-direction: column; gap: 16px;
-  align-items: center; text-align: center;
-}
-.form-foot__caption {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 10.5px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
-  display: inline-flex; align-items: center; gap: 10px;
-}
-.form-foot__caption svg { width: 12px; height: 12px; color: rgba(255,255,255,0.45); }
-.form-foot__sig {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-style: italic; font-size: 14px;
-  color: rgba(255,255,255,0.55);
-}
+/* ---- Global alert transition ---- */
+.talert-fade-enter-active,
+.talert-fade-leave-active { transition: opacity 0.25s, transform 0.25s; }
+.talert-fade-enter-from,
+.talert-fade-leave-to { opacity: 0; transform: translateY(-6px); }
 
-/* ----- Global alert ----- */
-.global-alert {
-  display: flex; gap: 16px;
-  padding: 22px 24px;
-  border: 1px solid rgba(232,94,255,0.35);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(232,94,255,0.06), rgba(232,94,255,0.02));
-  margin-bottom: 32px;
-  position: relative; overflow: hidden;
-}
-.global-alert::before {
-  content: ""; position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232,94,255,0.5), transparent);
-}
-.global-alert__mark {
-  width: 32px; height: 32px; flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(232,94,255,0.35);
-  background: rgba(232,94,255,0.08);
-  display: flex; align-items: center; justify-content: center;
-  color: #e85eff;
-}
-.global-alert__mark svg { width: 14px; height: 14px; }
-.global-alert__body { display: flex; flex-direction: column; gap: 6px; }
-.global-alert__title {
-  font-family: var(--font-grotesk); font-weight: 800;
-  font-size: 17px; letter-spacing: -0.015em;
-  color: #fff; margin: 0;
-}
-.global-alert__text {
-  font-family: var(--font-grotesk); font-size: 14px; font-weight: 300;
-  color: rgba(255,255,255,0.9); line-height: 1.6; margin: 0;
-}
-.global-alert__text :deep(a) {
-  color: #5ee7e7; text-decoration: none;
-  border-bottom: 1px solid rgba(94,231,231,0.3);
-}
-.alert-fade-enter-active, .alert-fade-leave-active { transition: opacity 0.25s, transform 0.25s; }
-.alert-fade-enter-from, .alert-fade-leave-to { opacity: 0; transform: translateY(-6px); }
-
+/* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
-  .ctrl, .radio, .check-chip, .combo-trigger, .cta-submit, .cta-submit svg, .precision { transition: none; animation: none; }
+  .combo-chevron,
+  .chip-box,
+  .tsubmit { transition: none; }
+}
+
+/* ---- Mobile / responsive ---- */
+@media (max-width: 900px) {
+  /* Séniorité tiles: 2-up on tablet */
+  .ttiles--4 { grid-template-columns: repeat(2, 1fr); }
+  /* Objectif tiles stay 2-col — already set inline, no change needed */
+  /* Numeric fields full-width via tfields--2 collapsing */
+}
+
+@media (max-width: 560px) {
+  /* Phone row: stack country code + number vertically */
+  :deep(.tphone) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  :deep(.tphone .tselect-wrap) { width: 100%; }
+  :deep(.tphone .tinput) { width: 100%; }
+
+  /* Séniorité tiles: 2-up then allow 1 if very narrow */
+  .ttiles--4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Objectif tiles (2-col inline): collapse to 1-col */
+  .ttile--row { flex-direction: row; align-items: center; }
+
+  /* Combobox panel: full width (already is, but ensure min-height for tap) */
+  .combo-opt { min-height: 44px; display: flex; align-items: center; }
+  .combo-search { min-height: 44px; }
+
+  /* Submit CTA full-width */
+  .tsubmit { width: 100%; justify-content: center; }
+  .tsubmit-area { align-items: stretch; }
+
+  /* Numeric field full-width handled by tfields--2 single-col global CSS */
 }
 </style>

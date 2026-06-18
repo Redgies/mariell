@@ -1,680 +1,278 @@
 <script setup lang="ts">
-useScrollReveal()
-
-useHead({
-  title: 'Les 10 essentiels du recrutement Sales · Le Lab Mariell',
-  meta: [
-    {
-      name: 'description',
-      content:
-        "Dix vérités pour ne pas rater votre prochain recrutement Sales. Aucune n'est complexe. Toutes demandent de la lucidité.",
-    },
-  ],
-})
-
-interface Essentiel {
-  num: string
-  concept: string
-  punch: string // raw HTML (entities like &nbsp; allowed)
-  body: string  // raw HTML (entities + <strong>/<em> allowed)
-  anecdote?: string
-}
-
-const essentiels: Essentiel[] = [
-  {
-    num: '01',
-    concept: 'La Base',
-    punch: "si vous cherchez un OVNI, sachez le reconnaître, le payer, et l'attraper.",
-    body:
-      "Vous avez le droit de chercher un OVNI. Mais un OVNI a trois caractéristiques&nbsp;: il est rare, il coûte cher, et il faut savoir le reconnaître. Si vous ne réunissez pas ces trois conditions — la rareté assumée dans la timeline, le budget aligné, l'œil pour le détecter — ne cherchez pas un OVNI. Cherchez un excellent profil standard. Vous gagnerez 4 mois.",
-  },
-  {
-    num: '02',
-    concept: 'Le Jeu',
-    punch: 'un recrutement se joue à 2.',
-    body:
-      "Un recrutement est un jeu qui se joue à 2. L'attractivité est une question centrale, celle du candidat comme celle de l'entreprise. C'est le rapport des deux qui définira les règles de ce recrutement. Tous les Sales ne se valent pas, toutes les entreprises non plus. Il faut adapter sa recherche en fonction, en optimisant la visibilité de ses plus-values et en compensant ses faiblesses. 100% Outbound&nbsp;? Variable attractif et atteignable. Un portfolio client ultra fourni&nbsp;? Le mentionner rapidement. Un package limité&nbsp;? Évolution rapide et plan de carrière clair.",
-    anecdote:
-      "Un client early stage nous appelle après plusieurs recrutements ratés et un turnover Sales chronique. Sous-performance systématique, profils qui ne tenaient pas. Diagnostic&nbsp;: ils recrutaient les mauvais Sales, car ils ne savaient pas vendre ce qu'ils avaient. Des références clients ultra populaires invisibles dans leur pitch RH. Un produit innovant, déjà au PMF. Une structure mouvante qui permettait un accès rapide aux responsabilités. On a remis ces 3 atouts au centre du discours candidat. Trois recrutements plus tard, fin du turnover.",
-  },
-  {
-    num: '03',
-    concept: "L'Enjeu",
-    punch: 'une phrase, ou rien.',
-    body:
-      "On ne recrute pas pour recruter. Avant chaque recrutement Sales, écrivez la phrase suivante&nbsp;: «&nbsp;Dans 12 mois, ce Sales aura permis de [enjeu chiffré ou périmètre précis].&nbsp;» Si vous n'arrivez pas à compléter la phrase sans la bourrer de «&nbsp;et de&nbsp;» et «&nbsp;ainsi que&nbsp;», c'est que vous ne savez pas pourquoi vous recrutez. Et vous ne saurez pas non plus s'il a réussi.",
-  },
-  {
-    num: '04',
-    concept: 'Le Brief',
-    punch: '3 lecteurs, 3 profils différents&nbsp;? Recommencez.',
-    body:
-      "Un brief de recrutement Sales se teste avant de se lancer. Envoyez le vôtre à trois personnes&nbsp;: un pair RH, le Hiring Sales Manager qui pilotera ce Sales au quotidien, et un externe (pair de votre secteur, advisor, cabinet). Demandez à chacun de décrire en 3 lignes le profil qu'il imagine. Si les trois descriptions ne se ressemblent pas, votre brief est flou. Et un brief flou produit toujours un recrutement flou — peu importe le talent du chasseur.",
-  },
-  {
-    num: '05',
-    concept: 'Le Process',
-    punch: 'retirez les frictions, pas les filtres.',
-    body:
-      "Six entretiens sont souvent synonyme de frictions. Mais retirer les bons filtres pour gagner du temps, c'est pire — vous laissez passer ce que vous deviez détecter. La règle&nbsp;: pour chaque étape de votre process, complétez la phrase «&nbsp;Cette étape sert à valider [compétence ou risque précis].&nbsp;» Si vous n'avez pas de réponse claire, c'est une friction. Si vous en avez une, c'est un filtre. Gardez les filtres, supprimez les frictions.",
-  },
-  {
-    num: '06',
-    concept: 'Le Track Record',
-    punch: '80% &gt; 120% selon le contexte.',
-    body:
-      "Un track record Sales se lit toujours en contexte, jamais à l'absolu. Un AE à 80% de quota dans une équipe où il est top performer — sur un produit avec un PMF encore fragile, une marque sans autorité sur son marché, une acquisition limitée — est probablement plus performant qu'un AE à 120% dans une équipe où tout le monde surperforme, sur un produit leader avec une demande inbound massive. Avant de valider un chiffre sur un CV, posez systématiquement quatre questions&nbsp;: quel était le quota de l'équipe&nbsp;? quel pourcentage de l'équipe atteignait 100%&nbsp;? combien d'AE étaient au-dessus du candidat&nbsp;? quel était l'état du PMF et de la notoriété produit à l'époque&nbsp;? Sans ces réponses, le chiffre sur le CV est de la décoration.",
-    anecdote:
-      "Deux profils recrutés pour le même client. Le premier&nbsp;: CV flamboyant, top boîtes leader, track record en béton. Le second&nbsp;: CV plus modeste, mais l'impact était là, en contexte. Les deux performent. Mais c'est le second qui survole l'équipe, fait remonter des recommandations stratégiques, prend des responsabilités. Quelques années plus tard, le premier reste top performer. Le second est N+2. Le client a recruté deux Sales. Il a hérité d'un manager.",
-  },
-  {
-    num: '07',
-    concept: 'Le Variable',
-    punch: 'le test silencieux du Sales que vous recrutez.',
-    body:
-      "Le variable n'est pas un argument à vendre, c'est un test d'alignement. Un vrai Sales lit un comp plan en 5 minutes et identifie immédiatement les seuils, les accélérateurs, les pièges, les angles de performance. Si votre candidat l'accepte poliment sans poser une seule question — pas de challenge sur le quota, pas de demande de simulation, pas de question sur les SPIFFs — vous ne recrutez pas un Sales. Vous recrutez un exécutant qui touchera son fixe.",
-  },
-  {
-    num: '08',
-    concept: 'La Comparaison',
-    punch: 'le candidat suivant devra prouver quoi de plus que le précédent&nbsp;?',
-    body:
-      "La sur-comparaison est le poison silencieux des recrutements Sales. Aujourd'hui, le choix se fait dans les deux sens&nbsp;: les meilleurs profils sont sollicités en permanence, ils ont 2-3 process en parallèle, et ils signent vite. Si vous prolongez votre recherche par confort — «&nbsp;je veux quand même voir le suivant&nbsp;» — vous ne comparez pas, vous offrez le candidat à votre concurrent. Posez la question avant de continuer&nbsp;: que devra prouver le candidat suivant pour déloger celui-ci&nbsp;? Si vous n'avez pas de réponse précise, vous ne cherchez plus mieux. Vous repoussez la décision. Et passer un tour, c'est souvent perdre la partie.",
-    anecdote:
-      "Un excellent profil en final step. Le client veut «&nbsp;voir encore un candidat pour comparer&nbsp;», on fait patienter le candidat. Une semaine. Puis une de plus. Le candidat signe ailleurs. Le client met un mois supplémentaire à combler le poste, avec l'amertume d'avoir manqué la perle qu'il avait déjà sous la main. Le candidat perdu&nbsp;? Top boîte concurrente. Aujourd'hui, il y performe.",
-  },
-  {
-    num: '09',
-    concept: 'VP/Head of Sales, CRO',
-    punch: 'commencez par votre réseau. Toujours.',
-    body:
-      "Pour les postes hautement stratégiques — VP Sales, Head of Sales, CRO — la chasse formelle ne doit jamais être votre premier réflexe. Commencez systématiquement par votre réseau et celui de vos investisseurs, advisors, board members, ex-collègues. Pourquoi&nbsp;? À ce niveau, le fit pèse autant que la compétence sur le papier, et la confiance se construit difficilement avec un inconnu — surtout quand les résultats ne se mesurent pas avant 12 à 18 mois. La chasse reste la meilleure option si le pool réseau est insuffisant — et oui, ces profils se chassent, ils ne candidatent pas. Mais elle ne doit jamais être votre premier réflexe.",
-  },
-  {
-    num: '10',
-    concept: 'Le Désalignement',
-    punch: 'ne le fuyez pas, il révèle un profil.',
-    body:
-      "Quand un candidat n'est pas aligné avec vous — sur la stratégie commerciale, sur la lecture du marché, sur la fiche de poste — la plupart des recruteurs vivent ce moment comme un signal de disqualification. C'est l'inverse. Le désalignement est le seul moment de l'entretien où le candidat ne joue plus un rôle préparé. Sa façon de tenir sa position, de l'argumenter, de l'adapter sans se renier — ou au contraire de pivoter mollement pour vous plaire — vous dit en 5 minutes ce que 5 entretiens ne vous diraient pas. Acceptez le désaccord, observez la réaction, jugez-la sans ego. Sans ego on a dit. Vous ne cherchez pas un candidat qui pense comme vous. Vous cherchez un Sales qui sait valoriser sa position face à un client difficile — et vous êtes son premier client difficile.",
-  },
-]
+const config = useRuntimeConfig()
+const calendlyUrl = config.public.calendlyUrl as string
 </script>
 
 <template>
-  <!-- Page-level opaque layer that masks the global GradientBlobs. -->
-  <div class="lab-page-bg" aria-hidden="true" />
-
-  <main class="lab-page">
-    <!-- ============ SUB-NAV ============ -->
-    <div class="lab-subnav">
-      <div class="lab-container lab-subnav__row">
-        <NuxtLink to="/lab" class="lab-subnav__back">
-          <span aria-hidden="true">←</span>
-          Retour au Lab
-        </NuxtLink>
-        <div class="lab-subnav__crumb">
-          <NuxtLink to="/lab">LE LAB</NuxtLink>
-          <span class="lab-subnav__sep">/</span>
-          10 ESSENTIELS RECRUTEMENT SALES
+  <div class="chromatic-mode">
+    <section class="page-hero">
+      <div class="page-hero__inner">
+        <Breadcrumb :items="[{ label: 'Le Lab', to: '/lab' }, { label: 'Les 10 essentiels du recrutement Sales' }]" />
+        <div class="eyebrow-m" style="color:rgba(244,239,227,0.45);margin-bottom:14px;">— Le Lab Mariell · Guides pratiques</div>
+        <h1 class="h-display h-display--l" style="max-width:920px;">Les 10 essentiels du recrutement Sales.</h1>
+        <p style="margin-top:24px;max-width:600px;font-size:18px;line-height:1.55;color:rgba(244,239,227,0.72);">Ce que personne ne vous dit, mais que vous devriez savoir.</p>
+        <div style="margin-top:36px;display:flex;gap:40px;flex-wrap:wrap;">
+          <div>
+            <div class="meta-label">Édition</div>
+            <div class="meta-value">Mai 2026</div>
+          </div>
+          <div>
+            <div class="meta-label">Essentiels</div>
+            <div class="meta-value">10</div>
+          </div>
+          <div>
+            <div class="meta-label">Accès</div>
+            <div class="meta-value">Libre</div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- ============ HEADER ============ -->
-    <header class="lab-header">
-      <div class="lab-container">
-        <div class="reveal lab-cartouche">
-          <span class="lab-cartouche__dot" />
-          LE LAB MARIELL
-          <span class="lab-cartouche__sep" />
-          <span class="lab-cartouche__num">GUIDES PRATIQUES</span>
-        </div>
-        <h1 class="reveal lab-h1">
-          Les <span class="gradient-text italic">10 essentiels</span><br />
-          du recrutement Sales.
-        </h1>
-        <p class="reveal lab-sub">
-          Ce que personne ne vous dit, <span class="gradient-text italic">mais que vous devriez savoir.</span>
-        </p>
-        <div class="reveal lab-meta">
-          <div>ÉDITION <strong>MAI&nbsp;2026</strong></div>
-          <div>ESSENTIELS <strong>10</strong></div>
-          <div>ACCÈS <strong>LIBRE</strong></div>
-        </div>
-      </div>
-    </header>
-
-    <!-- ============ AVANT-PROPOS ============ -->
-    <section class="lab-foreword">
-      <div class="lab-container">
-        <div class="reveal lab-foreword__lbl">AVANT-PROPOS</div>
-        <blockquote class="reveal lab-foreword__quote">
-          <p>La majorité des recrutements Sales ratés ne ratent pas à cause d'un mauvais profil. Ils ratent à cause de décisions prises avant même que la recherche commence&nbsp;: un brief flou, un enjeu mal posé, des critères jamais écrits, un process qui ne teste rien.</p>
-          <p>Ce guide rassemble les 10 vérités qu'on aurait aimé qu'on nous donne plus tôt. Aucune n'est complexe. Aucune ne demande un outil. Toutes demandent de la lucidité.</p>
-        </blockquote>
       </div>
     </section>
 
-    <!-- ============ 10 ESSENTIELS ============ -->
-    <section class="lab-essentiels">
-      <div class="lab-container lab-container--narrow">
-        <article
-          v-for="(essentiel, idx) in essentiels"
-          :key="essentiel.num"
-          class="essentiel"
-          :class="{ 'essentiel--first': idx === 0 }"
-        >
-          <div class="essentiel__row">
-            <div class="essentiel__num">
-              {{ essentiel.num }}<sup>ESSENTIEL</sup>
-            </div>
-            <div class="essentiel__body">
-              <h2 class="essentiel__title">
-                <span class="gradient-text italic essentiel__concept">{{ essentiel.concept }}</span><span class="essentiel__colon">:</span><span class="essentiel__punch" v-html="essentiel.punch" />
-              </h2>
-              <p class="essentiel__p" v-html="essentiel.body" />
+    <section class="section-pad section--paper" style="padding-bottom:0;">
+      <div class="container" style="max-width:760px;">
+        <div class="eyebrow-m" style="margin-bottom:14px;">Avant-propos</div>
+        <p style="font-family:var(--font-text);font-size:22px;line-height:1.4;letter-spacing:-0.005em;color:var(--fg-on-paper-1);margin:0 0 20px;">La majorité des recrutements Sales ratés ne ratent pas à cause d’un mauvais profil. Ils ratent à cause de décisions prises avant même que la recherche commence.</p>
+        <p style="font-size:16px;line-height:1.6;color:var(--fg-on-paper-2);margin:0;">Un brief flou, un enjeu mal posé, des critères jamais écrits, un process qui ne teste rien. Ce guide rassemble les 10 vérités qu’on aurait aimé qu’on nous donne plus tôt. Aucune n’est complexe. Aucune ne demande un outil. Toutes demandent de la lucidité.</p>
+      </div>
+    </section>
 
-              <aside v-if="essentiel.anecdote" class="anecdote">
-                <div class="anecdote__label">
-                  <em class="name">Vu chez Mariell<span class="dot">.</span></em>
-                </div>
-                <p v-html="essentiel.anecdote" />
-              </aside>
+    <section class="section-pad section--paper">
+      <div class="container" style="max-width:820px;display:flex;flex-direction:column;gap:0;">
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">01</div>
+            <div>
+              <h2 class="essentiel-title">La Base&nbsp;: si vous cherchez un OVNI, sachez le reconnaître, le payer, et l’attraper.</h2>
+              <p class="essentiel-body">Vous avez le droit de chercher un OVNI. Mais un OVNI a trois caractéristiques&nbsp;: il est rare, il coûte cher, et il faut savoir le reconnaître. Si vous ne réunissez pas ces trois conditions (rareté assumée dans la timeline, budget aligné, œil pour le détecter), ne cherchez pas un OVNI. Cherchez un excellent profil standard. Vous gagnerez 4 mois.</p>
             </div>
           </div>
-        </article>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">02</div>
+            <div>
+              <h2 class="essentiel-title">Le Jeu&nbsp;: un recrutement se joue à 2.</h2>
+              <p class="essentiel-body">Un recrutement est un jeu qui se joue à 2. L’attractivité est une question centrale, celle du candidat comme celle de l’entreprise. C’est le rapport des deux qui définira les règles. Tous les Sales ne se valent pas, toutes les entreprises non plus. Il faut adapter sa recherche&nbsp;: optimiser la visibilité de ses plus-values et compenser ses faiblesses. 100% Outbound&nbsp;? Variable attractif et atteignable. Un portfolio client ultra fourni&nbsp;? Le mentionner rapidement. Un package limité&nbsp;? Évolution rapide et plan de carrière clair.</p>
+              <div class="anecdote-box">
+                <div class="eyebrow-m" style="margin-bottom:14px;color:var(--cyan);">Vu chez Mariell</div>
+                <p style="margin:0;font-size:14.5px;line-height:1.6;color:rgba(244,239,227,0.82);">Un client early stage nous appelle après plusieurs recrutements ratés et un turnover Sales chronique. Diagnostic&nbsp;: ils recrutaient les mauvais Sales car ils ne savaient pas vendre ce qu’ils avaient. Des références clients populaires invisibles dans leur pitch RH. Un produit déjà au PMF. Une structure mouvante donnant accès rapide aux responsabilités. On a remis ces 3 atouts au centre du discours candidat. Trois recrutements plus tard, fin du turnover.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">03</div>
+            <div>
+              <h2 class="essentiel-title">L’Enjeu&nbsp;: une phrase, ou rien.</h2>
+              <p class="essentiel-body">On ne recrute pas pour recruter. Avant chaque recrutement Sales, écrivez la phrase&nbsp;: «&nbsp;Dans 12 mois, ce Sales aura permis de [enjeu chiffré ou périmètre précis].&nbsp;» Si vous n’arrivez pas à la compléter sans la bourrer de «&nbsp;et de&nbsp;» et «&nbsp;ainsi que&nbsp;», c’est que vous ne savez pas pourquoi vous recrutez. Et vous ne saurez pas non plus s’il a réussi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">04</div>
+            <div>
+              <h2 class="essentiel-title">Le Brief&nbsp;: 3 lecteurs, 3 profils différents&nbsp;? Recommencez.</h2>
+              <p class="essentiel-body">Un brief de recrutement Sales se teste avant de se lancer. Envoyez le vôtre à trois personnes&nbsp;: un pair RH, le Hiring Sales Manager qui pilotera ce Sales, et un externe (pair de votre secteur, advisor, cabinet). Demandez à chacun de décrire en 3 lignes le profil qu’il imagine. Si les trois descriptions ne se ressemblent pas, votre brief est flou. Et un brief flou produit toujours un recrutement flou, peu importe le talent du chasseur.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">05</div>
+            <div>
+              <h2 class="essentiel-title">Le Process&nbsp;: retirez les frictions, pas les filtres.</h2>
+              <p class="essentiel-body">Six entretiens sont souvent synonymes de frictions. Mais retirer les bons filtres pour gagner du temps, c’est pire&nbsp;: vous laissez passer ce que vous deviez détecter. La règle&nbsp;: pour chaque étape, complétez «&nbsp;Cette étape sert à valider [compétence ou risque précis].&nbsp;» Si vous n’avez pas de réponse claire, c’est une friction. Si vous en avez une, c’est un filtre. Gardez les filtres, supprimez les frictions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">06</div>
+            <div>
+              <h2 class="essentiel-title">Le Track Record&nbsp;: 80% &gt; 120% selon le contexte.</h2>
+              <p class="essentiel-body">Un track record Sales se lit toujours en contexte, jamais à l’absolu. Un AE à 80% de quota, top performer d’une équipe (produit au PMF fragile, marque sans autorité, acquisition limitée), est probablement plus performant qu’un AE à 120% dans une équipe où tout le monde surperforme, sur un produit leader à demande inbound massive. Avant de valider un chiffre, posez quatre questions&nbsp;: quel était le quota de l’équipe&nbsp;? quel % atteignait 100%&nbsp;? combien d’AE au-dessus du candidat&nbsp;? quel état du PMF et de la notoriété à l’époque&nbsp;? Sans ces réponses, le chiffre est de la décoration.</p>
+              <div class="anecdote-box">
+                <div class="eyebrow-m" style="margin-bottom:14px;color:var(--cyan);">Vu chez Mariell</div>
+                <p style="margin:0;font-size:14.5px;line-height:1.6;color:rgba(244,239,227,0.82);">Deux profils recrutés pour le même client. Le premier&nbsp;: CV flamboyant, top boîtes, track record en béton. Le second&nbsp;: CV plus modeste, mais l’impact était là, en contexte. Les deux performent. Mais c’est le second qui survole l’équipe, fait remonter des recommandations stratégiques, prend des responsabilités. Quelques années plus tard, le premier reste top performer. Le second est N+2. Le client a recruté deux Sales. Il a hérité d’un manager.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">07</div>
+            <div>
+              <h2 class="essentiel-title">Le Variable&nbsp;: le test silencieux du Sales que vous recrutez.</h2>
+              <p class="essentiel-body">Le variable n’est pas un argument à vendre, c’est un test d’alignement. Un vrai Sales lit un comp plan en 5 minutes et identifie les seuils, les accélérateurs, les pièges, les angles de performance. Si votre candidat l’accepte poliment sans poser une seule question (pas de challenge sur le quota, pas de demande de simulation, pas de question sur les SPIFFs), vous ne recrutez pas un Sales. Vous recrutez un exécutant qui touchera son fixe.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">08</div>
+            <div>
+              <h2 class="essentiel-title">La Comparaison&nbsp;: le candidat suivant devra prouver quoi de plus&nbsp;?</h2>
+              <p class="essentiel-body">La sur-comparaison est le poison silencieux des recrutements Sales. Le choix se fait dans les deux sens&nbsp;: les meilleurs profils sont sollicités en permanence, ont 2-3 process en parallèle, et signent vite. Si vous prolongez par confort («&nbsp;je veux quand même voir le suivant&nbsp;»), vous offrez le candidat à votre concurrent. Posez la question&nbsp;: que devra prouver le suivant pour déloger celui-ci&nbsp;? Sans réponse précise, vous ne cherchez plus mieux, vous repoussez la décision. Et passer un tour, c’est souvent perdre la partie.</p>
+              <div class="anecdote-box">
+                <div class="eyebrow-m" style="margin-bottom:14px;color:var(--cyan);">Vu chez Mariell</div>
+                <p style="margin:0;font-size:14.5px;line-height:1.6;color:rgba(244,239,227,0.82);">Un excellent profil en final step. Le client veut «&nbsp;voir encore un candidat pour comparer&nbsp;». On fait patienter. Une semaine. Puis une de plus. Le candidat signe ailleurs. Le client met un mois de plus à combler le poste, avec l’amertume d’avoir manqué la perle qu’il avait déjà sous la main. Le candidat perdu&nbsp;? Top boîte concurrente, où il performe aujourd’hui.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">09</div>
+            <div>
+              <h2 class="essentiel-title">VP / Head of Sales, CRO&nbsp;: commencez par votre réseau. Toujours.</h2>
+              <p class="essentiel-body">Pour les postes hautement stratégiques (VP Sales, Head of Sales, CRO), la chasse formelle ne doit jamais être votre premier réflexe. Commencez par votre réseau et celui de vos investisseurs, advisors, board members, ex-collègues. Pourquoi&nbsp;? À ce niveau, le fit pèse autant que la compétence, et la confiance se construit difficilement avec un inconnu, surtout quand les résultats ne se mesurent pas avant 12 à 18 mois. La chasse reste la meilleure option si le pool réseau est insuffisant, et oui, ces profils se chassent, ils ne candidatent pas. Mais elle ne doit jamais être le premier réflexe.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="essentiel-item essentiel-item--last">
+          <div class="essentiel-grid">
+            <div class="essentiel-num">10</div>
+            <div>
+              <h2 class="essentiel-title">Le Désalignement&nbsp;: ne le fuyez pas, il révèle un profil.</h2>
+              <p class="essentiel-body">Quand un candidat n’est pas aligné avec vous (stratégie commerciale, lecture du marché, fiche de poste), la plupart des recruteurs vivent ce moment comme un signal de disqualification. C’est l’inverse. Le désalignement est le seul moment où le candidat ne joue plus un rôle préparé. Sa façon de tenir sa position, de l’argumenter, de l’adapter sans se renier (ou de pivoter mollement pour vous plaire) vous dit en 5 minutes ce que 5 entretiens ne diraient pas. Acceptez le désaccord, observez la réaction, jugez-la sans ego. Sans ego on a dit. Vous ne cherchez pas un candidat qui pense comme vous, mais un Sales qui sait valoriser sa position face à un client difficile, et vous êtes son premier client difficile.</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- ============ SIGNATURE ============ -->
-    <section class="lab-signature">
-      <div class="lab-container lab-container--narrow">
-        <div class="lab-signature__lbl">SIGNATURE</div>
-        <p class="lab-signature__quote">
-          Les candidats recrutés par nos clients font la fierté de Mariell, tout autant que ceux qui ont été screenés par Mariell mais ont finalement signé ailleurs. Ils sont tous témoins de la qualité du travail effectué.
-        </p>
-        <div class="lab-signature__sig">
-          <span class="by">— Par </span><span class="gradient-text italic name">Mariell</span><span class="by">, pour vous.</span>
+    <section class="section-pad section--ink" style="padding-top:64px;padding-bottom:64px;">
+      <div class="container" style="max-width:760px;text-align:center;">
+        <div class="eyebrow-m" style="margin-bottom:14px;justify-content:center;">Signature</div>
+        <p style="font-family:var(--font-text);font-size:20px;line-height:1.5;letter-spacing:-0.005em;color:var(--fg-on-ink-1);margin:0;">Les candidats recrutés par nos clients font la fierté de Mariell, tout autant que ceux qui ont été screenés par Mariell mais ont finalement signé ailleurs. Ils sont tous témoins de la qualité du travail effectué.</p>
+        <p style="margin-top:20px;font-size:14px;color:rgba(244,239,227,0.5);">— Par Mariell, pour vous.</p>
+      </div>
+    </section>
+
+    <section class="section-pad section--paper" style="padding-top:64px;">
+      <div class="container">
+        <div class="cta-strip">
+          <div class="cta-strip__title">Déléguez le pari. Gardez la décision.</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
+            <NuxtLink class="btn-pill btn-ghost" to="/lab/guide-salaires-sales">Guide des salaires 2026</NuxtLink>
+          </div>
         </div>
       </div>
     </section>
-  </main>
+  </div>
 </template>
 
 <style scoped>
-/* Local aliases — bridge legacy short tokens to canonical Mariell tokens. */
-.lab-page,
-.lab-page-bg {
-  --bg: #000000;
-  --fg1: #ffffff;
-  --fg2: rgba(255, 255, 255, 0.9);
-  --fg3: rgba(255, 255, 255, 0.65);
-  --fg4: rgba(255, 255, 255, 0.45);
-  --fg5: rgba(255, 255, 255, 0.4);
-  --cyan: #5ee7e7;
-  --magenta: #e85eff;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hi: rgba(255, 255, 255, 0.18);
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-}
-
-/* Italic gradient text — give the trailing italic glyph room so the
-   `background-clip: text` slope isn't chopped on the right edge. */
-.lab-page :deep(.gradient-text) {
-  display: inline-block;
-  padding-right: 0.15em;
-}
-
-/* ============ Page-specific opaque background — masks the global GradientBlobs. ============ */
-.lab-page-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(40% 40% at 18% 12%, rgba(139, 92, 246, 0.18), transparent 70%),
-    radial-gradient(40% 40% at 88% 78%, rgba(94, 231, 231, 0.12), transparent 70%),
-    #000;
-}
-
-/* ============ Page shell ============ */
-.lab-page {
-  position: relative;
-  padding-top: 80px;
-  padding-bottom: 96px;
-}
-
-.lab-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 32px;
-  position: relative;
-  z-index: 1;
-}
-.lab-container--narrow {
-  max-width: 820px;
-}
-
-/* ============ SUB-NAV ============ */
-.lab-subnav {
-  position: sticky;
-  top: 80px;
-  z-index: 30;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-}
-.lab-subnav__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-  gap: 16px;
-}
-.lab-subnav__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.meta-label {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--fg5);
-  text-decoration: none;
-  transition: color 0.2s ease-out;
-}
-.lab-subnav__back:hover { color: var(--cyan); }
-.lab-subnav__crumb {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--fg5);
-  text-transform: uppercase;
-}
-.lab-subnav__crumb a {
-  color: var(--fg5);
-  text-decoration: none;
-  transition: color 0.2s ease-out;
-}
-.lab-subnav__crumb a:hover { color: var(--cyan); }
-.lab-subnav__sep { margin: 0 12px; opacity: 0.4; }
-
-/* ============ HEADER ============ */
-.lab-header {
-  padding: 112px 0 88px;
-  border-bottom: 1px solid var(--border);
+  color: rgba(244, 239, 227, 0.45);
 }
 
-.lab-cartouche {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 14px;
-  border: 1px solid var(--border-hi);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
+.meta-value {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
   color: var(--cyan);
-  text-transform: uppercase;
-  margin-bottom: 36px;
-}
-.lab-cartouche__dot {
-  width: 6px; height: 6px;
-  border-radius: 999px;
-  background: var(--cyan);
-  box-shadow: 0 0 10px var(--cyan);
-}
-.lab-cartouche__sep {
-  width: 18px; height: 1px;
-  background: var(--border-hi);
-}
-.lab-cartouche__num { color: var(--fg2); }
-
-.lab-h1 {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(44px, 7.2vw, 96px);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  margin: 0;
-  color: var(--fg1);
-  max-width: 900px;
+  margin-top: 4px;
 }
 
-.lab-sub {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--fg3);
-  font-size: clamp(20px, 2.2vw, 26px);
-  line-height: 1.4;
-  max-width: 640px;
-  margin: 28px 0 0;
+.essentiel-item {
+  border-top: 1px solid var(--border-on-paper);
+  padding: 36px 0;
 }
 
-.lab-meta {
-  display: flex;
-  gap: 40px;
-  margin-top: 56px;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: var(--fg4);
-  text-transform: uppercase;
-}
-.lab-meta strong {
-  color: var(--fg1);
-  font-weight: 500;
-  margin-left: 8px;
-  font-family: var(--font-mono);
+.essentiel-item--last {
+  border-bottom: 1px solid var(--border-on-paper);
 }
 
-/* ============ AVANT-PROPOS ============ */
-.lab-foreword { padding: 88px 0 64px; }
-.lab-foreword__lbl {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--cyan);
-  text-transform: uppercase;
-  margin-bottom: 22px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.lab-foreword__lbl::before {
-  content: "";
-  width: 32px;
-  height: 1px;
-  background: var(--cyan);
-}
-
-.lab-foreword__quote {
-  position: relative;
-  margin: 0;
-  padding: 36px 0 36px 40px;
-  border-left: 1px solid var(--border-hi);
-}
-.lab-foreword__quote::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 1px;
-  height: 96px;
-  background: linear-gradient(180deg, var(--cyan), transparent);
-  box-shadow: 0 0 14px rgba(94, 231, 240, 0.35);
-}
-.lab-foreword__quote p {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(19px, 2.05vw, 23px);
-  line-height: 1.5;
-  color: var(--fg2);
-  margin: 0 0 22px;
-  max-width: 720px;
-  letter-spacing: -0.005em;
-}
-.lab-foreword__quote p:last-child { margin-bottom: 0; }
-
-/* ============ 10 ESSENTIELS ============ */
-.lab-essentiels { padding: 56px 0 0; }
-
-.essentiel {
-  position: relative;
-  padding: 80px 0 72px;
-  border-top: 1px solid var(--border);
-}
-.essentiel--first {
-  border-top: 0;
-  padding-top: 56px;
-}
-
-.essentiel__row {
+.essentiel-grid {
   display: grid;
-  grid-template-columns: 132px 1fr;
-  gap: 56px;
+  grid-template-columns: 72px 1fr;
+  gap: 24px;
   align-items: start;
 }
 
-.essentiel__num {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
+.essentiel-num {
+  font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(72px, 9vw, 120px);
-  line-height: 0.85;
-  letter-spacing: -0.04em;
-  color: var(--fg1);
-  opacity: 0.92;
-  padding-top: 6px;
-  user-select: none;
-  /* tabular-nums : chiffres à largeur fixe → "01" et "10" (qui contiennent le
-     "1" très étroit en proportionnel) occupent la même largeur que "02"–"09",
-     donc le gap visuel entre le numéro et le contenu reste constant. */
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-}
-.essentiel__num sup {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  line-height: 1;
-  color: var(--cyan);
-  font-style: normal;
-  font-weight: 400;
-  opacity: 0.9;
-  margin-top: 22px;
+  font-size: 42px;
+  letter-spacing: -0.03em;
+  color: var(--moss);
+  line-height: 0.9;
 }
 
-.essentiel__body { padding-top: 8px; }
-
-.essentiel__title {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(28px, 3.4vw, 40px);
-  line-height: 1.15;
+.essentiel-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 30px);
   letter-spacing: -0.02em;
-  color: var(--fg1);
-  margin: 0 0 24px;
-  max-width: 760px;
-}
-.essentiel__concept {
-  padding-right: 0.18em;
-}
-.essentiel:nth-child(9) .essentiel__concept {
-  white-space: nowrap;
-}
-.essentiel__colon {
-  color: var(--fg4);
-  margin: 0 0.15em 0 0.05em;
-  font-style: normal;
-}
-.essentiel__punch {
-  color: var(--fg1);
-}
-
-.essentiel__p {
-  font-family: var(--font-grotesk);
-  font-weight: 300;
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--fg3);
-  margin: 0;
-  max-width: 720px;
-  text-wrap: pretty;
-}
-.essentiel__p :deep(strong) { color: var(--fg1); font-weight: 500; }
-.essentiel__p :deep(em) { font-style: italic; color: var(--fg2); }
-
-/* ============ ANECDOTE ============ */
-.anecdote {
-  margin-top: 36px;
-  max-width: 720px;
-  position: relative;
-  background: linear-gradient(180deg,
-                rgba(255, 255, 255, 0.022),
-                rgba(255, 255, 255, 0.008));
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--magenta);
-  border-radius: 0 14px 14px 0;
-  padding: 24px 28px 26px 30px;
-}
-.anecdote__label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 0.01em;
-  color: var(--magenta);
-  margin-bottom: 12px;
-}
-.anecdote__label::before {
-  content: "";
-  width: 22px;
-  height: 1px;
-  background: var(--magenta);
-  opacity: 0.7;
-}
-.anecdote__label .name {
-  color: var(--magenta);
-  font-style: italic;
-}
-.anecdote__label .dot {
-  color: var(--magenta);
-  opacity: 0.6;
-  margin-left: -2px;
-}
-.anecdote p {
-  font-family: var(--font-grotesk);
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--fg3);
-  margin: 0;
-  text-wrap: pretty;
-}
-.anecdote p :deep(strong) { color: var(--fg2); font-weight: 500; }
-
-/* ============ SIGNATURE ============ */
-.lab-signature {
-  margin-top: 96px;
-  padding: 96px 0 24px;
-  border-top: 1px solid var(--border);
-  position: relative;
-}
-.lab-signature::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), transparent);
-  opacity: 0.8;
-}
-
-.lab-signature__lbl {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--fg4);
-  text-transform: uppercase;
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  justify-content: center;
-}
-.lab-signature__lbl::before,
-.lab-signature__lbl::after {
-  content: "";
-  width: 32px;
-  height: 1px;
-  background: var(--border-hi);
-}
-
-.lab-signature__quote {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(20px, 2.3vw, 26px);
-  line-height: 1.55;
-  color: var(--fg2);
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-  letter-spacing: -0.005em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: var(--fg-on-paper-1);
   text-wrap: balance;
 }
 
-.lab-signature__sig {
-  margin-top: 64px;
-  text-align: center;
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-style: italic;
-  font-size: clamp(22px, 2.5vw, 30px);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+.essentiel-body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--fg-on-paper-2);
 }
-.lab-signature__sig .by { color: var(--fg2); }
 
-/* ============ Responsive ============ */
-@media (max-width: 768px) {
-  .lab-container { padding: 0 22px; }
+.anecdote-box {
+  margin-top: 20px;
+  background: var(--ink-900);
+  border-radius: 12px;
+  padding: 22px 24px;
+  color: var(--fg-on-ink-1);
+}
 
-  .lab-header { padding: 80px 0 64px; }
-  .lab-meta { gap: 14px 28px; margin-top: 40px; }
+.cta-strip__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  max-width: 560px;
+}
 
-  .lab-foreword { padding: 64px 0 48px; }
-  .lab-foreword__quote { padding: 24px 0 24px 24px; }
+/* ---- Mobile / responsive ---- */
+@media (max-width: 900px) {
+  .essentiel-grid { grid-template-columns: 48px 1fr; gap: 16px; }
+  .essentiel-num { font-size: 32px; }
+  .cta-strip__title { font-size: 22px; }
+  .anecdote-box { padding: 18px 20px; }
+  .meta-value { font-size: 22px; }
+}
 
-  .essentiel { padding: 56px 0 48px; }
-  .essentiel__row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .essentiel__num {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 12px;
-    font-size: 64px;
-    line-height: 0.9;
-    padding-top: 0;
+@media (max-width: 560px) {
+  .essentiel-grid { grid-template-columns: 1fr; gap: 8px; }
+  .essentiel-num {
+    font-size: 26px;
+    line-height: 1;
     margin-bottom: 4px;
   }
-  .essentiel__num sup {
-    margin-top: 0;
-    align-self: flex-start;
-    transform: translateY(8px);
-  }
-  .essentiel__title { font-size: 24px; }
-  .essentiel__p { font-size: 16px; }
-
-  .anecdote { padding: 20px 22px 22px 24px; margin-top: 28px; }
-
-  .lab-signature { margin-top: 72px; padding: 72px 0 16px; }
-  .lab-signature__lbl::before,
-  .lab-signature__lbl::after { width: 18px; }
-  .lab-signature__sig { margin-top: 48px; }
-}
-@media (max-width: 520px) {
-  .lab-subnav__crumb { display: none; }
+  .essentiel-item { padding: 24px 0; }
+  .anecdote-box { padding: 16px 16px; }
+  .cta-strip__title { font-size: 18px; }
+  .meta-value { font-size: 18px; }
 }
 </style>
