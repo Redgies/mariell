@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'tool' })
+definePageMeta({ layout: false })
 
 const config = useRuntimeConfig()
 const hasTurnstile = computed(() => {

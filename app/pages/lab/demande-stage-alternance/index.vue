@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'tool' })
+definePageMeta({ layout: false })
 
 const config = useRuntimeConfig()
 const hasTurnstile = computed(() => {
@@ -301,7 +301,19 @@ async function onSubmit() {
 </script>
 
 <template>
-  <main class="tool-shell">
+  <div class="tool-body">
+    <nav class="site-nav">
+      <div class="site-nav__inner">
+        <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell, accueil">
+          <ChromaticWordmark text="Mariell" :size="22" glitch />
+        </NuxtLink>
+        <NuxtLink to="/lab" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          Retour au Lab
+        </NuxtLink>
+      </div>
+    </nav>
+    <main class="tool-shell">
 
     <!-- Global alert -->
     <Transition name="talert-fade">
@@ -747,6 +759,7 @@ async function onSubmit() {
     </div>
 
   </main>
+  </div>
 </template>
 
 <style scoped>

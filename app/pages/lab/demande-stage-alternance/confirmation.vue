@@ -1,8 +1,9 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'tool' })
+definePageMeta({ layout: false })
 </script>
 
 <template>
+  <div class="tool-body">
   <div class="tcenter">
     <div class="tcenter-card">
       <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>
@@ -28,6 +29,7 @@ definePageMeta({ layout: 'tool' })
         Retour au Lab
       </NuxtLink>
     </div>
+  </div>
   </div>
 </template>
 
