@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
 type Tab = 'cible' | 'buildout'
 const tab = ref<Tab>('cible')
 const sub: Record<Tab, string> = {
@@ -33,6 +34,12 @@ const sub: Record<Tab, string> = {
         >
           Team Buildout
         </button>
+      </div>
+      <div class="statement__cta">
+        <a class="btn btn--primary" :href="calendlyUrl" target="_blank" rel="noopener">
+          Rencontrer Mariell
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -70,6 +77,13 @@ const sub: Record<Tab, string> = {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+.statement__cta {
+  margin-top: 28px;
+}
+.statement__cta .icon {
+  width: 14px;
+  height: 14px;
 }
 
 @media (max-width: 900px) {

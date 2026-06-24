@@ -129,7 +129,7 @@ const breadcrumbItems = [
             Quel que soit le poste Sales, on sait le chasser.
           </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a class="btn-pill btn-cyan" :href="calendlyUrl">Rencontrer Mariell</a>
+            <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
             <a class="btn-pill btn-ghost" href="mailto:chez@mariell.fr">Nous écrire</a>
           </div>
         </div>

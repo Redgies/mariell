@@ -69,7 +69,7 @@ const calendlyUrl = pub.calendlyUrl as string
               <span style="font-family:var(--font-text);font-size:16px;font-weight:400;color:var(--fg-on-ink-2);">Un poste à pourvoir, une équipe à construire, ou simplement l’envie d’évaluer ce qu’on peut vous apporter. Échangeons sur votre contexte.</span>
             </div>
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <a class="btn-pill btn-cyan" :href="calendlyUrl">Rencontrer Mariell</a>
+              <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
               <NuxtLink class="btn-pill btn-ghost" to="/methode">Voir la méthode</NuxtLink>
             </div>
           </div>

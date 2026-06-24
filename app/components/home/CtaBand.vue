@@ -34,6 +34,7 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
           </a>
           <a class="btn btn--secondary-ink" href="mailto:chez@mariell.fr">Nous écrire</a>
         </div>
+        <div class="cta__reassure">30&#160;min&#160;·&#160;Sans engagement&#160;·&#160;Confidentiel</div>
       </div>
     </div>
   </section>
@@ -104,6 +105,12 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
 .cta__actions .icon {
   width: 14px;
   height: 14px;
+}
+.cta__reassure {
+  margin-top: 14px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(244, 239, 227, 0.5);
 }
 
 @media (max-width: 900px) {

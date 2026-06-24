@@ -35,7 +35,7 @@ const calendlyUrl = config.public.calendlyUrl as string
           {{ expertise.heroParagraph }}
         </p>
         <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;">
-          <a class="btn-pill btn-cyan" :href="calendlyUrl">{{ expertise.ctaLabel }}</a>
+          <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">{{ expertise.ctaLabel }}</a>
           <NuxtLink class="btn-pill btn-ghost" to="/expertises">Toutes les expertises</NuxtLink>
         </div>
       </div>
@@ -127,7 +127,7 @@ const calendlyUrl = config.public.calendlyUrl as string
             Besoin d’un {{ expertise.label }} qui performe<br />dès les premiers mois&nbsp;?
           </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a class="btn-pill btn-cyan" :href="calendlyUrl">Rencontrer Mariell</a>
+            <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
             <a class="btn-pill btn-ghost" href="mailto:chez@mariell.fr">Nous écrire</a>
           </div>
         </div>

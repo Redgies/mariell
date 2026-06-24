@@ -108,7 +108,7 @@ const steps = [
               </div>
             </div>
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <a class="btn-pill btn-cyan" :href="calendlyUrl">Rencontrer Mariell</a>
+              <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
               <NuxtLink class="btn-pill btn-ghost" to="/expertises">Voir les expertises</NuxtLink>
             </div>
           </div>

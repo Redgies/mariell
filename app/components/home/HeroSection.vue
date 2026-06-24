@@ -56,6 +56,7 @@ onBeforeUnmount(() => mq?.removeEventListener('change', syncViz))
           </a>
           <a class="btn btn--secondary-ink" href="mailto:chez@mariell.fr">Nous écrire</a>
         </div>
+        <div class="home-hero__reassure">30&#160;min&#160;·&#160;Sans engagement&#160;·&#160;Confidentiel</div>
       </div>
     </div>
   </section>
@@ -146,6 +147,12 @@ onBeforeUnmount(() => mq?.removeEventListener('change', syncViz))
 .home-hero__actions .icon {
   width: 14px;
   height: 14px;
+}
+.home-hero__reassure {
+  margin-top: 14px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: rgba(244, 239, 227, 0.45);
 }
 
 @media (max-width: 1024px) {

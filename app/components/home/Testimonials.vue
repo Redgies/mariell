@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
 const quotes = [
   {
     quote: "Mariell nous a trouvé la pépite qu’il nous fallait en Sales, on n’a rencontré que d’excellents profils, vraiment. Rien à voir avec ce qu’on avait l’habitude de voir ; en plus tout a été simple et fluide, avec de super conseils. Je recommande, et je repasserai par leurs services de toute façon !",
@@ -40,6 +41,13 @@ const quotes = [
             </div>
           </div>
         </div>
+      </div>
+      <div class="testi__cta reveal">
+        <a class="btn btn--primary" :href="calendlyUrl" target="_blank" rel="noopener">
+          Rencontrer Mariell
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+        </a>
+        <div class="testi__cta-sub">30&#160;min&#160;·&#160;Sans engagement</div>
       </div>
     </div>
   </section>
@@ -91,6 +99,19 @@ const quotes = [
 .testi__role {
   font-size: 12px;
   color: rgba(244, 239, 227, 0.5);
+}
+.testi__cta {
+  margin-top: 48px;
+  text-align: center;
+}
+.testi__cta .icon {
+  width: 14px;
+  height: 14px;
+}
+.testi__cta-sub {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(244, 239, 227, 0.45);
 }
 
 @media (max-width: 900px) {

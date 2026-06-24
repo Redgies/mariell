@@ -125,6 +125,10 @@ onMounted(() => {
           <Breadcrumb :items="[{ label: 'Suivi de performance' }]" />
           <h1 class="h-display h-display--l" style="max-width:900px;">La signature n’est pas la fin de notre travail.</h1>
           <p style="margin-top:24px;max-width:620px;font-size:18px;line-height:1.55;color:rgba(244,239,227,0.72);">Nous mesurons la performance de chaque Sales que nous plaçons, à 4 mois et à 8 mois. Un recrutement commercial ne se juge pas le jour de la signature. Il se juge dans les mois qui suivent, sur le terrain, face aux objectifs.</p>
+          <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;">
+            <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
+            <NuxtLink class="btn-pill btn-ghost" to="/cas-clients">Voir les cas clients</NuxtLink>
+          </div>
         </div>
       </section>
 
@@ -223,7 +227,7 @@ onMounted(() => {
           <div class="cta-strip">
             <div style="font-family:var(--font-display);font-weight:500;font-size:28px;letter-spacing:-0.02em;line-height:1.15;max-width:620px;">Parlons de votre prochain recrutement.</div>
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <a class="btn-pill btn-cyan" :href="calendlyUrl">Rencontrer Mariell</a>
+              <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">Rencontrer Mariell</a>
               <a class="btn-pill btn-ghost" href="mailto:chez@mariell.fr">Nous écrire</a>
             </div>
           </div>

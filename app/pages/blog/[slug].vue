@@ -52,7 +52,7 @@ const calendlyUrl = config.public.calendlyUrl as string
           <div class="cta-strip" style="margin-top:48px;">
             <div class="cta-strip__heading" v-html="article.cta.heading" />
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <a class="btn-pill btn-cyan" :href="calendlyUrl">{{ article.cta.primary }}</a>
+              <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">{{ article.cta.primary }}</a>
               <NuxtLink class="btn-pill btn-ghost" to="/blog">Tous les articles</NuxtLink>
             </div>
           </div>
