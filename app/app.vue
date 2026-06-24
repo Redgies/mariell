@@ -14,7 +14,9 @@ const fading = ref(false)
 
 if (import.meta.client) {
   const nuxtApp = useNuxtApp()
-  const HOLD = 320
+  // Min time the screen stays fully black before revealing. Long enough that the
+  // ~200ms cover completes and the route swap + scroll reset happen unseen.
+  const HOLD = 420
   let startAt = 0
 
   nuxtApp.hook('page:start', () => {
