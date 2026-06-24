@@ -120,9 +120,9 @@ const calendlyUrl = config.public.calendlyUrl as string
       </div>
     </section>
 
-    <section class="section-pad section--ink">
+    <section class="section-pad section--paper">
       <div class="container">
-        <div class="cta-strip" style="background:var(--ink-1000);">
+        <div class="cta-strip">
           <div style="font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-0.02em;line-height:1.25;">
             Besoin d’un {{ expertise.label }} qui performe<br />dès les premiers mois&nbsp;?
           </div>
