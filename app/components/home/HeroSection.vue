@@ -1,5 +1,21 @@
 <script setup lang="ts">
 const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
+
+// Only mount the People Hunt iframe on desktop (>900px). A `display:none`
+// iframe still fetches its HTML + 4.9MB of videos, so on mobile we must avoid
+// rendering it at all. SSR-safe: false until mounted, so the prerendered HTML
+// never references the iframe; desktop mounts it after hydration and the query
+// reacts to resize (mount/unmount → stops loading/decoding when not shown).
+const showPeopleHunt = ref(false)
+let mq: MediaQueryList | null = null
+const syncViz = (e: MediaQueryListEvent | MediaQueryList) => { showPeopleHunt.value = e.matches }
+
+onMounted(() => {
+  mq = window.matchMedia('(min-width: 901px)')
+  syncViz(mq)
+  mq.addEventListener('change', syncViz)
+})
+onBeforeUnmount(() => mq?.removeEventListener('change', syncViz))
 </script>
 
 <template>
@@ -7,7 +23,7 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
     <!-- People Hunt — live talent map animation (silhouettes + scan + dossier).
          pointer-events:none so it never intercepts page scroll; the scan
          auto-runs on a timer. -->
-    <div class="home-hero__viz" aria-hidden="true">
+    <div v-if="showPeopleHunt" class="home-hero__viz" aria-hidden="true">
       <iframe
         class="home-hero__iframe"
         src="/people-hunt/people-hunt.html"

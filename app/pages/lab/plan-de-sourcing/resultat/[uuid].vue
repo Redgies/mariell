@@ -446,7 +446,7 @@ async function onRetry() {
 
 /* ---- Tool title italic accent ---- */
 .tool-title em {
-  font-style: italic;
+  font-style: normal;
   color: inherit;
 }
 

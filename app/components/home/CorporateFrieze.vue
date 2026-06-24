@@ -114,7 +114,11 @@ onMounted(() => {
   }
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (reduce || !('IntersectionObserver' in window)) {
+  // On stacked layouts (≤1024px) the horizontal spine is hidden and the
+  // sweep math no longer maps to the vertical stack — skip the frieze
+  // animation and just present the blocks one after another, fully revealed.
+  const stacked = window.matchMedia('(max-width: 1024px)').matches
+  if (reduce || stacked || !('IntersectionObserver' in window)) {
     settleStatic()
     return
   }
@@ -335,9 +339,14 @@ onBeforeUnmount(() => {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 48px;
   }
-  /* On stacked layouts the horizontal spine no longer maps to the dots; hide it. */
-  .frieze__rails {
+  /* On stacked layouts the frieze format is dropped: hide the horizontal spine
+     and the per-step dots, and present each block as plain stacked content. */
+  .frieze__rails,
+  .frieze__dot-row {
     display: none;
+  }
+  .frieze__text {
+    margin-top: 0;
   }
 }
 

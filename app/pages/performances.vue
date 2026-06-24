@@ -69,7 +69,9 @@ onMounted(() => {
   const span = xs.length ? xs[xs.length - 1] - xs[0] : 0
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const isMobile = window.matchMedia('(max-width: 760px)').matches
+  // Match the CSS breakpoint where the frieze stacks (≤900px): below it the
+  // rail/dots are hidden, so skip the sweep and reveal the blocks as-is.
+  const isMobile = window.matchMedia('(max-width: 900px)').matches
 
   const showFinal = () => {
     if (span > 0) fill.style.width = `${span}px`

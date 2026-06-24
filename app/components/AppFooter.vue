@@ -53,7 +53,13 @@ const columns: { head: string; items: { label: string; to: string; external?: bo
         <div class="site-footer__head">{{ col.head }}</div>
         <ul class="site-footer__list">
           <li v-for="item in col.items" :key="item.label">
-            <a v-if="item.external" class="site-footer__link" :href="item.to" target="_blank" rel="noopener">{{ item.label }}</a>
+            <a
+              v-if="item.external"
+              class="site-footer__link"
+              :href="item.to"
+              :target="/^(mailto:|tel:)/.test(item.to) ? undefined : '_blank'"
+              :rel="/^(mailto:|tel:)/.test(item.to) ? undefined : 'noopener'"
+            >{{ item.label }}</a>
             <NuxtLink v-else class="site-footer__link" :to="item.to">{{ item.label }}</NuxtLink>
           </li>
         </ul>

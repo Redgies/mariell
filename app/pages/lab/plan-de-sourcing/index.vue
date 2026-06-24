@@ -683,7 +683,7 @@ async function onSubmit() {
 <style scoped>
 /* ---- Tool title italic accent ---- */
 .tool-title em {
-  font-style: italic;
+  font-style: normal;
   color: inherit;
 }
 
