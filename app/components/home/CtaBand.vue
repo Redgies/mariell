@@ -6,7 +6,7 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
   <section id="cta" class="section section--paper cta">
     <div class="container cta__inner">
       <div class="reveal">
-        <ChromaticWordmark text="Mariell" :size="60" class="cta__wordmark" />
+        <ChromaticWordmark text="Mariell" :size="44" variant="dark" class="cta__wordmark" />
         <p class="cta__lede">
           <strong>Mariell</strong> est une équipe de Sales. Notre métier est de recruter d’autres Sales pour
           les entreprises qui exigent un standard rare. Du SDR au CRO. Recrutement individuel ou constitution
@@ -49,17 +49,6 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
   grid-template-columns: 1fr 1fr;
   gap: 64px;
   align-items: center;
-}
-/* Wordmark sits on cream here: force the base glyph to ink (component default
-   is cream, intended for dark surfaces). */
-.cta__wordmark :deep(.chromatic__base) {
-  color: var(--ink-900);
-}
-.cta__wordmark :deep(.chromatic__layer--cyan) {
-  opacity: 0.85;
-}
-.cta__wordmark :deep(.chromatic__layer--magenta) {
-  opacity: 0.85;
 }
 .cta__lede {
   margin-top: 24px;

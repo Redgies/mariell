@@ -101,6 +101,14 @@ export default defineNuxtConfig({
             "Mariell recrute les meilleurs Sales pour les meilleures entreprises. Des Sales qui chassent d'autres Sales.",
         },
         { name: 'theme-color', content: '#F4EFE3' },
+        // Global Open Graph / Twitter image. Per-route SEO (seo-meta.json via
+        // usePageSeo) overrides these for mapped routes; this is the site-wide
+        // default so unmapped routes (tool results, confirmation) still share it.
+        { property: 'og:image', content: `${process.env.NUXT_PUBLIC_SITE_URL || 'https://mariell.fr'}/og-home.png` },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: `${process.env.NUXT_PUBLIC_SITE_URL || 'https://mariell.fr'}/og-home.png` },
       ],
       link: [
         // Préchargement de la police d'affichage critique (titres au-dessus de

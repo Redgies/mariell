@@ -1,32 +1,40 @@
 <script setup lang="ts">
 /**
- * Mariell chromatic wordmark — cyan/magenta split lifted from the brand mark.
- * Relies on the `.chromatic*` classes defined in design/site.css.
- * `glitch` = periodic nav pulse ; `animate` = one-shot settle on load.
- * NOTE: rendered as live text in --font-display weight 600. Flagged in the
- * design handoff to be swapped for an SVG once Tiempos is licensed.
+ * Mariell brand wordmark — static brand logo (replaces the former animated
+ * chromatic text). Renders the official brand PNG (retina @2x).
+ *  - `variant`: `light` = cream wordmark for dark surfaces (nav bars);
+ *               `dark`  = ink wordmark for light/cream surfaces (home CTA band).
+ *  - `size`: rendered logo HEIGHT in px.
+ *  - `text`: used as alt text.
+ * Legacy `glitch` / `animate` props are accepted but are no-ops now.
  */
 withDefaults(defineProps<{
   text?: string
   size?: number
+  variant?: 'light' | 'dark'
   glitch?: boolean
   animate?: boolean
 }>(), {
   text: 'Mariell',
   size: 24,
+  variant: 'light',
   glitch: false,
   animate: false,
 })
 </script>
 
 <template>
-  <span
-    class="chromatic"
-    :class="{ 'chromatic--glitch': glitch, 'chromatic--animate': animate }"
-    :style="{ fontSize: `${size}px` }"
+  <img
+    class="brand-logo"
+    :src="variant === 'dark' ? '/brand/mariell-dark@2x.png' : '/brand/mariell-light@2x.png'"
+    :alt="text"
+    :style="{ height: `${size}px`, width: 'auto' }"
+    decoding="async"
   >
-    <span class="chromatic__layer chromatic__layer--cyan">{{ text }}</span>
-    <span class="chromatic__layer chromatic__layer--magenta">{{ text }}</span>
-    <span class="chromatic__base">{{ text }}</span>
-  </span>
 </template>
+
+<style scoped>
+.brand-logo {
+  display: block;
+}
+</style>

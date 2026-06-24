@@ -262,12 +262,8 @@ async function onRetry() {
     <div v-if="state === 'plan'" class="tresult-bar">
       <div class="tresult-bar-inner">
         <div class="res-bar-left">
-          <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell" style="font-size: 18px;">
-            <span class="chromatic chromatic--glitch">
-              <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
-              <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
-              <span class="chromatic__base">Mariell</span>
-            </span>
+          <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell">
+            <ChromaticWordmark :size="18" />
           </NuxtLink>
           <span class="res-bar-meta">
             Plan de sourcing
@@ -293,12 +289,8 @@ async function onRetry() {
     <!-- ===== MINIMAL HEADER (loading / error / deferred) ===== -->
     <header v-else class="load-header">
       <div class="load-header__inner">
-        <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell" style="font-size: 20px;">
-          <span class="chromatic chromatic--glitch">
-            <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
-            <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
-            <span class="chromatic__base">Mariell</span>
-          </span>
+        <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell">
+          <ChromaticWordmark :size="20" />
         </NuxtLink>
         <span class="load-header__divider" aria-hidden="true" />
         <div class="load-header__meta">

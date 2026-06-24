@@ -329,11 +329,7 @@ async function onSubmit() {
     <nav class="site-nav">
       <div class="site-nav__inner">
         <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell, accueil">
-          <span class="chromatic chromatic--glitch" style="font-size: 22px;">
-            <span class="chromatic__layer chromatic__layer--cyan">Mariell</span>
-            <span class="chromatic__layer chromatic__layer--magenta">Mariell</span>
-            <span class="chromatic__base">Mariell</span>
-          </span>
+          <ChromaticWordmark :size="22" />
         </NuxtLink>
         <NuxtLink to="/lab" class="nav-link">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

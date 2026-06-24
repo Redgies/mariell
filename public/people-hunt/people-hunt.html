@@ -132,7 +132,7 @@
   .crowd {
     position: absolute; inset: 0;
     transform-origin: 50% 62%;
-    transition: transform 500ms var(--ease-in-out), opacity 800ms var(--ease-out);
+    transition: transform 500ms var(--ease-in-out), opacity 1200ms var(--ease-out);
     will-change: transform;
     opacity: 0;
     /* Reveal is gated on real video readiness (see trailing script) so all
@@ -655,7 +655,9 @@ function applyWalkerStyle(w) {
   const depthDim = 0.62 + 0.38 * g.p;
   // Cubic smoothstep (smoother than quadratic) for an extra-gentle curve.
   const smooth = t => t * t * t * (t * (t * 6 - 15) + 10);
-  const fadeIn  = smooth(Math.max(0, Math.min(1, w.progress / 0.32)));
+  // On first load, skip the spawn fade-in so every silhouette is fully present
+  // and they all fade in together via the collective crowd fade (no pop-in).
+  const fadeIn  = phEntering ? 1 : smooth(Math.max(0, Math.min(1, w.progress / 0.32)));
   // Fade-out must reach 0 BY the recycle point (1.08), otherwise the walker is
   // still ~8% visible when it teleports behind the horizon → a visible "pop".
   const fadeOut = smooth(Math.max(0, Math.min(1, (1.08 - w.progress) / 0.42)));
@@ -928,6 +930,12 @@ function recycleWalker(w) {
   });
   w.scanned = false;
 }
+
+// First-load entrance flag. While true, walkers skip their per-walker spawn
+// fade-in so every on-stage silhouette sits at full presence and the single
+// collective crowd fade (.crowd opacity 0→1) reveals them all together, at one
+// rhythm, with a soft progressive fade. Set only on first load (see init()).
+let phEntering = false;
 
 function buildCrowd() {
   crowdEl.innerHTML = '';
@@ -1374,6 +1382,10 @@ function applyPeople(c){ document.documentElement.style.setProperty('--people-he
 
 function init() {
   applyPeople(TWEAKS.people);
+  // Entrance window: present all silhouettes together for the first-load fade.
+  // Generous duration covers the video-ready gate (≤2.5s) plus the reveal fade.
+  phEntering = true;
+  setTimeout(function () { phEntering = false; }, 4000);
   buildCrowd();
   // First-load reveal is handled purely in CSS (#crowd { animation: crowdReveal })
   // so it always plays on load, independent of JS timing.
