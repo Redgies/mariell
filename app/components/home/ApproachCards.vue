@@ -20,7 +20,7 @@ const cards = [
     <div class="container">
       <div class="approach__head reveal">
         <h2 class="h-display h-display--m approach__title">
-          Tous les Sales ne se valent pas.<br /> <span class="italic">Les recruteurs non plus.</span>
+          Tous les Sales ne se valent pas.<br /> <span class="italic" style="white-space: nowrap;">Les recruteurs non plus.</span>
         </h2>
         <p class="approach__intro">
           Notre métier est de repérer les profils Sales qui font la différence, de les approcher, et d’en
