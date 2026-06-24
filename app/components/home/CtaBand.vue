@@ -6,7 +6,7 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
   <section id="cta" class="section section--paper cta">
     <div class="container cta__inner">
       <div class="reveal">
-        <ChromaticWordmark text="Mariell" :size="44" variant="dark" class="cta__wordmark" />
+        <ChromaticWordmark text="Mariell" :size="60" variant="dark" class="cta__wordmark" />
         <p class="cta__lede">
           <strong>Mariell</strong> est une équipe de Sales. Notre métier est de recruter d’autres Sales pour
           les entreprises qui exigent un standard rare. Du SDR au CRO. Recrutement individuel ou constitution
