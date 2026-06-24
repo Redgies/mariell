@@ -345,8 +345,12 @@ onBeforeUnmount(() => {
   .frieze__dot-row {
     display: none;
   }
+  /* Force full visibility regardless of the JS sweep math (the hidden dots make
+     the reveal geometry degenerate on mobile) — blocks are plain stacked content. */
   .frieze__text {
     margin-top: 0;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

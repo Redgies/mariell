@@ -360,8 +360,8 @@ onMounted(() => {
     padding-top: 0;
   }
   .fs-text {
-    opacity: 1;
-    transform: none;
+    opacity: 1 !important;
+    transform: none !important;
     text-align: left;
   }
   .fs-text--center .fs-body,
