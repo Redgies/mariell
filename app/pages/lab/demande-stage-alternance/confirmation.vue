@@ -4,6 +4,7 @@ definePageMeta({ layout: false })
 
 <template>
   <div class="tool-body">
+  <div class="tool-bg" aria-hidden="true" />
   <div class="tcenter">
     <div class="tcenter-card">
       <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>

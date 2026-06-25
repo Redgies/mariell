@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plan de sourcing LinkedIn personnalisé | Mariell</title>
+<meta name="description" content="Une stratégie de chasse LinkedIn complète, calibrée sur votre contexte : entreprises cibles, requête booléenne, scoring. Gratuit." />
+<link rel="canonical" href="https://mariell.fr/lab/plan-de-sourcing" />
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:site_name" content="Mariell" />
+<meta property="og:title" content="Plan de sourcing LinkedIn personnalisé | Mariell" />
+<meta property="og:description" content="Une stratégie de chasse LinkedIn complète, calibrée sur votre contexte : entreprises cibles, requête booléenne, scoring. Gratuit." />
+<meta property="og:url" content="https://mariell.fr/lab/plan-de-sourcing" />
+<meta property="og:image" content="https://mariell.fr/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://mariell.fr/og-image.jpg" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Mariell","url":"https://mariell.fr"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mariell.fr/"},{"@type":"ListItem","position":2,"name":"Le Lab","item":"https://mariell.fr/lab"},{"@type":"ListItem","position":3,"name":"Plan de sourcing LinkedIn","item":"https://mariell.fr/lab/plan-de-sourcing"}]}</script>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="pages.css" />
+<link rel="stylesheet" href="tools.css" />
+<style>
+  .combo-trigger{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+  .combo-trigger .combo-value{color:var(--fg-on-ink-4);}
+  .combo-trigger.has-value .combo-value{color:var(--fg-on-ink-1);}
+  .combo-panel{display:none;margin-top:8px;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:10px;overflow:hidden;}
+  .combo-panel.is-open{display:block;}
+  .combo-search{width:100%;box-sizing:border-box;background:var(--ink-700);border:none;border-bottom:1px solid var(--border-on-ink);color:var(--fg-on-ink-1);font:inherit;font-size:14px;padding:11px 14px;}
+  .combo-search:focus{outline:none;}
+  .combo-list{max-height:240px;overflow-y:auto;}
+  .combo-opt{padding:11px 14px;font-size:14px;color:var(--fg-on-ink-2);cursor:pointer;}
+  .combo-opt:hover,.combo-opt.is-active{background:rgba(127,231,225,0.10);color:var(--fg-on-ink-1);}
+  .num-wrap{position:relative;}
+  .num-wrap .num-suffix{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--fg-on-ink-3);font-size:15px;pointer-events:none;}
+  .num-wrap .tinput{padding-right:34px;}
+  .precision{margin-top:12px;display:none;}
+  .precision.is-show{display:block;}
+  .chip-check{display:inline-flex;align-items:center;gap:9px;margin-top:12px;cursor:pointer;}
+  .chip-check input{position:absolute;opacity:0;}
+  .chip-box{width:18px;height:18px;border-radius:5px;border:1.6px solid var(--fg-on-ink-3);position:relative;transition:all 140ms;}
+  .chip-check input:checked ~ .chip-box{background:var(--cyan);border-color:var(--cyan);}
+  .chip-check input:checked ~ .chip-box::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border-right:2px solid var(--ink-900);border-bottom:2px solid var(--ink-900);transform:rotate(45deg);}
+  .chip-label{font-size:14px;color:var(--fg-on-ink-2);}
+  .submit-hint{font-size:13px;color:var(--fg-on-ink-3);margin:0;}
+  .tsubmit-area.is-ready .submit-hint{display:none;}
+  .submit-loading-note{display:none;font-size:13px;line-height:1.5;color:var(--fg-on-ink-3);margin:0;}
+  .submit-loading-note em{font-family:var(--font-text);font-style:normal;color:var(--cyan);}
+  .tsubmit-area.is-loading .submit-loading-note{display:block;}
+  /* result */
+  .res-state{display:none;}
+  .res-state.is-active{display:block;}
+  .read{max-width:760px;margin:0 auto;padding:0 40px;}
+  .prose-res h2{font-family:var(--font-display);font-weight:500;font-size:clamp(26px,3.4vw,38px);letter-spacing:-0.02em;line-height:1.12;margin:44px 0 16px;color:var(--fg-on-ink-1);}
+  .prose-res h2 em,.prose-res h3 em{font-style:normal;color:inherit;}
+  .prose-res h3{font-family:var(--font-display);font-weight:500;font-size:20px;margin:28px 0 8px;color:var(--fg-on-ink-1);}
+  .prose-res h4{font-family:var(--font-text);font-weight:600;font-size:16px;margin:0 0 6px;color:var(--fg-on-ink-1);}
+  .prose-res p{font-size:16px;line-height:1.62;color:var(--fg-on-ink-2);margin:0 0 16px;}
+  .prose-res strong{color:var(--fg-on-ink-1);}
+  .prose-res ul,.prose-res ol{margin:0 0 18px;padding-left:0;list-style:none;}
+  .prose-res li{font-size:15px;line-height:1.55;color:var(--fg-on-ink-2);padding-left:24px;position:relative;margin-bottom:9px;}
+  .prose-res li::before{content:"";position:absolute;left:3px;top:10px;width:5px;height:5px;border-radius:50%;background:var(--cyan);}
+  .prose-res ol{counter-reset:n;}
+  .prose-res ol li{counter-increment:n;}
+  .prose-res ol li::before{content:counter(n);background:none;width:auto;height:auto;top:0;left:0;font-family:var(--font-mono);font-size:12px;color:var(--cyan);}
+  .prose-res ol li{padding-left:26px;}
+  .sec-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin:48px 0 0 !important;}
+  .greeting{font-size:17px !important;color:var(--fg-on-ink-1) !important;}
+  .plan-meta-line{font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;color:var(--fg-on-ink-3);}
+  .rule-hr{border:none;border-top:1px solid var(--border-on-ink);margin:32px 0;}
+  .codeblock,.template{background:var(--ink-1000);border:1px solid var(--border-on-ink);border-radius:12px;overflow:hidden;margin:0 0 20px;}
+  .codeblock .head,.template .t-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border-on-ink);}
+  .codeblock .lang,.template .t-label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);}
+  .copy-btn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border-on-ink);border-radius:7px;padding:5px 10px;font:inherit;font-size:12px;color:var(--fg-on-ink-2);cursor:pointer;}
+  .copy-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .copy-btn .icon-copied,.copy-btn .label-copied{display:none;}
+  .copy-btn.is-copied .icon-default,.copy-btn.is-copied .label-default{display:none;}
+  .copy-btn.is-copied .icon-copied,.copy-btn.is-copied .label-copied{display:inline;color:var(--cyan);}
+  .codeblock pre{margin:0;padding:16px;overflow-x:auto;}
+  .codeblock code{font-family:var(--font-mono);font-size:13px;line-height:1.6;color:var(--cyan);white-space:pre;}
+  .template .t-body{padding:16px;font-size:14px;line-height:1.6;color:var(--fg-on-ink-2);white-space:pre-wrap;}
+  .tbl-wrap{margin:0 0 18px;}
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--border-on-ink);border-radius:12px;}
+  .prose-res table{width:100%;border-collapse:collapse;font-size:14px;min-width:420px;}
+  .prose-res th{text-align:left;padding:12px 14px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);border-bottom:1px solid var(--border-on-ink);}
+  .prose-res td{padding:12px 14px;color:var(--fg-on-ink-2);border-bottom:1px solid var(--border-on-ink);}
+  .vig{background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:12px;padding:18px 20px;margin-bottom:14px;}
+  .final-cta{margin:56px auto 0;max-width:760px;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:16px;padding:36px 40px;text-align:center;}
+  .final-cta h2{font-family:var(--font-display);font-weight:500;font-size:28px;letter-spacing:-0.02em;margin:0 0 10px;}
+  .final-cta h2 em{font-style:normal;color:inherit;}
+  .final-cta p{font-size:15px;color:var(--fg-on-ink-2);margin:0 0 22px;}
+  .cta-gradient-lg{display:inline-flex;align-items:center;gap:10px;background:var(--cyan);background-image:linear-gradient(100deg,var(--cyan) 0%,var(--cyan) 38%,var(--magenta) 100%);background-size:200% 100%;background-position:0% 50%;color:var(--ink-900);font-weight:600;padding:14px 26px;border-radius:999px;text-decoration:none;transition:background-position 400ms var(--ease-out);}
+  .cta-gradient-lg:hover{background-position:100% 50%;}
+  .cta-gradient-lg svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .step-stack{display:flex;flex-direction:column;gap:12px;margin:36px 0 0;}
+  .step{font-size:15px;color:var(--fg-on-ink-4);padding-left:26px;position:relative;transition:color 300ms;}
+  .step::before{content:"";position:absolute;left:3px;top:7px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--fg-on-ink-4);}
+  .step.is-active{color:var(--cyan);}
+  .step.is-active::before{border-color:var(--cyan);background:var(--cyan);}
+  .step.is-done{color:var(--fg-on-ink-2);}
+  .step.is-done::before{border-color:var(--cyan);background:var(--cyan);}
+  .reassure{margin-top:28px;font-size:13px;color:var(--fg-on-ink-3);}
+  .load-counter{position:relative;display:inline-flex;align-items:baseline;justify-content:center;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:clamp(58px,9vw,92px);line-height:1;letter-spacing:-0.03em;color:var(--cyan);margin:34px 0 6px;text-shadow:0 0 28px rgba(127,231,225,0.35);animation:counterPulse 1.8s ease-in-out infinite;}
+  .load-counter__pct{font-size:0.38em;color:var(--fg-on-ink-3);margin-left:5px;letter-spacing:0;text-shadow:none;}
+  .load-bar{width:min(320px,80%);height:3px;border-radius:999px;background:var(--ink-700);margin:6px auto 0;overflow:hidden;}
+  .load-bar__fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width 120ms linear;}
+  @keyframes counterPulse{0%,100%{opacity:1;}50%{opacity:0.72;}}
+  .err-mark{width:48px;height:48px;color:var(--cyan);margin:0 auto 4px;}
+  .err-mark svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+  .res-bar-actions{display:flex;gap:10px;align-items:center;}
+  .tool-title em{font-style:normal !important;color:inherit !important;}
+</style>
+<link rel="icon" href="../../assets/brand/mariell-favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="../../assets/brand/mariell-favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../../assets/brand/mariell-apple-touch-icon.png" />
+</head>
+<body class="tool-body">
+<div class="tool-bg" aria-hidden="true"></div>
+
+<nav class="site-nav" id="form-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__brand" href="homepage-a-chromatic.html" aria-label="Mariell, accueil"><span class="chromatic chromatic--glitch" style="font-size:24px;"><span class="chromatic__layer chromatic__layer--cyan">Mariell</span><span class="chromatic__layer chromatic__layer--magenta">Mariell</span><span class="chromatic__base">Mariell</span></span></a>
+    <a class="nav-link" href="lab.html" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Retour au Lab</a>
+  </div>
+</nav>
+
+<!-- ========== VIEW: FORM ========== -->
+<main id="view-form" class="tview is-active" data-screen-label="01 Formulaire">
+  <div class="tool-shell">
+    <header style="text-align:center;">
+      <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>
+      <h1 class="tool-title" style="margin-left:auto;margin-right:auto;">Plan de sourcing LinkedIn <em>personnalisé.</em></h1>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Une stratégie de chasse complète, calibrée sur votre contexte. Générée en moins de 60 secondes.</p>
+      <div style="margin-top:22px;display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);border:1px solid var(--border-on-ink);border-radius:999px;padding:7px 16px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);"></span>Gratuit · Sans inscription · &lt; 60 secondes
+      </div>
+    </header>
+
+    <form id="sourcing-form" novalidate>
+      <!-- 01 Identité -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">01</span><h2 class="tblock-title">Identité</h2><span class="tblock-rule"></span></div>
+        <div class="tfields--2">
+          <div class="tfield" data-field="firstname"><label class="tlabel" for="firstname">Prénom <span class="treq">*</span></label><input class="tinput" id="firstname" type="text" placeholder="Marie" required /><p class="terror">Ce champ est requis.</p></div>
+          <div class="tfield" data-field="lastname"><label class="tlabel" for="lastname">Nom <span class="treq">*</span></label><input class="tinput" id="lastname" type="text" placeholder="Dupont" required /><p class="terror">Ce champ est requis.</p></div>
+        </div>
+        <div class="tfields" style="margin-top:24px;">
+          <div class="tfield" data-field="email"><label class="tlabel" for="email">Adresse mail <span class="treq">*</span></label><input class="tinput" id="email" type="email" placeholder="marie.dupont@entreprise.com" required /><p class="terror">Format d'email invalide.</p></div>
+          <div class="tfield" data-field="phone"><label class="tlabel" for="phone">Numéro de téléphone <span class="treq">*</span></label>
+            <div class="tphone"><div class="tselect-wrap"><select id="phone-cc" class="tselect" aria-label="Indicatif"><option value="+33" selected>FR +33</option><option value="+32">BE +32</option><option value="+41">CH +41</option><option value="+44">UK +44</option><option value="+49">DE +49</option><option value="+34">ES +34</option><option value="+39">IT +39</option><option value="+352">LU +352</option></select></div><input class="tinput" id="phone" type="tel" placeholder="06 12 34 56 78" required /></div>
+            <p class="terror">Numéro invalide.</p></div>
+          <div class="tfield" data-field="company"><label class="tlabel" for="company">Entreprise <span class="treq">*</span></label><input class="tinput" id="company" type="text" placeholder="Nom de votre entreprise" required /><p class="terror">Ce champ est requis.</p></div>
+        </div>
+      </section>
+
+      <!-- 02 Le poste à pourvoir -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">02</span><h2 class="tblock-title">Le poste à pourvoir</h2><span class="tblock-rule"></span></div>
+        <div class="tfields">
+          <div class="tfield" data-field="jobtitle">
+            <label class="tlabel">Poste recherché <span class="treq">*</span></label>
+            <div class="tselect-wrap combo-trigger tinput" id="jt-trigger" tabindex="0" style="border-radius:10px;"><span class="combo-value">Sélectionnez un intitulé…</span></div>
+            <div class="combo-panel" id="jt-panel"><input class="combo-search" id="jt-search" placeholder="Rechercher…" /><div class="combo-list" id="jt-list"></div></div>
+            <input type="hidden" id="jobtitle" required />
+            <p class="terror">Sélectionnez un intitulé de poste.</p>
+            <div class="precision" id="jt-precision"><input class="tinput" id="jobtitlePrecision" type="text" maxlength="60" placeholder="Précisez l'intitulé du poste (60 caractères max)" /></div>
+          </div>
+          <div class="tfield" data-field="seniority">
+            <span class="tlabel">Séniorité visée <span class="treq">*</span></span>
+            <div class="ttiles ttiles--4" role="radiogroup">
+              <label class="ttile"><input type="radio" name="seniority" value="Junior" /><span class="ttile-title">Junior</span><span class="ttile-sub">0–2 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="Confirmé" /><span class="ttile-title">Confirmé</span><span class="ttile-sub">2–5 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="Senior" /><span class="ttile-title">Senior</span><span class="ttile-sub">5–8 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="Lead-Manager" /><span class="ttile-title">Lead-Manager</span><span class="ttile-sub">8+ ans</span></label>
+            </div>
+            <p class="terror">Sélectionnez une séniorité.</p>
+          </div>
+          <div class="tfield" data-field="objective">
+            <span class="tlabel">Objectifs du poste <span class="treq">*</span></span>
+            <div class="ttiles ttiles--2" role="radiogroup" style="grid-template-columns:repeat(2,1fr);">
+              <label class="ttile" style="flex-direction:row;align-items:center;"><input type="radio" name="objective" value="Gestion portefeuille clients" /><span class="ttile-title">Gestion portefeuille clients</span></label>
+              <label class="ttile" style="flex-direction:row;align-items:center;"><input type="radio" name="objective" value="Développement et chasse" /><span class="ttile-title">Développement et chasse</span></label>
+              <label class="ttile" style="flex-direction:row;align-items:center;"><input type="radio" name="objective" value="Ouverture de nouvelle verticale" /><span class="ttile-title">Ouverture de nouvelle verticale</span></label>
+              <label class="ttile" style="flex-direction:row;align-items:center;"><input type="radio" name="objective" value="Création et management d'équipe" /><span class="ttile-title">Création et management d'équipe</span></label>
+            </div>
+            <p class="terror">Sélectionnez un objectif.</p>
+          </div>
+          <div class="tfield" data-field="location">
+            <label class="tlabel" for="location">Localisation principale <span class="treq">*</span></label>
+            <input class="tinput" id="location" type="text" placeholder="Paris, Lyon, remote…" required />
+            <label class="chip-check"><input type="checkbox" id="remote" /><span class="chip-box"></span><span class="chip-label">Remote possible</span></label>
+            <p class="terror">Ce champ est requis.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Le contexte -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">03</span><h2 class="tblock-title">Le contexte</h2><span class="tblock-rule"></span></div>
+        <div class="tfields">
+          <div class="tfield" data-field="sector">
+            <label class="tlabel" for="sector">Secteur de votre entreprise <span class="treq">*</span></label>
+            <div class="tselect-wrap"><select class="tselect is-empty" id="sector" required><option value="" disabled selected hidden>Sélectionnez un secteur</option><option>SaaS B2B</option><option>Conseil IT / ESN</option><option>Industrie / B2B classique</option><option>Cyber / Sécurité</option><option>Fintech</option><option>Healthtech</option><option>Services</option><option value="Autre">Autre</option></select></div>
+            <div class="precision" id="sector-precision"><input class="tinput" id="sectorPrecision" type="text" maxlength="60" placeholder="Précisez votre secteur" /></div>
+            <p class="terror">Sélectionnez un secteur.</p>
+          </div>
+          <div class="tfields--2">
+            <div class="tfield" data-field="fixe"><label class="tlabel" for="fixe">Fixe annuel brut (€) <span class="treq">*</span></label><div class="num-wrap"><input class="tinput" id="fixe" type="text" inputmode="numeric" data-num-min="15000" data-num-max="500000" placeholder="55000" required /><span class="num-suffix">€</span></div><p class="terror">Montant invalide.</p></div>
+            <div class="tfield" data-field="ote"><label class="tlabel" for="ote">OTE total cible (€) <span class="treq">*</span></label><div class="num-wrap"><input class="tinput" id="ote" type="text" inputmode="numeric" data-num-min="0" data-num-max="800000" placeholder="100000" required /><span class="num-suffix">€</span></div><p class="terror">Montant invalide.</p></div>
+          </div>
+          <p class="thelper">OTE = Fixe + Variable cible à 100% d'atteinte des objectifs.</p>
+        </div>
+      </section>
+
+      <!-- 04 Pour aller plus loin -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">04</span><h2 class="tblock-title">Pour aller plus loin</h2><span class="tblock-rule"></span></div>
+        <div class="tfields">
+          <div class="tfield" data-field="siteurl"><label class="tlabel" for="siteurl">Site de l'entreprise</label><input class="tinput" id="siteurl" type="url" placeholder="https://votre-entreprise.com" /></div>
+          <div class="tfield" data-field="jobdesc"><label class="tlabel" for="jobdesc">Contenu de la fiche de poste</label><textarea class="ttextarea" id="jobdesc" placeholder="Collez ici la fiche de poste si vous en avez une, cela affine considérablement le plan."></textarea></div>
+        </div>
+        <p class="thelper" style="margin-top:14px;">Plus le contexte est riche, plus le plan sera précis.</p>
+      </section>
+
+      <section class="tblock" style="margin-bottom:8px;">
+        <label class="tcheck" data-field="rgpd"><input id="rgpd" type="checkbox" required /><span class="tcheck-box"></span><span class="tcheck-text">J'accepte la politique de confidentialité et le traitement de mes données personnelles par Mariell.</span></label>
+      </section>
+
+      <div class="tsubmit-area" id="submit-area">
+        <button type="submit" id="submit-btn" class="tsubmit is-disabled" disabled>
+          <span class="tspinner"></span>
+          <span class="tsubmit-idle">Générer mon plan de sourcing</span>
+          <span class="tsubmit-loading">Génération en cours…</span>
+          <svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="submit-hint">Renseignez tous les champs obligatoires pour activer la génération.</p>
+        <p class="submit-loading-note">Notre IA construit votre stratégie de sourcing sur les <em>8 livrables clés.</em><br/>Cela peut prendre jusqu'à 60 secondes. Merci de ne pas fermer cette page.</p>
+      </div>
+
+      <div class="tfoot" style="align-items:center;text-align:center;">
+        <div id="cf-turnstile" data-sitekey="" data-size="invisible" style="display:none;"></div>
+        <span class="tcf">⛉ Protégé par Cloudflare Turnstile</span>
+        <span class="tfoot-2">Recruter n'est pas un pari.</span>
+      </div>
+    </form>
+  </div>
+</main>
+
+<!-- ========== VIEW: RESULT (multi-state) ========== -->
+<main id="view-result" class="tview" data-screen-label="02 Résultat">
+  <!-- sticky action bar (only on plan state) -->
+  <div class="tresult-bar res-only-plan" style="display:none;">
+    <div class="tresult-bar-inner">
+      <div style="display:flex;align-items:center;gap:14px;"><span class="site-nav__brand" style="font-size:18px;">Mariell</span><span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);">Plan de sourcing · AE Mid-Market</span></div>
+      <div class="res-bar-actions">
+        <button class="btn-pill btn-ghost" onclick="window.print()">Imprimer</button>
+        <a class="btn-pill btn-cyan" href="https://calendly.com/chez-mariell/30min">Prendre rendez-vous</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATE: loading -->
+  <section class="res-state is-active" id="state-loading">
+    <div class="tool-shell" style="text-align:center;">
+      <div class="tool-eyebrow">Le Lab Mariell</div>
+      <div class="tool-title" style="margin-left:auto;margin-right:auto;">Votre plan de sourcing, <em>en construction.</em></div>
+      <div class="load-counter" id="load-counter" aria-hidden="true">0<span class="load-counter__pct">%</span></div>
+      <div class="load-bar"><div class="load-bar__fill" id="load-bar-fill"></div></div>
+      <div class="step-stack" id="step-stack" style="max-width:420px;margin-left:auto;margin-right:auto;text-align:left;">
+        <div class="step is-active" data-step="0">Analyse de votre contexte…</div>
+        <div class="step" data-step="1">Identification des entreprises cibles…</div>
+        <div class="step" data-step="2">Construction de la requête booléenne…</div>
+        <div class="step" data-step="3">Élaboration de la stratégie en 4 phases…</div>
+        <div class="step" data-step="4">Compilation du tableau de scoring…</div>
+        <div class="step" data-step="5">Finalisation du plan…</div>
+      </div>
+      <p class="reassure">Cette opération prend en général 30 à 60 secondes. Merci de ne pas fermer cette fenêtre.</p>
+    </div>
+  </section>
+
+  <!-- STATE: plan -->
+  <section class="res-state" id="state-plan">
+    <div class="read" style="padding-top:48px;padding-bottom:80px;">
+      <header>
+        <span class="sec-eyebrow" style="margin-top:0 !important;">Plan de sourcing LinkedIn</span>
+        <div class="tool-title" style="font-size:clamp(30px,4vw,46px);">Plan de sourcing LinkedIn, <em>Account Executive Mid-Market.</em></div>
+        <p class="plan-meta-line">Préparé par Mariell pour Doctolib · Paris · 1<sup>er</sup> mai 2026</p>
+      </header>
+      <hr class="rule-hr" />
+      <article class="prose-res">
+        <p class="greeting">Bonjour Marie,</p>
+        <p>Voici le plan de sourcing complet, calibré sur votre contexte. Il combine une cartographie des viviers cibles, une requête booléenne enrichie, une stratégie d'approche en 4 phases et un tableau de scoring opérationnel. <strong>Aucun standard recyclé</strong>, chaque section est calibrée sur le couple (poste · package · secteur) que vous nous avez transmis.</p>
+        <p>L'objectif : vous donner ce qu'un cabinet de chasse délivre en J+5, condensé en quelques pages exploitables dès cet après-midi sur LinkedIn Sales Navigator.</p>
+
+        <p class="sec-eyebrow">02 · Entreprises cibles</p>
+        <h2>Lecture <em>des viviers cibles.</em></h2>
+        <p>Trois cercles concentriques, du plus évident au plus opportuniste. <strong>On ne vous donne pas une liste générique</strong>, on vous donne les entreprises où vos prochains AE Mid-Market sont en ce moment, et qui correspondent à votre couple SaaS B2B / 80-120k OTE.</p>
+        <ul>
+          <li><strong>Viviers premium</strong>, Doctolib, Qonto, Salesforce, Datadog, Front, Aircall, Spendesk, Payfit. Profils déjà acculturés au cycle long Mid-Market et au pipeline outbound musclé.</li>
+          <li><strong>Sources adjacentes</strong>, Pennylane, Lemonway, Swile, Kard, Alma. Hyper-croissance récente, AE qui ont scalé un segment Mid-Market en 18 mois.</li>
+          <li><strong>Opportunistes</strong>, ESN tech mid-market (Theodo, Octo, Zenika), chasseurs aguerris à la vente conseil sur cycle 60-90j, transition naturelle vers SaaS.</li>
+        </ul>
+
+        <p class="sec-eyebrow">03 · Intitulés LinkedIn</p>
+        <h2>Intitulés <em>de poste à cibler.</em></h2>
+        <p>Liste prioritaire, classée par signal de match. <strong>Configurer en current title</strong> dans Sales Navigator, pas en past title.</p>
+        <ol>
+          <li><strong>Account Executive</strong>, match direct, à filtrer par segment (Mid-Market, SMB, Enterprise) dans la phase de qualification.</li>
+          <li><strong>Sales Executive Mid-Market</strong>, variante anglo-saxonne fréquente dans les scale-ups parisiennes.</li>
+          <li><strong>Senior Account Manager</strong>, souvent un AE qui s'est vu confier des comptes existants, profil hybride farming/hunting très intéressant.</li>
+          <li><strong>Business Developer</strong> (5+ ans d'XP), souvent un AE Mid-Market déguisé en France, à requalifier en entretien.</li>
+        </ol>
+
+        <p class="sec-eyebrow">04 · Requête booléenne</p>
+        <h2>Requête <em>booléenne enrichie.</em></h2>
+        <p>Copiez-collez directement dans la barre de recherche LinkedIn Sales Navigator (champ Job Title, mode booléen activé).</p>
+        <div class="codeblock">
+          <div class="head"><span class="lang">LinkedIn, Sales Navigator</span><button type="button" class="copy-btn" data-copy="code"><span class="icon-default"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span><span class="icon-copied"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="label-default">Copier</span><span class="label-copied">Copié !</span></button></div>
+<pre><code id="bool-code">("Account Executive" OR "Sales Executive" OR "Senior Account Manager")
+AND ("SaaS" OR "B2B" OR "Software" OR "Cloud")
+AND ("Mid-Market" OR "Mid Market" OR "MM" OR "ETI" OR "PME")
+NOT ("intern" OR "stagiaire" OR "junior" OR "alternance" OR "BDR" OR "SDR")</code></pre>
+        </div>
+
+        <p class="sec-eyebrow">05 · Stratégie LinkedIn</p>
+        <h2>Stratégie LinkedIn <em>en 4 phases.</em></h2>
+        <h3>Phase 1, <em>Paramétrage du sourcing</em></h3>
+        <p>Localisation : Île-de-France élargie + Lyon/Bordeaux pour le remote. Ancienneté : 4-8 ans. Filtre Years in Current Role : 1-3 ans (sweet spot, le profil n'est plus en onboarding mais commence à gratter).</p>
+        <h3>Phase 2, <em>Qualification des profils</em></h3>
+        <p>Pour chaque profil, vérifier en 90 secondes :</p>
+        <ul>
+          <li><strong>La trajectoire</strong>, minimum un cycle de vente complet (12 mois) sur un produit comparable.</li>
+          <li><strong>Le ticket moyen affiché</strong>, souvent visible dans les recommandations, posts ou bio. Cherchez « 50k+ deals », « cycle 60j », « pipeline 2M€ ».</li>
+          <li><strong>L'activité publique</strong>, un AE qui ne poste jamais ni ne commente est rarement un chasseur actif.</li>
+        </ul>
+        <h3>Phase 3, <em>Approche et messages</em></h3>
+        <p>Deux templates calibrés. Personnalisez la première phrase, gardez la structure du reste. Taux de réponse moyen Mariell : <strong>32% sur la cohorte AE Mid-Market</strong>.</p>
+        <div class="template">
+          <div class="t-head"><span class="t-label">Template 01, Premier contact</span><button type="button" class="copy-btn" data-copy="tpl1"><span class="icon-default"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span><span class="icon-copied"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="label-default">Copier</span><span class="label-copied">Copié !</span></button></div>
+          <div class="t-body" id="tpl1-body">Bonjour [Prénom],
+
+Votre dernière prise de parole sur le ramp-up des AE chez [Entreprise] m'a marqué, c'est précisément le sujet sur lequel un de nos clients SaaS B2B (80-120k OTE, segment Mid-Market) cherche à recruter en ce moment.
+
+Pas un brief standard : un produit category-leader, une équipe Sales senior, et un cycle 60-90j qui se déroule. 15 minutes pour vous en parler ?
+
+[Prénom recruteur]</div>
+        </div>
+        <div class="template">
+          <div class="t-head"><span class="t-label">Template 02, Relance à J+4</span><button type="button" class="copy-btn" data-copy="tpl2"><span class="icon-default"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span><span class="icon-copied"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="label-default">Copier</span><span class="label-copied">Copié !</span></button></div>
+          <div class="t-body" id="tpl2-body">[Prénom],
+
+Je reviens vers vous une seule fois, pas de relance industrielle de notre côté.
+
+Le poste reste ouvert, et le contexte est rare : la team Sales a 3 AE Mid-Market top performers, un VP qui closait lui-même il y a 18 mois, et un produit qui se vend sans avoir à brader le prix.
+
+Si le timing n'est pas le bon, dites-le-moi, je n'insiste pas.
+
+[Prénom recruteur]</div>
+        </div>
+        <h3>Phase 4, <em>Vivier long-terme</em></h3>
+        <p>Les profils qui n'ouvrent pas aujourd'hui ouvriront dans 6 à 9 mois, c'est statistique. Tagguez-les en CRM avec un rappel calendaire. Une seconde approche, mieux calibrée sur le cycle Mid-Market qu'ils vivent à ce moment-là, double les taux de transformation.</p>
+
+        <p class="sec-eyebrow">06 · Tableau de scoring</p>
+        <h2>Tableau <em>de scoring.</em></h2>
+        <p>Grille à appliquer en sortie d'entretien R1, chaque critère noté de 1 à 5, pondéré pour produire un score global sur 100. <strong>Seuil de poursuite : 75/100.</strong></p>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Critère</th><th>Pondération</th><th>Notation 1-5</th></tr></thead><tbody>
+          <tr><td>Adéquation poste (cycle, segment, secteur)</td><td>25%</td><td>—</td></tr>
+          <tr><td>Track record commercial vérifié</td><td>20%</td><td>—</td></tr>
+          <tr><td>Qualité du discours produit</td><td>15%</td><td>—</td></tr>
+          <tr><td>Maîtrise du pipeline outbound</td><td>15%</td><td>—</td></tr>
+          <tr><td>Stabilité et ambition (cohérence parcours)</td><td>10%</td><td>—</td></tr>
+          <tr><td>Adéquation culturelle</td><td>10%</td><td>—</td></tr>
+          <tr><td>Effet « moteur » dans une équipe</td><td>5%</td><td>—</td></tr>
+        </tbody></table></div></div>
+
+        <p class="sec-eyebrow">07 · Points de vigilance</p>
+        <h2>Points <em>de vigilance.</em></h2>
+        <div class="vig"><h4>Profils en transition Sales / CSM</h4><p style="margin:0;">Des AE déçus de leurs quotas finissent CSM pour 18 mois et reviennent en chasse. Bonne énergie, mais à creuser : pourquoi le retour, et qu'est-ce qui sera différent cette fois ?</p></div>
+        <div class="vig"><h4>Le « top performer » d'une seule deal</h4><p style="margin:0;">Un AE qui a closé un deal exceptionnel il y a 14 mois et qui le ressort à chaque entretien. Demandez le pipeline en cours, c'est là que l'oignon s'épluche.</p></div>
+        <div class="vig"><h4>Discours produit récité</h4><p style="margin:0;">Quand l'AE peut pitcher son produit en 30 secondes mais ne peut pas vous expliquer pourquoi un prospect a dit non. Drapeau orange.</p></div>
+        <div class="vig"><h4>Package masqué</h4><p style="margin:0;">Un candidat qui refuse d'évoquer son OTE actuel, même en moyenne, n'a pas confiance dans son track record. Information par défaut.</p></div>
+
+        <p class="sec-eyebrow">08 · Conclusion</p>
+        <h2><em>Conclusion.</em></h2>
+        <p>Le sourcing LinkedIn est <strong>un levier, pas une solution</strong>. La vraie différence se fait dans la qualification (Phase 2), dans la calibration des messages (Phase 3) et dans la rigueur du scoring (section 6). Le reste, c'est de la mécanique.</p>
+        <p>Si vous voulez gagner trois semaines : on peut prendre 30 minutes pour calibrer ce plan sur votre contexte exact, et lancer la chasse dès la semaine prochaine.</p>
+      </article>
+      <aside class="final-cta">
+        <h2>Recruter n'est pas un pari. <em>Parlons-en.</em></h2>
+        <p>Un échange de 30 minutes pour caler le plan sur votre contexte précis et lancer la chasse cette semaine.</p>
+        <a class="cta-gradient-lg" href="https://calendly.com/chez-mariell/30min"><span>Prendre rendez-vous</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- STATE: error -->
+  <section class="res-state" id="state-error">
+    <div class="tcenter"><div class="tstate">
+      <div class="err-mark"><svg viewBox="0 0 24 24"><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <div class="tool-eyebrow">Génération interrompue</div>
+      <div class="tool-title">Une erreur <em>est survenue.</em></div>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Réessayons. Vos informations sont conservées, vous n'avez rien à ressaisir.</p>
+      <div style="display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap;justify-content:center;">
+        <button class="tsubmit" id="retry-btn"><span class="tsubmit-idle">Réessayer la génération</span><svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <a class="nav-link" href="#" id="err-back" style="color:var(--fg-on-ink-2);">Retour au formulaire</a>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- STATE: deferred -->
+  <section class="res-state" id="state-deferred">
+    <div class="tcenter"><div class="tstate">
+      <div class="err-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
+      <div class="tool-eyebrow">Service personnalisé</div>
+      <div class="tool-title">Votre demande sera <em>traitée manuellement.</em></div>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Notre équipe a bien reçu votre demande et la traitera sous 24h. Vous recevrez votre plan de sourcing par email à l'adresse <span style="color:var(--cyan);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6dbd7c4dfd398d2c3c6d9d8c2f6d2d9d5c2d9dadfd498d5d9db">[email&#160;protected]</a></span> dès qu'il sera prêt.</p>
+      <a class="btn-pill btn-ghost" href="lab.html" style="margin-top:8px;">Retour au Lab Mariell</a>
+    </div></div>
+  </section>
+</main>
+
+<!-- demo state switcher -->
+<aside style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:14px;padding:12px 16px;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+  <div style="display:flex;gap:6px;align-items:center;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);">État
+    <button class="dbtn is-active" data-state="form">Formulaire</button>
+    <button class="dbtn" data-state="loading">Chargement</button>
+    <button class="dbtn" data-state="plan">Résultat</button>
+    <button class="dbtn" data-state="error">Erreur</button>
+    <button class="dbtn" data-state="deferred">Différé</button>
+  </div>
+</aside>
+<style>
+  .dbtn{font:inherit;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 10px;border-radius:7px;border:1px solid var(--border-on-ink);background:transparent;color:var(--fg-on-ink-2);cursor:pointer;}
+  .dbtn:hover{background:rgba(244,239,227,0.06);}
+  .dbtn.is-active{background:var(--cyan);color:var(--ink-900);border-color:var(--cyan);}
+  .tool-title em{font-style:normal !important;color:inherit !important;}
+</style>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  'use strict';
+  const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+  // combobox
+  const ROLES=['SDR / BDR','Inside Sales','Field Sales / Outside Sales','Business Developer Full Cycle','Account Executive, PME / SMB','Account Executive, Mid-Market','Account Executive, Enterprise','Sales Engineer / Pre-Sales','Account Manager','Strategic Account Manager / Key Account Manager','Customer Success Manager','Sales Ops / RevOps','Channel / Partner Manager','Sales Manager / Team Lead','Head of Sales','VP Sales / CRO','Autre'];
+  const jtTrigger=$('#jt-trigger'),jtPanel=$('#jt-panel'),jtSearch=$('#jt-search'),jtList=$('#jt-list'),jtVal=jtTrigger.querySelector('.combo-value'),jtHidden=$('#jobtitle'),jtPrec=$('#jt-precision');
+  function renderList(filter){ jtList.innerHTML=''; ROLES.filter(r=>r.toLowerCase().includes((filter||'').toLowerCase())).forEach(r=>{ const d=document.createElement('div'); d.className='combo-opt'; d.textContent=r; d.addEventListener('click',()=>{ jtVal.textContent=r; jtTrigger.classList.add('has-value'); jtHidden.value=r; jtPanel.classList.remove('is-open'); jtPrec.classList.toggle('is-show',r==='Autre'); clrErr($('[data-field="jobtitle"]')); updateSubmit(); }); jtList.appendChild(d); }); }
+  jtTrigger.addEventListener('click',()=>{ jtPanel.classList.toggle('is-open'); if(jtPanel.classList.contains('is-open')){ renderList(''); jtSearch.value=''; jtSearch.focus(); } });
+  jtSearch.addEventListener('input',()=>renderList(jtSearch.value));
+  document.addEventListener('click',e=>{ if(!e.target.closest('#jt-trigger')&&!e.target.closest('#jt-panel')) jtPanel.classList.remove('is-open'); });
+
+  // numeric formatting
+  $$('input[data-num-min]').forEach(input=>{ input.addEventListener('input',()=>{ let d=input.value.replace(/\D+/g,''); input.value=d?Number(d).toLocaleString('fr-FR'):''; }); });
+  // sector autre
+  const sector=$('#sector'),sectorPrec=$('#sector-precision');
+  sector.addEventListener('change',()=>{ sector.classList.toggle('is-empty',!sector.value); sectorPrec.classList.toggle('is-show',sector.value==='Autre'); clrErr($('[data-field="sector"]')); updateSubmit(); });
+
+  function setErr(f,m){ if(!f)return; f.classList.add('is-error'); const e=f.querySelector('.terror'); if(e&&m)e.textContent=m; }
+  function clrErr(f){ if(f)f.classList.remove('is-error'); }
+  function setFilled(f,v){ if(f)f.classList.toggle('is-filled',!!v); }
+
+  $$('.tfield input,.tfield textarea,.tfield select').forEach(input=>{ input.addEventListener('input',()=>{ const f=input.closest('.tfield'); setFilled(f,!!(input.value||'').trim()); clrErr(f); updateSubmit(); }); });
+  $$('input[name="seniority"],input[name="objective"]').forEach(r=>r.addEventListener('change',()=>{ clrErr(r.closest('.tfield')); updateSubmit(); }));
+
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const submitArea=$('#submit-area'),submitBtn=$('#submit-btn');
+  function ready(){ for(const id of ['firstname','lastname','email','phone','company','location','fixe','ote']){ const el=$('#'+id); if(!el||!(el.value||'').trim())return false; } if(!jtHidden.value)return false; if(!$('input[name="seniority"]:checked'))return false; if(!$('input[name="objective"]:checked'))return false; if(!sector.value)return false; if(!$('#rgpd').checked)return false; return true; }
+  function updateSubmit(){ const r=ready(); submitBtn.disabled=!r; submitBtn.classList.toggle('is-disabled',!r); submitArea.classList.toggle('is-ready',r); }
+  $('#rgpd').addEventListener('change',updateSubmit);
+
+  // views/states
+  function showView(v){ $('#view-form').classList.toggle('is-active',v==='form'); $('#view-result').classList.toggle('is-active',v!=='form'); $('#form-nav').style.display=v==='form'?'':'none'; window.scrollTo(0,0); }
+  function showState(s){
+    if(s==='form'){ showView('form'); return; }
+    showView('result');
+    ['loading','plan','error','deferred'].forEach(k=>$('#state-'+k).classList.toggle('is-active',k===s));
+    document.querySelector('.res-only-plan').style.display = s==='plan'?'':'none';
+    if(s==='loading') runLoader();
+  }
+  let loaderTimer,countTimer;
+  function runCounter(ms){ const el=$('#load-counter'),bar=$('#load-bar-fill'); if(!el)return; let pct=0; const t0=performance.now(); clearInterval(countTimer); countTimer=setInterval(()=>{ pct=Math.min(99,Math.round((performance.now()-t0)/ms*100)); el.firstChild.textContent=pct; if(bar)bar.style.width=pct+'%'; if(pct>=99)clearInterval(countTimer); },40); }
+  function runLoader(){ const steps=$$('#step-stack .step'); let i=0; steps.forEach(st=>st.classList.remove('is-active','is-done')); steps[0].classList.add('is-active'); runCounter(700*steps.length); clearInterval(loaderTimer); loaderTimer=setInterval(()=>{ steps[i].classList.remove('is-active'); steps[i].classList.add('is-done'); i++; if(i<steps.length){ steps[i].classList.add('is-active'); } else { clearInterval(loaderTimer); clearInterval(countTimer); const c=$('#load-counter'),b=$('#load-bar-fill'); if(c)c.firstChild.textContent='100'; if(b)b.style.width='100%'; showState('plan'); } },700); }
+
+  $('#sourcing-form').addEventListener('submit',e=>{ e.preventDefault(); let ok=true;
+    $$('.tfield').forEach(f=>{ const inp=f.querySelector('input[required],textarea[required],select[required]'); if(inp&&!(inp.value||'').trim()){ setErr(f,'Ce champ est requis.'); ok=false; } });
+    if(!jtHidden.value){ setErr($('[data-field="jobtitle"]'),'Sélectionnez un intitulé de poste.'); ok=false; }
+    if(!$('input[name="seniority"]:checked')){ setErr($('[data-field="seniority"]'),'Sélectionnez une séniorité.'); ok=false; }
+    if(!$('input[name="objective"]:checked')){ setErr($('[data-field="objective"]'),'Sélectionnez un objectif.'); ok=false; }
+    if(!$('#rgpd').checked){ $('[data-field="rgpd"]').classList.add('is-error'); ok=false; }
+    if(!ok)return;
+    submitArea.classList.add('is-loading'); submitBtn.classList.add('is-loading');
+    setTimeout(()=>{ submitArea.classList.remove('is-loading'); submitBtn.classList.remove('is-loading'); showState('loading'); },1400);
+  });
+  $('#retry-btn').addEventListener('click',e=>{e.preventDefault();showState('loading');});
+  $('#err-back').addEventListener('click',e=>{e.preventDefault();showState('form');});
+
+  // copy buttons
+  $$('.copy-btn').forEach(btn=>btn.addEventListener('click',()=>{ const k=btn.dataset.copy; const map={code:'#bool-code',tpl1:'#tpl1-body',tpl2:'#tpl2-body'}; const el=$(map[k]); if(el&&navigator.clipboard)navigator.clipboard.writeText(el.textContent); btn.classList.add('is-copied'); setTimeout(()=>btn.classList.remove('is-copied'),1600); }));
+
+  $$('[data-state]').forEach(b=>b.addEventListener('click',()=>{ $$('[data-state]').forEach(x=>x.classList.toggle('is-active',x===b)); showState(b.dataset.state); }));
+  updateSubmit();
+})();
+</script>
+</body>
+</html>

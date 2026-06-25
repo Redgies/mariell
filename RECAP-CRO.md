@@ -25,32 +25,31 @@ Build vérifié : `npm run build` → OK (exit 0).
 
 ---
 
-## ⏸️ À valider (volontairement NON appliqué)
+## ✅ Décisions sur les points en attente (toutes traitées le 2026-06-25)
 
-### 1. QW-2 — Rétrograder « Nous écrire » dans le hero
-- **Constat audit :** le bouton mailto « Nous écrire » est à poids visuel ~égal au CTA Calendly et le dilue (le mailto n'a ni qualification, ni tracking, ni prise de RDV).
-- **Pourquoi non appliqué :** tu avais **explicitement demandé** ce CTA mailto. La microcopy QW-1 rééquilibre déjà l'attention vers le primaire.
-- **Décision attendue :** le garder tel quel, ou le passer en **petit lien texte** sous le CTA (au lieu d'un bouton) ?
+> **Décisions prises (2026-06-25) — toutes traitées.**
 
-### 2. CTA mobile persistant (sticky) — **levier n°1 de l'audit**
-- **Constat :** sous 900px, le CTA de la nav est enfoui dans le menu burger. Un visiteur qui scrolle sur mobile **n'a aucun accès visible au Calendly** avant le tout bas de page.
-- **Pourquoi non appliqué :** changement plus lourd (nouveau composant barre fixe, z-index, à masquer sur les pages outils Lab).
-- **Décision attendue :** je crée une barre CTA fixe en bas d'écran sur mobile ? (plus gros impact attendu)
+### 1. QW-2 — « Nous écrire » dans le hero → ✅ **GARDÉ TEL QUEL**
+- Décision : on conserve le CTA mailto. Il dilue légèrement le CTA principal, mais reste clair et distinct — utile pour ceux qui veulent simplement écrire un mail. La microcopy QW-1 rééquilibre déjà l'attention. *(Aucun changement.)*
 
-### 3. QW-8 — Changer le label du CTA final
-- **Proposition audit :** « Rencontrer Mariell » → « **Planifier un brief** » (plus orienté action, fait écho à la 1ʳᵉ étape du process).
-- **Pourquoi non appliqué :** changement de copy établie ; j'ai gardé le label actuel.
-- **Décision attendue :** tester la variante ou non.
+### 2. CTA mobile persistant (sticky) → ✅ **FAIT** *(levier n°1 de l'audit)*
+- Nouveau composant `app/components/AppMobileCta.vue` : barre fixe en bas d'écran, **mobile uniquement (< 901px)**, CTA « Rencontrer Mariell » + réassurance « 30 min · Sans engagement · Confidentiel ».
+- Montée dans `app/layouts/default.vue` → **exclue automatiquement des pages outils Lab** (qui sont en `layout: false`).
+- Apparaît après avoir scrollé au-delà du hero (`scrollY > 480`), se masque près du bas de page pour ne pas recouvrir le footer / CTA final. Désactivée en `prefers-reduced-motion` (fondu seul, pas de slide).
 
-### 4. QW-4 — CTA après la frise process — **écarté**
-- Aurait nécessité de polluer `index.vue` (qui doit rester un fichier de composition pur) et créait 5 CTA rapprochés. Les 4 CTA actuels couvrent déjà bien le funnel. *(Pas d'action requise — noté pour transparence.)*
+### 3. QW-8 — Label du CTA final → ✅ **VARIANTE APPLIQUÉE**
+- `CtaBand.vue` : « Rencontrer Mariell » → « **Planifier un brief** » (plus orienté action, écho à la 1ʳᵉ étape du process). À tester / mesurer.
+
+### 4. QW-4 — CTA après la frise process → ⛔️ **ÉCARTÉ (confirmé)**
+- Aurait pollué `index.vue` (fichier de composition pur) pour un 5ᵉ CTA rapproché. Les 4 CTA actuels couvrent bien le funnel. *(Pas d'action.)*
 
 ---
 
 ## ⚠️ À traiter en dehors du CRO (sécurité — important)
 
-**Tous les `.svg` de `brand-kit/` sont infectés** par un script JS embarqué qui détourne la géolocalisation
-(`navigator.geolocation.*` + `navigator.permissions.query`). Le vrai logo n'est que ~3 `<text>` ; le reste (~56 Ko) est le script.
-→ Aucun SVG n'est utilisé sur le site (le logo est rendu en **texte vivant** via la police Tiempos déjà self-hostée).
-→ **Action recommandée :** vérifier l'origine de ce brand-kit et purger / ré-exporter les SVG proprement.
+**Les 10 `.svg` de `brand-kit/` étaient infectés** par un script JS embarqué qui détournait la géolocalisation
+(`navigator.geolocation.*` + `navigator.permissions.query`).
+→ ✅ **NETTOYÉS le 2026-06-25** : bloc `<script>` retiré de chaque fichier, vérifié (0 script / 0 payload restant, dessin du logo intact, 10/10 XML bien formés). Les SVG sont désormais sains.
+→ Aucun SVG n'était de toute façon utilisé sur le site (logo rendu en **texte vivant** via la police Tiempos self-hostée).
+→ **Reste à faire côté équipe :** vérifier l'**origine** de ce brand-kit (par quel outil/export l'injection est arrivée) pour éviter que ça recommence.
 *(Le favicon `favicon_mariell.png` et l'og:image `og-home.png` sont des PNG sains et sont utilisés.)*

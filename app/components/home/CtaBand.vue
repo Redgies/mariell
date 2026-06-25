@@ -29,7 +29,7 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
         </div>
         <div class="cta__actions">
           <a class="btn btn--primary" :href="calendlyUrl" target="_blank" rel="noopener">
-            Rencontrer Mariell
+            Planifier un brief
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
           </a>
           <a class="btn btn--secondary-ink" href="mailto:chez@mariell.fr">Nous écrire</a>

@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Évaluation d'attractivité d'une offre Sales | Mariell</title>
+<meta name="description" content="Votre offre Sales confrontée au marché 2026 : diagnostic chiffré, lecture marque, secteur, mission et package, leviers d'action. Gratuit." />
+<link rel="canonical" href="https://mariell.fr/lab/evaluation-attractivite" />
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:site_name" content="Mariell" />
+<meta property="og:title" content="Évaluation d'attractivité d'une offre Sales | Mariell" />
+<meta property="og:description" content="Votre offre Sales confrontée au marché 2026 : diagnostic chiffré, lecture marque, secteur, mission et package, leviers d'action. Gratuit." />
+<meta property="og:url" content="https://mariell.fr/lab/evaluation-attractivite" />
+<meta property="og:image" content="https://mariell.fr/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://mariell.fr/og-image.jpg" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Mariell","url":"https://mariell.fr"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mariell.fr/"},{"@type":"ListItem","position":2,"name":"Le Lab","item":"https://mariell.fr/lab"},{"@type":"ListItem","position":3,"name":"Évaluation d'attractivité","item":"https://mariell.fr/lab/evaluation-attractivite"}]}</script>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="pages.css" />
+<link rel="stylesheet" href="tools.css" />
+<style>
+  .combo-trigger{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+  .combo-trigger .combo-value{color:var(--fg-on-ink-4);}
+  .combo-trigger.has-value .combo-value{color:var(--fg-on-ink-1);}
+  .combo-panel{display:none;margin-top:8px;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:10px;overflow:hidden;}
+  .combo-panel.is-open{display:block;}
+  .combo-search{width:100%;box-sizing:border-box;background:var(--ink-700);border:none;border-bottom:1px solid var(--border-on-ink);color:var(--fg-on-ink-1);font:inherit;font-size:14px;padding:11px 14px;}
+  .combo-search:focus{outline:none;}
+  .combo-list{max-height:240px;overflow-y:auto;}
+  .combo-opt{padding:11px 14px;font-size:14px;color:var(--fg-on-ink-2);cursor:pointer;}
+  .combo-opt:hover{background:rgba(127,231,225,0.10);color:var(--fg-on-ink-1);}
+  .num-wrap{position:relative;}
+  .num-wrap .num-suffix{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--fg-on-ink-3);font-size:15px;pointer-events:none;}
+  .num-wrap .tinput{padding-right:34px;}
+  .precision{margin-top:12px;display:none;}
+  .precision.is-show{display:block;}
+  .ta-foot{display:flex;justify-content:space-between;gap:16px;margin-top:8px;align-items:flex-start;}
+  .ta-foot .thelper{flex:1;}
+  .submit-hint{font-size:13px;color:var(--fg-on-ink-3);margin:0;}
+  .tsubmit-area.is-ready .submit-hint{display:none;}
+  /* result */
+  .res-state{display:none;}
+  .res-state.is-active{display:block;}
+  .read{max-width:780px;margin:0 auto;padding:48px 40px 80px;}
+  .doc-h1{font-family:var(--font-display);font-weight:500;font-size:clamp(30px,4vw,46px);letter-spacing:-0.02em;line-height:1.1;margin:14px 0 0;}
+  .doc-h1 em{font-style:normal;color:inherit;}
+  .doc-meta{font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;color:var(--fg-on-ink-3);margin-top:14px;}
+  /* verdict */
+  .verdict{margin:44px 0 36px;padding:32px 30px;border:1px solid var(--border-on-ink);border-radius:16px;background:var(--ink-800);}
+  .verdict__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+  .verdict__eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:12px;}
+  .verdict__eyebrow::before{content:"";width:24px;height:1px;background:currentColor;}
+  .verdict__score{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-on-ink-3);}
+  .verdict__score b{color:var(--fg-on-ink-1);font-weight:500;}
+  .verdict__level{font-family:var(--font-display);font-weight:500;font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;margin:0 0 20px;color:var(--fg-on-ink-1);}
+  .verdict__level em{font-style:normal;color:inherit;}
+  .gauge{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:0 0 8px;}
+  .gauge__seg{height:10px;border-radius:3px;background:var(--ink-700);transition:background 300ms,box-shadow 300ms;}
+  .gauge__seg.is-on{background:var(--cyan);box-shadow:0 0 10px rgba(127,231,225,0.5);}
+  .gauge__scale{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-4);margin-bottom:24px;}
+  .takeaways{display:flex;flex-direction:column;gap:14px;}
+  .take{display:flex;gap:14px;align-items:flex-start;}
+  .take__icon{width:28px;height:28px;flex-shrink:0;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .take__icon svg{width:16px;height:16px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .take--ok .take__icon{background:rgba(47,110,85,0.2);}.take--ok .take__icon svg{stroke:#5fcfa0;}
+  .take--warn .take__icon{background:rgba(201,138,42,0.2);}.take--warn .take__icon svg{stroke:var(--warn);}
+  .take--lever .take__icon{background:rgba(127,231,225,0.15);}.take--lever .take__icon svg{stroke:var(--cyan);}
+  .take__label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-on-ink-3);}
+  .take__text{font-size:14px;line-height:1.55;color:var(--fg-on-ink-2);margin:4px 0 0;}
+  .dim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 8px;}
+  .dim{background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:12px;padding:18px;}
+  .dim__head{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+  .dim__icon svg{width:18px;height:18px;fill:none;stroke:var(--cyan);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+  .dim__label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);}
+  .dim__value{font-family:var(--font-display);font-weight:500;font-size:20px;color:var(--fg-on-ink-1);}
+  .ed-section{margin-top:44px;}
+  .ed-section__eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);}
+  .ed-section h2{font-family:var(--font-display);font-weight:500;font-size:clamp(24px,3.2vw,34px);letter-spacing:-0.02em;margin:10px 0 16px;color:var(--fg-on-ink-1);}
+  .ed-section h2 em{font-style:normal;color:inherit;}
+  .ed-section .prose p{font-size:16px;line-height:1.62;color:var(--fg-on-ink-2);margin:0 0 14px;}
+  .ed-section .prose strong{color:var(--fg-on-ink-1);}
+  .synthese__group{margin-top:18px;}
+  .synthese__label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-on-ink-3);margin:0 0 12px;}
+  .synthese__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;}
+  .synthese__item{display:flex;gap:12px;align-items:flex-start;}
+  .synthese__bullet{width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-top:8px;flex-shrink:0;}
+  .synthese__txt{font-size:15px;line-height:1.55;color:var(--fg-on-ink-2);}
+  .synthese__txt strong{color:var(--fg-on-ink-1);}
+  .twist{margin-top:44px;padding:28px 30px;border-left:2px solid var(--cyan);background:var(--ink-800);border-radius:0 12px 12px 0;}
+  .twist p{font-size:16px;line-height:1.62;color:var(--fg-on-ink-2);margin:0;}
+  .twist strong{color:var(--cyan);}
+  .final-cta{margin-top:48px;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:16px;padding:36px 40px;text-align:center;}
+  .final-cta h2{font-family:var(--font-display);font-weight:500;font-size:28px;letter-spacing:-0.02em;margin:0 0 10px;}
+  .final-cta h2 em{font-style:normal;color:inherit;}
+  .final-cta p{font-size:15px;color:var(--fg-on-ink-2);margin:0 0 22px;}
+  .cta-gradient-lg{display:inline-flex;align-items:center;gap:10px;background:var(--cyan);background-image:linear-gradient(100deg,var(--cyan) 0%,var(--cyan) 38%,var(--magenta) 100%);background-size:200% 100%;background-position:0% 50%;color:var(--ink-900);font-weight:600;padding:14px 26px;border-radius:999px;text-decoration:none;transition:background-position 400ms var(--ease-out);}
+  .cta-gradient-lg:hover{background-position:100% 50%;}
+  .cta-gradient-lg svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .doc-foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--border-on-ink);font-size:12px;color:var(--fg-on-ink-3);}
+  .step-stack{display:flex;flex-direction:column;gap:12px;margin:36px auto 0;max-width:420px;text-align:left;}
+  .step{font-size:15px;color:var(--fg-on-ink-4);padding-left:26px;position:relative;transition:color 300ms;}
+  .step::before{content:"";position:absolute;left:3px;top:7px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--fg-on-ink-4);}
+  .step.is-active,.step.is-done{color:var(--cyan);}
+  .step.is-active::before,.step.is-done::before{border-color:var(--cyan);background:var(--cyan);}
+  .step.is-done{color:var(--fg-on-ink-2);}
+  .reassure{margin-top:28px;font-size:13px;color:var(--fg-on-ink-3);}
+  .load-counter{position:relative;display:inline-flex;align-items:baseline;justify-content:center;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:clamp(58px,9vw,92px);line-height:1;letter-spacing:-0.03em;color:var(--cyan);margin:34px 0 6px;text-shadow:0 0 28px rgba(127,231,225,0.35);animation:counterPulse 1.8s ease-in-out infinite;}
+  .load-counter__pct{font-size:0.38em;color:var(--fg-on-ink-3);margin-left:5px;letter-spacing:0;text-shadow:none;}
+  .load-bar{width:min(320px,80%);height:3px;border-radius:999px;background:var(--ink-700);margin:6px auto 0;overflow:hidden;}
+  .load-bar__fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width 120ms linear;}
+  @keyframes counterPulse{0%,100%{opacity:1;}50%{opacity:0.72;}}
+  .err-mark{width:48px;height:48px;color:var(--cyan);margin:0 auto 4px;}
+  .err-mark svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+  .tool-title em{font-style:normal !important;color:inherit !important;}
+</style>
+<link rel="icon" href="../../assets/brand/mariell-favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="../../assets/brand/mariell-favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../../assets/brand/mariell-apple-touch-icon.png" />
+</head>
+<body class="tool-body">
+<div class="tool-bg" aria-hidden="true"></div>
+
+<nav class="site-nav" id="form-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__brand" href="homepage-a-chromatic.html" aria-label="Mariell, accueil"><span class="chromatic chromatic--glitch" style="font-size:24px;"><span class="chromatic__layer chromatic__layer--cyan">Mariell</span><span class="chromatic__layer chromatic__layer--magenta">Mariell</span><span class="chromatic__base">Mariell</span></span></a>
+    <a class="nav-link" href="lab.html" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Retour au Lab</a>
+  </div>
+</nav>
+
+<!-- ========== VIEW: FORM ========== -->
+<main id="view-form" class="tview is-active" data-screen-label="01 Formulaire">
+  <div class="tool-shell">
+    <header style="text-align:center;">
+      <div class="tool-eyebrow">Outil · Le&nbsp;Lab&nbsp;Mariell</div>
+      <h1 class="tool-title" style="margin-left:auto;margin-right:auto;">Évaluation <em>d'attractivité.</em></h1>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Votre offre Sales, confrontée au marché 2026. Diagnostic chiffré, comparatif, et leviers concrets à activer.</p>
+      <div style="margin-top:22px;display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);border:1px solid var(--border-on-ink);border-radius:999px;padding:7px 16px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);"></span>Gratuit · Sans inscription · &lt; 60 secondes</div>
+    </header>
+
+    <form id="eval-form" novalidate>
+      <!-- 01 Identité -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">01</span><h2 class="tblock-title">Identité</h2><span class="tblock-rule"></span></div>
+        <div class="tfields--2">
+          <div class="tfield" data-field="firstname"><label class="tlabel" for="firstname">Prénom <span class="treq">*</span></label><input class="tinput" id="firstname" type="text" placeholder="Marie" required /><p class="terror">Ce champ est requis.</p></div>
+          <div class="tfield" data-field="lastname"><label class="tlabel" for="lastname">Nom <span class="treq">*</span></label><input class="tinput" id="lastname" type="text" placeholder="Dupont" required /><p class="terror">Ce champ est requis.</p></div>
+        </div>
+        <div class="tfields" style="margin-top:24px;">
+          <div class="tfield" data-field="email"><label class="tlabel" for="email">Adresse mail <span class="treq">*</span></label><input class="tinput" id="email" type="email" placeholder="marie.dupont@entreprise.com" required /><p class="terror">Format d'email invalide.</p></div>
+          <div class="tfield" data-field="phone"><label class="tlabel" for="phone">Numéro de téléphone <span class="treq">*</span></label><div class="tphone"><div class="tselect-wrap"><select id="phone-cc" class="tselect" aria-label="Indicatif"><option value="+33" selected>FR +33</option><option value="+32">BE +32</option><option value="+41">CH +41</option><option value="+44">UK +44</option><option value="+49">DE +49</option><option value="+34">ES +34</option><option value="+39">IT +39</option><option value="+352">LU +352</option></select></div><input class="tinput" id="phone" type="tel" placeholder="06 12 34 56 78" required /></div><p class="terror">Numéro invalide.</p></div>
+        </div>
+      </section>
+
+      <!-- 02 Contexte entreprise -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">02</span><h2 class="tblock-title">Contexte entreprise</h2><span class="tblock-rule"></span></div>
+        <div class="tfields--2">
+          <div class="tfield" data-field="company"><label class="tlabel" for="company">Entreprise <span class="treq">*</span></label><input class="tinput" id="company" type="text" placeholder="Nom de votre entreprise" required /><p class="terror">Ce champ est requis.</p></div>
+          <div class="tfield" data-field="website"><label class="tlabel" for="website">Site web</label><input class="tinput" id="website" type="url" placeholder="https://votre-entreprise.com" /></div>
+          <div class="tfield" data-field="sector"><label class="tlabel" for="sector">Secteur de votre entreprise <span class="treq">*</span></label><div class="tselect-wrap"><select class="tselect is-empty" id="sector" required><option value="" disabled selected hidden>Sélectionnez un secteur</option><option>SaaS B2B</option><option>Conseil IT / ESN</option><option>Industrie / B2B classique</option><option>Cyber / Sécurité</option><option>Fintech</option><option>Healthtech</option><option>Services</option><option value="Autre">Autre</option></select></div><div class="precision" id="sector-precision"><input class="tinput" id="sectorPrecision" type="text" maxlength="60" placeholder="Précisez votre secteur (60 caractères max)" /></div><p class="terror">Sélectionnez un secteur.</p></div>
+          <div class="tfield" data-field="location"><label class="tlabel" for="location">Localisation <span class="treq">*</span></label><input class="tinput" id="location" type="text" maxlength="100" placeholder="Paris, France" required /><p class="terror">Ce champ est requis.</p></div>
+          <div class="tfield" data-field="headcount"><label class="tlabel" for="headcount">Effectifs entreprise <span class="treq">*</span></label><input class="tinput" id="headcount" type="text" maxlength="50" placeholder="ex. 800 personnes, 25 personnes" required /><p class="terror">Ce champ est requis.</p></div>
+          <div class="tfield" data-field="salesteam"><label class="tlabel" for="salesteam">Composition équipe Sales <span class="treq">*</span></label><input class="tinput" id="salesteam" type="text" maxlength="300" placeholder="ex. 15 pers (4 SDR, 8 AE, 2 Team Lead, 1 Head of Sales)" required /><p class="terror">Ce champ est requis.</p></div>
+        </div>
+      </section>
+
+      <!-- 03 Le poste à évaluer -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">03</span><h2 class="tblock-title">Le poste à évaluer</h2><span class="tblock-rule"></span></div>
+        <div class="tfields">
+          <div class="tfield" data-field="jobtitle">
+            <label class="tlabel">Intitulé de poste <span class="treq">*</span></label>
+            <div class="tselect-wrap combo-trigger tinput" id="jt-trigger" tabindex="0" style="border-radius:10px;"><span class="combo-value">Sélectionnez un intitulé…</span></div>
+            <div class="combo-panel" id="jt-panel"><input class="combo-search" id="jt-search" placeholder="Rechercher…" /><div class="combo-list" id="jt-list"></div></div>
+            <input type="hidden" id="jobtitle" required /><p class="terror">Sélectionnez un intitulé de poste.</p>
+            <div class="precision" id="jt-precision"><input class="tinput" id="jobtitlePrecision" type="text" maxlength="60" placeholder="Précisez l'intitulé du poste (60 caractères max)" /></div>
+          </div>
+          <div class="tfield" data-field="seniority">
+            <span class="tlabel">Séniorité visée <span class="treq">*</span></span>
+            <div class="ttiles ttiles--4" role="radiogroup">
+              <label class="ttile"><input type="radio" name="seniority" value="junior" /><span class="ttile-title">Junior</span><span class="ttile-sub">0–2 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="confirme" /><span class="ttile-title">Confirmé</span><span class="ttile-sub">2–5 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="senior" /><span class="ttile-title">Senior</span><span class="ttile-sub">5–8 ans</span></label>
+              <label class="ttile"><input type="radio" name="seniority" value="lead" /><span class="ttile-title">Lead</span><span class="ttile-sub">8+ ans</span></label>
+            </div>
+            <p class="terror">Sélectionnez une séniorité.</p>
+          </div>
+          <div class="tfield" data-field="workmode">
+            <span class="tlabel">Modalité de travail <span class="treq">*</span></span>
+            <div class="ttiles ttiles--4" role="radiogroup">
+              <label class="ttile"><input type="radio" name="workmode" value="Full remote" /><span class="ttile-title">Full remote</span><span class="ttile-sub">&nbsp;</span></label>
+              <label class="ttile"><input type="radio" name="workmode" value="Hybride flexible (1-2 jours bureau / sem)" /><span class="ttile-title">Hybride flexible</span><span class="ttile-sub">1-2 j bureau/sem</span></label>
+              <label class="ttile"><input type="radio" name="workmode" value="Hybride équilibré (3 jours bureau / sem)" /><span class="ttile-title">Hybride équilibré</span><span class="ttile-sub">3 j bureau/sem</span></label>
+              <label class="ttile"><input type="radio" name="workmode" value="Présentiel (4-5 jours bureau / sem)" /><span class="ttile-title">Présentiel</span><span class="ttile-sub">4-5 j bureau/sem</span></label>
+            </div>
+            <p class="terror">Sélectionnez une modalité de travail.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 Description des missions -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">04</span><h2 class="tblock-title">Description des missions</h2><span class="tblock-rule"></span></div>
+        <div class="tfield" data-field="missions">
+          <label class="tlabel" for="missions">Description des missions <span class="treq">*</span></label>
+          <div class="ttextarea-wrap"><textarea class="ttextarea" id="missions" maxlength="20000" rows="9" required placeholder="Décrivez en quelques lignes ce que ce Sales fera concrètement : type de cycle, taille de comptes, périmètre géographique, ratios chasse/farming, contexte équipe, stack outils, trajectoire d'évolution... Vous pouvez aussi coller un extrait de votre fiche de poste. (1000 caractères max)"></textarea><span class="ttextarea-counter" id="missionsCounter">0 / 20000</span></div>
+          <div class="ta-foot"><p class="thelper">Plus la description est précise, plus l'évaluation sera fine. Mentionnez les éléments structurants : ratio inbound/outbound, taille des comptes, stack outils, trajectoire d'évolution.</p></div>
+          <p class="terror">Champ obligatoire.</p>
+        </div>
+      </section>
+
+      <!-- 05 Package proposé -->
+      <section class="tblock">
+        <div class="tblock-head"><span class="tblock-num">05</span><h2 class="tblock-title">Package proposé</h2><span class="tblock-rule"></span></div>
+        <div class="tfields--2">
+          <div class="tfield" data-field="fixe"><label class="tlabel" for="fixe">Fixe annuel brut (€) <span class="treq">*</span></label><div class="num-wrap"><input class="tinput" id="fixe" type="text" inputmode="numeric" data-num-min="15000" data-num-max="500000" placeholder="55000" required /><span class="num-suffix">€</span></div><p class="terror">Montant invalide.</p></div>
+          <div class="tfield" data-field="ote"><label class="tlabel" for="ote">OTE total cible (€) <span class="treq">*</span></label><div class="num-wrap"><input class="tinput" id="ote" type="text" inputmode="numeric" data-num-min="0" data-num-max="800000" placeholder="100000" required /><span class="num-suffix">€</span></div><p class="terror">Montant invalide.</p></div>
+        </div>
+        <p class="thelper" style="margin-top:14px;">OTE = Fixe + Variable cible à 100% d'atteinte des objectifs.</p>
+      </section>
+
+      <section class="tblock" style="margin-bottom:8px;">
+        <label class="tcheck" data-field="rgpd"><input id="rgpd" type="checkbox" required /><span class="tcheck-box"></span><span class="tcheck-text">J'accepte la politique de confidentialité et le traitement de mes données personnelles par Mariell.</span></label>
+      </section>
+
+      <div class="tsubmit-area" id="submit-area">
+        <button type="submit" id="submit-btn" class="tsubmit is-disabled" disabled>
+          <span class="tspinner"></span>
+          <span class="tsubmit-idle">Évaluer mon offre</span>
+          <span class="tsubmit-loading">Évaluation en cours…</span>
+          <svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="submit-hint">Renseignez tous les champs obligatoires pour activer l'évaluation.</p>
+      </div>
+      <div class="tfoot" style="align-items:center;text-align:center;"><span class="tcf">⛉ Protégé par Cloudflare Turnstile</span><span class="tfoot-2">Recruter n'est pas un pari.</span></div>
+    </form>
+  </div>
+</main>
+
+<!-- ========== VIEW: RESULT ========== -->
+<main id="view-result" class="tview" data-screen-label="02 Résultat">
+  <div class="tresult-bar res-only-result" style="display:none;">
+    <div class="tresult-bar-inner">
+      <div style="display:flex;align-items:center;gap:14px;"><span class="site-nav__brand" style="font-size:18px;">Mariell</span><span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);">Évaluation · AE Mid-Market</span></div>
+      <div style="display:flex;gap:10px;align-items:center;"><button class="btn-pill btn-ghost" onclick="window.print()">Imprimer</button><a class="btn-pill btn-cyan" href="https://calendly.com/chez-mariell/30min">Prendre rendez-vous</a></div>
+    </div>
+  </div>
+
+  <!-- loading -->
+  <section class="res-state is-active" id="state-loading">
+    <div class="tool-shell" style="text-align:center;">
+      <div class="tool-eyebrow">Le Lab Mariell</div>
+      <div class="tool-title" style="margin-left:auto;margin-right:auto;">Votre évaluation d'attractivité, <em>en cours.</em></div>
+      <div class="load-counter" id="load-counter" aria-hidden="true">0<span class="load-counter__pct">%</span></div>
+      <div class="load-bar"><div class="load-bar__fill" id="load-bar-fill"></div></div>
+      <div class="step-stack" id="step-stack">
+        <div class="step is-active" data-step="0">Analyse de votre contexte…</div>
+        <div class="step" data-step="1">Lecture de la marque et du secteur…</div>
+        <div class="step" data-step="2">Évaluation de la mission…</div>
+        <div class="step" data-step="3">Comparaison du package au marché…</div>
+        <div class="step" data-step="4">Synthèse et recommandations…</div>
+        <div class="step" data-step="5">Finalisation de votre évaluation…</div>
+      </div>
+      <p class="reassure">Cette opération prend en général 30 à 60 secondes. Merci de ne pas fermer cette fenêtre.</p>
+    </div>
+  </section>
+
+  <!-- result -->
+  <section class="res-state" id="state-result">
+    <div class="read">
+      <div class="sec-eyebrow" style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;">Outil n°3 · Le Lab Mariell</div>
+      <div class="doc-h1">Évaluation d'attractivité, <em>Account Executive Mid-Market.</em></div>
+      <p class="doc-meta">Préparée par Mariell pour Pennylane · Paris · 1ᵉʳ mai 2026</p>
+
+      <section class="verdict">
+        <header class="verdict__head"><span class="verdict__eyebrow">Verdict synthétique</span><span class="verdict__score">Position <b>8 / 10</b></span></header>
+        <h2 class="verdict__level">Position d'attractivité : <em>Très attractive.</em></h2>
+        <div class="gauge" id="gauge">
+          <span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span><span class="gauge__seg"></span>
+        </div>
+        <div class="gauge__scale"><span>Fragile</span><span>Hyper attractive</span></div>
+        <div class="takeaways">
+          <div class="take take--ok"><div class="take__icon"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7"/></svg></div><div class="take__body"><span class="take__label">Ce qui fonctionne</span><p class="take__text">Le triplé marque-secteur-mission se renforce mutuellement, avec une signature lisible côté candidat dès le premier message d'approche.</p></div></div>
+          <div class="take take--warn"><div class="take__icon"><svg viewBox="0 0 24 24"><path d="M12 4l10 17H2L12 4z"/><path d="M12 10v5"/></svg></div><div class="take__body"><span class="take__label">Ce qui pose question</span><p class="take__text">Le package OTE est aligné mais ne crée pas de levier d'aspiration supplémentaire, la concurrence sur les profils AE Mid-Market expérimentés en fintech reste forte sur Paris.</p></div></div>
+          <div class="take take--lever"><div class="take__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg></div><div class="take__body"><span class="take__label">Levier prioritaire</span><p class="take__text">Capitaliser sur la trajectoire Senior AE → Team Lead à 18 mois en la rendant explicite dans la communication du poste, c'est ce qui fait basculer un Confirmé sur ce profil.</p></div></div>
+        </div>
+      </section>
+
+      <section class="dim-grid">
+        <div class="dim"><div class="dim__head"><span class="dim__icon"><svg viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-4 8-9 9-5-1-9-4-9-9V6l9-4z"/></svg></span><span class="dim__label">Marque</span></div><div class="dim__value">Référence</div></div>
+        <div class="dim"><div class="dim__head"><span class="dim__icon"><svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></span><span class="dim__label">Secteur</span></div><div class="dim__value">Dynamique</div></div>
+        <div class="dim"><div class="dim__head"><span class="dim__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="dim__label">Mission</span></div><div class="dim__value">Premium</div></div>
+        <div class="dim"><div class="dim__head"><span class="dim__icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span><span class="dim__label">Package</span></div><div class="dim__value">Aligné</div></div>
+      </section>
+
+      <section class="ed-section"><span class="ed-section__eyebrow">01 · Marque & secteur</span><h2>Lecture <em>marque & secteur.</em></h2><div class="prose">
+        <p>Pennylane occupe une position de référence dans son écosystème. Centaure validée en 2025, 115M€ d'ARR, 800k clients, levée majeure début 2026, vous êtes identifiés comme une cible désirable par les Sales fintech B2B qui connaissent votre marché. Votre signature porte spontanément dans les communautés Sales spécialisées : sur LinkedIn, vos hires, vos product launches, vos prises de parole sont suivis.</p>
+        <p>La fintech B2B reste un secteur dynamique en 2026, porté par la facturation électronique généralisée et la digitalisation accélérée des cabinets. Les Sales fintech expérimentés sont activement courtisés, packages tirés à la hausse. Marque forte + secteur dynamique : vous bénéficiez d'un effet d'aspiration naturel sur le marché candidat.</p>
+      </div></section>
+
+      <section class="ed-section"><span class="ed-section__eyebrow">02 · Mission</span><h2>Lecture <em>mission.</em></h2><div class="prose">
+        <p>La mission décrite est <strong>premium</strong> pour un AE Mid-Market confirmé. Le brief coche les signaux que les candidats expérimentés cherchent en première lecture.</p>
+        <p>Votre mention d'un playbook MEDDPICC et d'un onboarding structuré sur 3 semaines est un signal fort de maturité commerciale qui rassurera immédiatement les candidats Confirmé. Le ratio SDR/AE explicité (4 SDR pour 8 AE, soit 1 pour 2) est dans la fourchette saine attendue. Combiné à une équipe Demand Gen active et un mix 60/40 inbound/outbound, vous envoyez un signal clair.</p>
+        <p>Stack HubSpot + Outreach + Modjo en ligne avec les standards 2026. Cohérence séniorité × mission bonne, la trajectoire Senior AE puis Team Lead à 18 mois est très alignée avec ce qu'attendent les candidats Confirmé.</p>
+      </div></section>
+
+      <section class="ed-section"><span class="ed-section__eyebrow">03 · Package</span><h2>Lecture <em>package.</em></h2><div class="prose">
+        <p>Votre fixe de 55k€ est aligné avec le standard du marché pour un AE Mid-Market confirmé sur Paris. Pas de levier d'attractivité supplémentaire mais pas de signal négatif.</p>
+        <p>Votre OTE de 45k€ est aligné avec les pratiques du marché. Le ratio fixe/variable de 55/45 est cohérent avec le profil et signale un poste avec une vraie composante chasse, sans déséquilibre.</p>
+        <p>Bon équilibre entre signal de marque et niveau de package, votre offre est attractive de manière équilibrée, sans surenchère financière.</p>
+      </div></section>
+
+      <section class="ed-section"><span class="ed-section__eyebrow">04 · Synthèse</span><h2>Synthèse & <em>leviers d'action.</em></h2>
+        <div class="synthese__group"><p class="synthese__label">Forces de l'offre</p><ul class="synthese__list">
+          <li class="synthese__item"><span class="synthese__bullet"></span><span class="synthese__txt">Triplé marque-secteur-mission qui se renforce mutuellement, avec une signature très lisible côté candidat.</span></li>
+          <li class="synthese__item"><span class="synthese__bullet"></span><span class="synthese__txt">Brief de mission musclé sur les 3 dimensions clés pour un AE Mid-Market : maturité du processus Sales, qualité du pipeline, modernité de la stack.</span></li>
+        </ul></div>
+        <div class="synthese__group"><p class="synthese__label">Leviers d'action prioritaires</p><ul class="synthese__list">
+          <li class="synthese__item"><span class="synthese__bullet"></span><span class="synthese__txt"><strong>Communiquer activement la trajectoire Team Lead 18 mois</strong> dans les premiers échanges, c'est le signal qui fait basculer un Confirmé entre 2 offres au même package.</span></li>
+          <li class="synthese__item"><span class="synthese__bullet"></span><span class="synthese__txt"><strong>Mentionner le track record de promotion interne</strong> sur ce poste si vous avez des cas concrets ("notre Team Lead actuelle a démarré comme AE en 2023"), ce qui transforme une trajectoire annoncée en trajectoire crédible.</span></li>
+          <li class="synthese__item"><span class="synthese__bullet"></span><span class="synthese__txt"><strong>Préciser les ratios de performance attendus</strong> la 1ère année (comptes ouverts, ARR cible, taux de conversion), niveau de transparence rare dans les briefs et différenciant pour les profils sérieux.</span></li>
+        </ul></div>
+      </section>
+
+      <section class="twist"><p>Vous avez maintenant une lecture claire du positionnement de votre offre. La stratégie est posée. Reste l'exécution : trouver le bon profil pour cette offre, négocier dans une fenêtre de 10 jours face à 4 cabinets concurrents, détecter les top performers en conversation, tenir le closing sans perdre le candidat à la dernière étape. <strong>80% du résultat se joue à ce moment-là</strong>, et c'est précisément là qu'on intervient.</p></section>
+
+      <aside class="final-cta">
+        <h2>Le diagnostic est posé. <em>Parlons exécution.</em></h2>
+        <p>Un échange de 30 minutes pour transformer cette évaluation en plan de recrutement actionnable, calibré sur votre contexte exact.</p>
+        <a class="cta-gradient-lg" href="https://calendly.com/chez-mariell/30min"><span>Prendre rendez-vous</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </aside>
+      <footer class="doc-foot">Évaluation conservée 90 jours · Mariell · Cabinet de recrutement Sales</footer>
+    </div>
+  </section>
+
+  <!-- error -->
+  <section class="res-state" id="state-error">
+    <div class="tcenter"><div class="tstate">
+      <div class="err-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/></svg></div>
+      <div class="tool-eyebrow">Évaluation interrompue</div>
+      <div class="tool-title">Une erreur <em>est survenue.</em></div>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Réessayons. Vos informations sont conservées, vous n'avez rien à ressaisir.</p>
+      <div style="display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap;justify-content:center;">
+        <button class="tsubmit" id="retry-btn"><span class="tsubmit-idle">Réessayer l'évaluation</span><svg class="tsubmit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <a class="nav-link" href="#" id="err-back" style="color:var(--fg-on-ink-2);">Retour au formulaire</a>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- deferred -->
+  <section class="res-state" id="state-deferred">
+    <div class="tcenter"><div class="tstate">
+      <div class="err-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
+      <div class="tool-eyebrow">Service personnalisé</div>
+      <div class="tool-title">Votre demande sera <em>traitée manuellement.</em></div>
+      <p class="tool-subtitle" style="margin-left:auto;margin-right:auto;">Notre équipe a bien reçu votre demande et la traitera sous 24 à 48 heures. Vous recevrez votre évaluation par email à l'adresse <span style="color:var(--cyan);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3e535f4c575b105a4b4e51504a7e4e5b505047525f505b105d5153">[email&#160;protected]</a></span> dès qu'elle sera prête.</p>
+      <a class="btn-pill btn-ghost" href="lab.html" style="margin-top:8px;">Retour au Lab Mariell</a>
+    </div></div>
+  </section>
+</main>
+
+<aside style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;background:var(--ink-800);border:1px solid var(--border-on-ink);border-radius:14px;padding:12px 16px;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+  <div style="display:flex;gap:6px;align-items:center;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-on-ink-3);">État
+    <button class="dbtn is-active" data-state="form">Formulaire</button>
+    <button class="dbtn" data-state="loading">Chargement</button>
+    <button class="dbtn" data-state="result">Résultat</button>
+    <button class="dbtn" data-state="error">Erreur</button>
+    <button class="dbtn" data-state="deferred">Différé</button>
+  </div>
+</aside>
+<style>
+  .dbtn{font:inherit;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 10px;border-radius:7px;border:1px solid var(--border-on-ink);background:transparent;color:var(--fg-on-ink-2);cursor:pointer;}
+  .dbtn:hover{background:rgba(244,239,227,0.06);}
+  .dbtn.is-active{background:var(--cyan);color:var(--ink-900);border-color:var(--cyan);}
+  .tool-title em{font-style:normal !important;color:inherit !important;}
+</style>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  'use strict';
+  const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+  const ROLES=['SDR / BDR','Inside Sales','Field Sales / Outside Sales','Business Developer Full Cycle','Account Executive, PME / SMB','Account Executive, Mid-Market','Account Executive, Enterprise','Sales Engineer / Pre-Sales','Account Manager','Strategic Account Manager / Key Account Manager','Customer Success Manager','Sales Ops / RevOps','Channel / Partner Manager','Sales Manager / Team Lead','Head of Sales','VP Sales / CRO','Autre'];
+  const jtTrigger=$('#jt-trigger'),jtPanel=$('#jt-panel'),jtSearch=$('#jt-search'),jtList=$('#jt-list'),jtVal=jtTrigger.querySelector('.combo-value'),jtHidden=$('#jobtitle'),jtPrec=$('#jt-precision');
+  function renderList(f){ jtList.innerHTML=''; ROLES.filter(r=>r.toLowerCase().includes((f||'').toLowerCase())).forEach(r=>{ const d=document.createElement('div'); d.className='combo-opt'; d.textContent=r; d.addEventListener('click',()=>{ jtVal.textContent=r; jtTrigger.classList.add('has-value'); jtHidden.value=r; jtPanel.classList.remove('is-open'); jtPrec.classList.toggle('is-show',r==='Autre'); clrErr($('[data-field="jobtitle"]')); updateSubmit(); }); jtList.appendChild(d); }); }
+  jtTrigger.addEventListener('click',()=>{ jtPanel.classList.toggle('is-open'); if(jtPanel.classList.contains('is-open')){ renderList(''); jtSearch.value=''; jtSearch.focus(); } });
+  jtSearch.addEventListener('input',()=>renderList(jtSearch.value));
+  document.addEventListener('click',e=>{ if(!e.target.closest('#jt-trigger')&&!e.target.closest('#jt-panel')) jtPanel.classList.remove('is-open'); });
+
+  $$('input[data-num-min]').forEach(input=>input.addEventListener('input',()=>{ let d=input.value.replace(/\D+/g,''); input.value=d?Number(d).toLocaleString('fr-FR'):''; }));
+  const sector=$('#sector'),sectorPrec=$('#sector-precision');
+  sector.addEventListener('change',()=>{ sector.classList.toggle('is-empty',!sector.value); sectorPrec.classList.toggle('is-show',sector.value==='Autre'); clrErr($('[data-field="sector"]')); updateSubmit(); });
+  const missions=$('#missions'),mc=$('#missionsCounter');
+  missions.addEventListener('input',()=>{ const l=missions.value.length; mc.textContent=l+' / 20000'; mc.classList.toggle('is-warn',l>=19000&&l<20000); mc.classList.toggle('is-danger',l>=20000); });
+
+  function setErr(f,m){ if(!f)return; f.classList.add('is-error'); const e=f.querySelector('.terror'); if(e&&m)e.textContent=m; }
+  function clrErr(f){ if(f)f.classList.remove('is-error'); }
+  function setFilled(f,v){ if(f)f.classList.toggle('is-filled',!!v); }
+  $$('.tfield input,.tfield textarea,.tfield select').forEach(input=>input.addEventListener('input',()=>{ const f=input.closest('.tfield'); setFilled(f,!!(input.value||'').trim()); clrErr(f); updateSubmit(); }));
+  $$('input[name="seniority"],input[name="workmode"]').forEach(r=>r.addEventListener('change',()=>{ clrErr(r.closest('.tfield')); updateSubmit(); }));
+
+  const submitArea=$('#submit-area'),submitBtn=$('#submit-btn');
+  function ready(){ for(const id of ['firstname','lastname','email','phone','company','sector','location','headcount','salesteam','missions','fixe','ote']){ const el=$('#'+id); if(!el||!(el.value||'').trim())return false; } if(!jtHidden.value)return false; if(!$('input[name="seniority"]:checked'))return false; if(!$('input[name="workmode"]:checked'))return false; if(!$('#rgpd').checked)return false; return true; }
+  function updateSubmit(){ const r=ready(); submitBtn.disabled=!r; submitBtn.classList.toggle('is-disabled',!r); submitArea.classList.toggle('is-ready',r); }
+  $('#rgpd').addEventListener('change',updateSubmit);
+
+  function showView(v){ $('#view-form').classList.toggle('is-active',v==='form'); $('#view-result').classList.toggle('is-active',v!=='form'); $('#form-nav').style.display=v==='form'?'':'none'; window.scrollTo(0,0); }
+  function showState(s){ if(s==='form'){ showView('form'); return; } showView('result'); ['loading','result','error','deferred'].forEach(k=>$('#state-'+k).classList.toggle('is-active',k===s)); document.querySelector('.res-only-result').style.display=s==='result'?'':'none'; if(s==='loading')runLoader(); if(s==='result')runGauge(); }
+  let loaderTimer;
+  function runLoader(){ const steps=$$('#step-stack .step'); let i=0; steps.forEach(st=>st.classList.remove('is-active','is-done')); steps[0].classList.add('is-active'); runCounter(720*steps.length); clearInterval(loaderTimer); loaderTimer=setInterval(()=>{ steps[i].classList.remove('is-active'); steps[i].classList.add('is-done'); i++; if(i<steps.length)steps[i].classList.add('is-active'); else { clearInterval(loaderTimer); clearInterval(countTimer); const c=$('#load-counter'),b=$('#load-bar-fill'); if(c)c.firstChild.textContent='100'; if(b)b.style.width='100%'; showState('result'); } },720); }
+  let countTimer;
+  function runCounter(ms){ const el=$('#load-counter'),bar=$('#load-bar-fill'); if(!el)return; let pct=0; const t0=performance.now(); clearInterval(countTimer); countTimer=setInterval(()=>{ pct=Math.min(99,Math.round((performance.now()-t0)/ms*100)); el.firstChild.textContent=pct; if(bar)bar.style.width=pct+'%'; if(pct>=99)clearInterval(countTimer); },40); }
+  function runGauge(){ const segs=$$('#gauge .gauge__seg'); segs.forEach(s=>s.classList.remove('is-on')); let i=0; const t=setInterval(()=>{ if(i<8){ segs[i].classList.add('is-on'); i++; } else clearInterval(t); },90); }
+
+  $('#eval-form').addEventListener('submit',e=>{ e.preventDefault(); let ok=true;
+    $$('.tfield').forEach(f=>{ const inp=f.querySelector('input[required],textarea[required],select[required]'); if(inp&&!(inp.value||'').trim()){ setErr(f,'Ce champ est requis.'); ok=false; } });
+    if(!jtHidden.value){ setErr($('[data-field="jobtitle"]'),'Sélectionnez un intitulé de poste.'); ok=false; }
+    if(!$('input[name="seniority"]:checked')){ setErr($('[data-field="seniority"]'),'Sélectionnez une séniorité.'); ok=false; }
+    if(!$('input[name="workmode"]:checked')){ setErr($('[data-field="workmode"]'),'Sélectionnez une modalité de travail.'); ok=false; }
+    if(!$('#rgpd').checked){ $('[data-field="rgpd"]').classList.add('is-error'); ok=false; }
+    if(!ok)return;
+    submitBtn.classList.add('is-loading');
+    setTimeout(()=>{ submitBtn.classList.remove('is-loading'); showState('loading'); },1400);
+  });
+  $('#retry-btn').addEventListener('click',e=>{e.preventDefault();showState('loading');});
+  $('#err-back').addEventListener('click',e=>{e.preventDefault();showState('form');});
+  $$('[data-state]').forEach(b=>b.addEventListener('click',()=>{ $$('[data-state]').forEach(x=>x.classList.toggle('is-active',x===b)); showState(b.dataset.state); }));
+  updateSubmit();
+})();
+</script>
+</body>
+</html>

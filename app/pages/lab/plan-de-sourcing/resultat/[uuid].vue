@@ -25,6 +25,14 @@ const deferredEmail = ref<string>('')
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true })
 const renderedHtml = computed(() => (planContent.value ? md.render(planContent.value) : ''))
 
+const planDateLabel = computed(() => {
+  const raw = planMetadata.value?.createdAt
+  if (!raw) return ''
+  const d = new Date(raw)
+  if (Number.isNaN(d.getTime())) return ''
+  return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
+})
+
 useHead(() => ({
   title:
     state.value === 'plan' && planMetadata.value
@@ -343,6 +351,12 @@ async function onRetry() {
       <!-- ===== STATE: PLAN ===== -->
       <section v-else-if="state === 'plan'" class="state-plan">
         <div class="read" style="padding-top: 48px; padding-bottom: 80px;">
+          <header v-if="planMetadata" class="plan-head">
+            <span class="sec-eyebrow">Plan de sourcing LinkedIn<template v-if="planMetadata.posteRecherche"> · {{ planMetadata.posteRecherche }}</template></span>
+            <p class="plan-meta-line">
+              Préparé par Mariell pour {{ planMetadata.entreprise }}<template v-if="planDateLabel"> · {{ planDateLabel }}</template>
+            </p>
+          </header>
           <article class="prose-res" v-html="renderedHtml" />
           <aside class="final-cta">
             <h2>Recruter n’est pas un pari. <em>Parlons-en.</em></h2>
@@ -594,9 +608,32 @@ async function onRetry() {
 
 /* ---- Plan state ---- */
 .state-plan { position: relative; z-index: 1; animation: planFade 0.6s var(--ease-out); }
+.read { max-width: 760px; margin: 0 auto; padding: 0 40px; }
 @keyframes planFade {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Plan header (above markdown) ---- */
+.plan-head {
+  margin-bottom: 8px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-on-ink);
+}
+.sec-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.plan-meta-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--fg-on-ink-3);
+  margin: 10px 0 0;
 }
 
 /* ---- Prose styles for rendered markdown ---- */

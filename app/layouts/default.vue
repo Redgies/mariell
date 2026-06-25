@@ -10,6 +10,7 @@
       <slot />
     </main>
     <AppFooter />
+    <AppMobileCta />
   </div>
 </template>
 

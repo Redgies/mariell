@@ -536,8 +536,8 @@ a { color: inherit; }
   backdrop-filter: blur(16px);
 }
 .tresult-bar-inner {
-  max-width: 1100px; margin: 0 auto;
-  padding: 12px 24px;
+  max-width: 1040px; margin: 0 auto;
+  padding: 14px 40px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   flex-wrap: wrap;
 }
@@ -546,7 +546,7 @@ a { color: inherit; }
   padding: 0 24px;
 }
 .r-nav-inner {
-  max-width: 1100px; margin: 0 auto;
+  max-width: 1040px; margin: 0 auto;
   height: 60px; display: flex; align-items: center; justify-content: space-between;
 }
 .r-brand { display: inline-flex; align-items: center; text-decoration: none; flex-shrink: 0; }
@@ -591,9 +591,30 @@ a { color: inherit; }
   transition: width 120ms linear;
 }
 
+/* Loading — step stack (design ref) */
+.step-stack {
+  display: flex; flex-direction: column; gap: 12px;
+  margin: 36px auto 0; max-width: 420px; text-align: left;
+}
+.step {
+  font-size: 15px; color: var(--fg-on-ink-4);
+  padding-left: 26px; position: relative; transition: color 300ms;
+}
+.step::before {
+  content: ''; position: absolute; left: 3px; top: 7px;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1.5px solid var(--fg-on-ink-4);
+}
+.step.is-active, .step.is-done { color: var(--cyan); }
+.step.is-active::before, .step.is-done::before { border-color: var(--cyan); background: var(--cyan); }
+.step.is-done { color: var(--fg-on-ink-2); }
+
 /* Result fade-in */
 .r-result-fade { animation: r-fade 0.6s cubic-bezier(0.22,1,0.36,1); }
 @keyframes r-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Reading column (design ref) */
+.read { max-width: 780px; margin: 0 auto; padding: 48px 40px 80px; }
 
 /* doc-h1 */
 .doc-h1 {
@@ -730,7 +751,7 @@ a { color: inherit; }
 .doc-foot {
   margin-top: 40px; padding-top: 20px;
   border-top: 1px solid var(--border-on-ink);
-  font-family: var(--font-mono); font-size: 12px;
+  font-size: 12px;
   color: var(--fg-on-ink-3); text-align: center;
 }
 
@@ -778,7 +799,7 @@ a { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .r-result-fade, .gauge__seg, .load-bar__fill { animation: none; transition: none; }
+  .r-result-fade, .gauge__seg, .load-bar__fill, .step { animation: none; transition: none; }
   .load-counter { animation: none; }
 }
 

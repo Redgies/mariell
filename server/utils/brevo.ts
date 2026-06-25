@@ -70,6 +70,28 @@ export async function sendBrevoEmail(opts: SendBrevoOptions): Promise<BrevoSendR
 }
 
 /**
+ * Resolve a Brevo template id from its env var, with an explicit, debuggable
+ * error. When Brevo is configured (BREVO_API_KEY present) but the template env
+ * var is missing/0, throw a NAMED message — which env var to set on Vercel and
+ * which Brevo template to check — instead of a generic "invalid templateId".
+ * The message surfaces in logs AND in the critical alert raised by the handlers.
+ * In dev (no BREVO_API_KEY) we don't throw: sendBrevoEmail() logs a stub.
+ */
+function resolveTemplateId(envVar: string, label: string): number {
+  const raw = process.env[envVar]
+  const id = parseInt(raw || '0', 10)
+  if (hasBrevo() && (!Number.isFinite(id) || id <= 0)) {
+    throw new Error(
+      `[brevo] ${label} NON ENVOYÉ — variable d'env ${envVar} non configurée ` +
+        `(valeur actuelle : "${raw ?? 'undefined'}"). ` +
+        `→ Définis ${envVar} sur Vercel avec l'ID numérique du template, ` +
+        `et vérifie que ce template existe et est actif dans Brevo.`,
+    )
+  }
+  return id
+}
+
+/**
  * Critical alert email to the gérant — used by fail-soft handlers.
  * Plain-text, no template required, so it works even before Brevo templates are setup.
  */
@@ -170,7 +192,10 @@ export async function sendBrevoStageConfirmationProspect(args: {
   input: StageAlternanceInput
 }): Promise<BrevoSendResponse> {
   const { input } = args
-  const templateId = parseInt(process.env.BREVO_TEMPLATE_ID_STAGE_CONFIRMATION_PROSPECT || '0', 10)
+  const templateId = resolveTemplateId(
+    'BREVO_TEMPLATE_ID_STAGE_CONFIRMATION_PROSPECT',
+    'Stage/alternance — confirmation prospect',
+  )
   const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://mariell.fr'
 
   return sendBrevoEmail({
@@ -283,7 +308,10 @@ interface PlanSourcingLivraisonProspectArgs {
 export async function sendBrevoPlanSourcingLivraisonProspect(
   args: PlanSourcingLivraisonProspectArgs,
 ): Promise<BrevoSendResponse> {
-  const templateId = parseInt(process.env.BREVO_TEMPLATE_ID_PLAN_SOURCING_LIVRAISON_PROSPECT || '0', 10)
+  const templateId = resolveTemplateId(
+    'BREVO_TEMPLATE_ID_PLAN_SOURCING_LIVRAISON_PROSPECT',
+    'Plan de sourcing — livraison prospect',
+  )
   const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
 
   const posteAffiche =
@@ -346,7 +374,10 @@ interface PlanSourcingDeferredProspectArgs {
 export async function sendBrevoPlanSourcingDeferredProspect(
   args: PlanSourcingDeferredProspectArgs,
 ): Promise<BrevoSendResponse> {
-  const templateId = parseInt(process.env.BREVO_TEMPLATE_ID_PLAN_SOURCING_DEFERRED_PROSPECT || '0', 10)
+  const templateId = resolveTemplateId(
+    'BREVO_TEMPLATE_ID_PLAN_SOURCING_DEFERRED_PROSPECT',
+    'Plan de sourcing — différé prospect',
+  )
   const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
 
   const posteAffiche =
@@ -500,9 +531,9 @@ interface EvaluationConfirmationProspectArgs {
 export async function sendBrevoEvaluationConfirmationProspect(
   args: EvaluationConfirmationProspectArgs,
 ): Promise<BrevoSendResponse> {
-  const templateId = parseInt(
-    process.env.BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_CONFIRMATION_PROSPECT || '0',
-    10,
+  const templateId = resolveTemplateId(
+    'BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_CONFIRMATION_PROSPECT',
+    'Évaluation — confirmation prospect',
   )
   const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
 
@@ -533,9 +564,9 @@ interface EvaluationSuiviProspectArgs {
 export async function sendBrevoEvaluationSuiviProspect(
   args: EvaluationSuiviProspectArgs,
 ): Promise<BrevoSendResponse> {
-  const templateId = parseInt(
-    process.env.BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_SUIVI_PROSPECT || '0',
-    10,
+  const templateId = resolveTemplateId(
+    'BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_SUIVI_PROSPECT',
+    'Évaluation — suivi prospect (différé)',
   )
   const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
 

@@ -302,6 +302,7 @@ async function onSubmit() {
 
 <template>
   <div class="tool-body">
+    <div class="tool-bg" aria-hidden="true" />
     <nav class="site-nav">
       <div class="site-nav__inner">
         <NuxtLink to="/" class="site-nav__brand" aria-label="Mariell, accueil">
