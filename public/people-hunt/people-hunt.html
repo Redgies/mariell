@@ -132,11 +132,13 @@
   .crowd {
     position: absolute; inset: 0;
     transform-origin: 50% 62%;
-    transition: transform 500ms var(--ease-in-out), opacity 1200ms var(--ease-out);
+    transition: transform 500ms var(--ease-in-out);
     will-change: transform;
     opacity: 0;
-    /* Reveal is gated on real video readiness (see trailing script) so all
-       silhouettes appear together instead of popping in as each buffers. */
+    /* Le fondu d'entrée est déclenché en JS (revealCrowdWhenReady) une fois que
+       les vraies vidéos de la foule peuvent jouer (canplay/readyState>=3), pour
+       qu'elles montent toutes ensemble au lieu de surgir une par une pendant
+       le buffering. */
   }
   .ph-debug-tag {
     position: absolute;
@@ -942,7 +944,7 @@ function buildCrowd() {
   walkers = [];
   // Fewer concurrent videos = far smoother. Alpha 1080p webm are decode-heavy,
   // so we cap the simultaneous count low; depth staggering keeps it looking full.
-  const target = Math.max(7, Math.min(7, Math.round(TWEAKS.density * 0.55)));
+  const target = 6;   // baisse à 5 pour plus de fluidité, monte pour plus de densité
   // On init: stagger progress across the FULL cycle, from behind the horizon
   // (−0.35) through the visible zone (→ 1.0). Seeding some walkers already
   // "queued" behind the horizon means that as the first wave exits, others are
@@ -1069,7 +1071,7 @@ function tick(now) {
     // Maintain a minimum on-screen population: whenever fewer than MIN walkers
     // are visible (progress 0..1.15), pull the queued walker nearest the horizon
     // forward to the entry point so it fades in immediately. Keeps 4-6 on screen.
-    const MIN_VISIBLE = 6;
+    const MIN_VISIBLE = 4;
     let visible = 0;
     for (const w of walkers) if (w.progress >= 0 && w.progress <= 1.15) visible++;
     if (visible < MIN_VISIBLE) {
@@ -1387,12 +1389,33 @@ function init() {
   phEntering = true;
   setTimeout(function () { phEntering = false; }, 4000);
   buildCrowd();
-  // First-load reveal is handled purely in CSS (#crowd { animation: crowdReveal })
-  // so it always plays on load, independent of JS timing.
-  const vids = crowdEl.querySelectorAll('video');
+  // On ne révèle la foule qu'une fois que les vraies vidéos peuvent jouer, pour
+  // qu'elles fondent toutes ensemble au lieu de surgir une par une.
+  revealCrowdWhenReady();
   last = performance.now();
   requestAnimationFrame(tick);
   scheduleNext();
+}
+
+function revealCrowdWhenReady() {
+  const vids = Array.from(crowdEl.querySelectorAll('video'));
+  let done = false;
+  const reveal = () => {
+    if (done) return;
+    done = true;
+    crowdEl.style.animation = 'none';
+    void crowdEl.offsetWidth;                 // reflow pour relancer l'animation
+    // Même fondu doux de 4 s qu'avant, joué une fois les vidéos prêtes.
+    crowdEl.style.animation = 'crowdReveal 4000ms var(--ease-out) forwards';
+  };
+  const whenReady = v => new Promise(res => {
+    if (v.readyState >= 3) return res();       // peut déjà jouer
+    v.addEventListener('canplay', res, { once: true });
+    v.addEventListener('loadeddata', res, { once: true });
+    v.addEventListener('error', res, { once: true });   // une vidéo en échec ne bloque pas
+  });
+  Promise.all(vids.map(whenReady)).then(reveal);
+  setTimeout(reveal, 2500);                    // plafond, ne jamais attendre plus de 2,5 s
 }
 init();
 
@@ -1478,31 +1501,6 @@ window.addEventListener('message', (e)=>{
   if (d.type === '__deactivate_edit_mode') twEl.classList.remove('on');
 });
 window.parent && window.parent.postMessage({ type:'__edit_mode_available' }, '*');
-</script>
-<script>
-/* People Hunt — reveal the crowd only once every silhouette video has its first
-   frame ready, so they all appear together (no progressive pop-in on first load).
-   Safety timeout guarantees the scene is never left hidden. */
-(function () {
-  var crowd = document.querySelector('.crowd');
-  var vids = window.STOCK_VIDEOS || [];
-  if (!crowd) return;
-  var done = false;
-  var reveal = function () { if (done) return; done = true; crowd.style.opacity = '1'; };
-  if (!vids.length) { reveal(); return; }
-  var pending = vids.length;
-  var fin = function () { if (--pending <= 0) reveal(); };
-  vids.forEach(function (item) {
-    var v = document.createElement('video');
-    v.muted = true; v.preload = 'auto';
-    var once = false;
-    var go = function () { if (once) return; once = true; fin(); };
-    v.addEventListener('loadeddata', go, { once: true });
-    v.addEventListener('error', go, { once: true });
-    v.src = item.src; v.load();
-  });
-  setTimeout(reveal, 2500);
-})();
 </script>
 </body>
 </html>

@@ -72,6 +72,13 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'vercel',
+    routeRules: {
+      // Vidéos People Hunt : noms datés = contenu immuable → cache CDN long.
+      // Ciblé sur uploads/ (que des .webm) pour ne pas figer le HTML/JS voisins.
+      '/people-hunt/uploads/**': {
+        headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+      },
+    },
     // Outil 2 génère le plan via Claude Haiku — call serveur ~30s.
     // Vercel preset standard tolère jusqu'à 300s ; vercel-edge serait coupé à 25s.
     prerender: {
