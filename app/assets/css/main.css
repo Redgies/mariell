@@ -74,28 +74,36 @@ html {
   border-radius: 2px;
 }
 
-/* ---- Page transition: black fade UNDER the navbar ------------------------ */
-/* Full-viewport black overlay driven by app.vue navigation hooks. z-index 800
-   sits below the fixed navbar (z 900) so the nav stays visible and immobile
-   while only the content area fades through pure black. */
-.page-fade {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 800;
-  /* Reveal (out): long, smooth ease-out — the new page eases up from black. */
-  transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1);
+/* ---- Page transition (name "page", mode "out-in") ------------------------ */
+/* Nuxt wraps <NuxtPage> (the layout's <slot>) only, so the nav/footer never
+   animate — only the routed content fades + slides. Duration must match the
+   scroll delay in app/router.options.ts. */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.page-fade.is-on {
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-enter-to,
+.page-leave-from {
   opacity: 1;
-  /* Cover (in): quick ease-in so the route swap + scroll reset are hidden. */
-  transition: opacity 200ms cubic-bezier(0.4, 0, 1, 1);
+  transform: translateY(0);
 }
 
+/* Accessibilité : coupe le mouvement, garde un fondu quasi instantané. */
 @media (prefers-reduced-motion: reduce) {
-  .page-fade { display: none; }
+  .page-enter-active,
+  .page-leave-active {
+    transition: opacity 0.01ms;
+    transform: none;
+  }
+  .page-enter-from,
+  .page-leave-to {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

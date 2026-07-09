@@ -94,10 +94,12 @@ export default defineNuxtConfig({
   },
 
   app: {
-    // Transition de route = overlay "fondu au noir" piloté dans app.vue, placé
-    // SOUS la navbar (z-index 800 < 900) : la nav reste visible et fixe, seule
-    // la zone contenu passe au noir complet. CSS + reduced-motion dans main.css.
-    // Pas de pageTransition/layoutTransition Vue (l'overlay fait tout le visuel).
+    // Transition de route = fondu+slide du CONTENU uniquement (name "page",
+    // mode out-in). <NuxtPage> est dans le <slot> du layout ; la nav/footer sont
+    // sœurs du slot → elles restent fixes, seul le contenu s'anime. CSS +
+    // reduced-motion dans main.css, scroll retardé dans app/router.options.ts.
+    // NE PAS activer layoutTransition (sinon la nav s'animerait aussi).
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       title: 'Mariell — Recrutement Sales Premium',
       htmlAttrs: { lang: 'fr' },

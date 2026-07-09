@@ -6,32 +6,14 @@
 // export, applied centrally & reactively for every route. See usePageSeo.
 usePageSeo()
 
-// Route transition — a pure-black "fade through" overlay driven by Nuxt
-// navigation hooks. It sits BELOW the navbar (z-index 800 < nav 900, see
-// main.css) so the nav stays visible and fixed while only the content area
-// fades through black. A minimum hold makes the change perceptible even when
-// pages load instantly. Disabled via CSS on reduced-motion.
-const fading = ref(false)
-
-if (import.meta.client) {
-  const nuxtApp = useNuxtApp()
-  const HOLD = 420
-  let startAt = 0
-
-  nuxtApp.hook('page:start', () => {
-    fading.value = true
-    startAt = performance.now()
-  })
-  nuxtApp.hook('page:finish', () => {
-    const elapsed = performance.now() - startAt
-    window.setTimeout(() => { fading.value = false }, Math.max(0, HOLD - elapsed))
-  })
-}
+// Route transition — content-only fade+slide (name "page", mode out-in) defined
+// in nuxt.config app.pageTransition + main.css. The navbar/footer live in the
+// default layout as siblings of the transitioned <slot>, so they stay fixed —
+// only the routed content animates. Scroll reset is delayed via router.options.
 </script>
 
 <template>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <div class="page-fade" :class="{ 'is-on': fading }" aria-hidden="true" />
 </template>
