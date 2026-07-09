@@ -23,6 +23,17 @@ const errorMessage = ref<string>('')
 const deferredEmail = ref<string>('')
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true })
+
+// Bouton « Copier » sur chaque bloc de code (ex. requête booléenne LinkedIn) — cf. brief résultat outil 2.
+const defaultFence = md.renderer.rules.fence?.bind(md.renderer.rules)
+md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+  const rendered = defaultFence
+    ? defaultFence(tokens, idx, options, env, self)
+    : self.renderToken(tokens, idx, options)
+  const code = md.utils.escapeHtml(tokens[idx].content)
+  return `<div class="code-wrap"><button class="code-copy" type="button" data-code="${code}" aria-label="Copier le bloc">Copier</button>${rendered}</div>`
+}
+
 const renderedHtml = computed(() => (planContent.value ? md.render(planContent.value) : ''))
 
 const planDateLabel = computed(() => {
@@ -216,9 +227,6 @@ onBeforeUnmount(() => stopLoadingAnimation())
 
 const copyStates = reactive<Record<string, 'idle' | 'copied'>>({
   link: 'idle',
-  bool: 'idle',
-  tpl1: 'idle',
-  tpl2: 'idle',
 })
 
 async function onCopy(key: string, getText: () => string) {
@@ -233,11 +241,17 @@ function onCopyLink() {
   onCopy('link', () => window.location.href)
 }
 
-function onCopyBlock(key: string, elId: string) {
-  onCopy(key, () => {
-    const el = document.getElementById(elId)
-    return el?.textContent || ''
-  })
+// Copie du contenu d'un bloc de code rendu dans le plan (délégation d'événement sur l'article).
+async function onProseClick(e: MouseEvent) {
+  const btn = (e.target as HTMLElement).closest('.code-copy') as HTMLElement | null
+  if (!btn) return
+  try {
+    await navigator.clipboard.writeText(btn.getAttribute('data-code') || '')
+    btn.classList.add('is-copied')
+    const prev = btn.textContent
+    btn.textContent = 'Copié !'
+    setTimeout(() => { btn.classList.remove('is-copied'); btn.textContent = prev }, 1800)
+  } catch {}
 }
 
 function onPrint() {
@@ -286,6 +300,11 @@ async function onRetry() {
               <rect x="6" y="14" width="12" height="8" />
             </svg>
             Imprimer
+          </button>
+          <button class="btn-pill btn-ghost" type="button"
+                  :class="{ 'is-copied': copyStates.link === 'copied' }"
+                  @click="onCopyLink">
+            {{ copyStates.link === 'copied' ? 'Copié !' : 'Copier le lien' }}
           </button>
           <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">
             Prendre rendez-vous
@@ -343,7 +362,7 @@ async function onRetry() {
             </div>
           </div>
           <p class="reassure">
-            Cette opération prend en général 30 à 60 secondes. Merci de ne pas fermer cette fenêtre.
+            Cette opération prend en général 25 à 35 secondes. Merci de ne pas fermer cette fenêtre.
           </p>
         </div>
       </section>
@@ -357,7 +376,8 @@ async function onRetry() {
               Préparé par Mariell pour {{ planMetadata.entreprise }}<template v-if="planDateLabel"> · {{ planDateLabel }}</template>
             </p>
           </header>
-          <article class="prose-res" v-html="renderedHtml" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <article class="prose-res" v-html="renderedHtml" @click="onProseClick" />
           <aside class="final-cta">
             <h2>Recruter n’est pas un pari. <em>Parlons-en.</em></h2>
             <p>Un échange de 30 minutes pour caler le plan sur votre contexte précis et lancer la chasse cette semaine.</p>
@@ -724,6 +744,31 @@ async function onRetry() {
   border: none;
   border-top: 1px solid var(--border-on-ink);
   margin: 32px 0;
+}
+.prose-res :deep(.code-wrap) {
+  position: relative;
+}
+.prose-res :deep(.code-copy) {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-on-ink-2);
+  background: var(--ink-900);
+  border: 1px solid var(--border-on-ink-strong);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.prose-res :deep(.code-copy:hover),
+.prose-res :deep(.code-copy.is-copied) {
+  color: var(--cyan);
+  border-color: var(--cyan);
 }
 .prose-res :deep(pre) {
   margin: 0;

@@ -25,7 +25,16 @@ const errorMessage = ref<string>('')
 const deferredEmail = ref<string>('')
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true })
-const renderedHtml = computed(() => (evalMarkdown.value ? md.render(evalMarkdown.value) : ''))
+
+// Brief « cta-aligne » : la section 8 du markdown LLM (« On peut en parler. C'est ici. »)
+// fait doublon avec le bloc <aside class="final-cta"> statique et doit être retirée.
+function stripFinalCta(markdown: string): string {
+  return markdown
+    .replace(/\n#{1,6}[ \t]*8[.)]?[ \t][\s\S]*$/i, '')
+    .replace(/\n+[*_>\s]*On peut en parler\.?\s*C['’]est ici\.?[*_>\s]*$/i, '')
+    .trimEnd()
+}
+const renderedHtml = computed(() => (evalMarkdown.value ? md.render(stripFinalCta(evalMarkdown.value)) : ''))
 
 useHead(() => ({
   title:
@@ -50,7 +59,7 @@ async function fetchEvaluation() {
     state.value = 'result'
   } catch (err: any) {
     if (err?.statusCode === 404) {
-      errorMessage.value = 'Évaluation introuvable ou expirée (durée de vie : 90 jours).'
+      errorMessage.value = 'Évaluation introuvable ou expirée (durée de vie : 90 jours).'
     } else {
       errorMessage.value = err?.data?.message || err?.message || 'Une erreur est survenue.'
     }
@@ -282,7 +291,7 @@ async function onRetry() {
           <button class="btn-pill btn-ghost r-copy-btn" type="button"
                   :class="{ 'is-copied': copyState === 'copied' }"
                   @click="onCopyLink">
-            {{ copyState === 'copied' ? 'Copié !' : 'Copier le lien' }}
+            {{ copyState === 'copied' ? 'Copié !' : 'Copier le lien' }}
           </button>
           <a class="btn-pill btn-cyan" :href="calendlyUrl" target="_blank" rel="noopener">
             Prendre rendez-vous
@@ -351,7 +360,7 @@ async function onRetry() {
               <span class="verdict__score">Position <b>{{ evalJson.jauge_position }}&nbsp;/ 10</b></span>
             </header>
             <h2 class="verdict__level">
-              Position d’attractivité : <em>{{ evalJson.niveau_attractivite }}.</em>
+              Position d’attractivité&nbsp;: <em>{{ evalJson.niveau_attractivite }}.</em>
             </h2>
             <div class="gauge" role="img" :aria-label="`Jauge — ${evalJson.jauge_position} sur 10`">
               <span v-for="i in 10" :key="i" class="gauge__seg"
