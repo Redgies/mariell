@@ -94,8 +94,11 @@ export default defineNuxtConfig({
   },
 
   app: {
-    // Transition gérée par un overlay "fondu vers le noir" piloté dans app.vue
-    // (couvre aussi la nav/menu). Pas de pageTransition Vue.
+    // Transition de route = fondu du contenu uniquement (out-in). Elle enveloppe
+    // <NuxtPage>, donc la nav/footer du layout restent fixes — seul le contenu
+    // routé fait le fondu. CSS + reduced-motion dans app/assets/css/main.css.
+    // Pas de layoutTransition (sinon la nav s'animerait aussi).
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       title: 'Mariell — Recrutement Sales Premium',
       htmlAttrs: { lang: 'fr' },
