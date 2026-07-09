@@ -1398,24 +1398,36 @@ function init() {
 }
 
 function revealCrowdWhenReady() {
-  const vids = Array.from(crowdEl.querySelectorAll('video'));
+  // On ne révèle la foule qu'une fois que chaque silhouette VISIBLE a peint sa
+  // PREMIÈRE IMAGE (pas seulement "canplay"). Sinon une vidéo lente à décoder
+  // (webm alpha 1080p, ~4,9 Mo) reste vide pendant le fondu collectif puis
+  // surgit d'un coup — d'autant que phEntering désactive le fondu par-personne.
+  // Les walkers en file derrière l'horizon (progress<0) sont invisibles et leur
+  // vidéo est en pause (aucune frame peinte) → on ne les attend pas.
+  const vids = walkers.filter(w => w.progress >= 0).map(w => w.el);
   let done = false;
   const reveal = () => {
     if (done) return;
     done = true;
     crowdEl.style.animation = 'none';
     void crowdEl.offsetWidth;                 // reflow pour relancer l'animation
-    // Même fondu doux de 4 s qu'avant, joué une fois les vidéos prêtes.
     crowdEl.style.animation = 'crowdReveal 4000ms var(--ease-out) forwards';
   };
-  const whenReady = v => new Promise(res => {
-    if (v.readyState >= 3) return res();       // peut déjà jouer
-    v.addEventListener('canplay', res, { once: true });
-    v.addEventListener('loadeddata', res, { once: true });
-    v.addEventListener('error', res, { once: true });   // une vidéo en échec ne bloque pas
+  const whenPainted = v => new Promise(res => {
+    let settled = false;
+    const ok = () => { if (!settled) { settled = true; res(); } };
+    if (typeof v.requestVideoFrameCallback === 'function') {
+      v.requestVideoFrameCallback(() => ok());   // vraie première frame rendue
+    } else if (v.readyState >= 2) {
+      ok();                                       // fallback: HAVE_CURRENT_DATA
+    } else {
+      v.addEventListener('loadeddata', ok, { once: true });
+      v.addEventListener('canplay', ok, { once: true });
+    }
+    v.addEventListener('error', ok, { once: true });   // une vidéo en échec ne bloque pas
   });
-  Promise.all(vids.map(whenReady)).then(reveal);
-  setTimeout(reveal, 2500);                    // plafond, ne jamais attendre plus de 2,5 s
+  Promise.all(vids.map(whenPainted)).then(reveal);
+  setTimeout(reveal, 4000);                    // plafond de sécurité (décodage 1080p alpha lent)
 }
 init();
 
