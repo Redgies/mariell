@@ -401,6 +401,7 @@ export async function sendBrevoPlanSourcingDeferredProspect(
 // ============================================================
 
 import type { FormulaireOutil3 } from '../schemas/outil-3/formulaire'
+import { getDimensionFonctionLabel } from '../schemas/outil-3/formulaire'
 import type { LlmOutputJson } from '../schemas/outil-3/llm-output-json'
 
 function buildEvaluationInternalParams(input: FormulaireOutil3, json?: LlmOutputJson | null) {
@@ -426,10 +427,7 @@ function buildEvaluationInternalParams(input: FormulaireOutil3, json?: LlmOutput
     EQUIPE_SALES: input.equipe_sales,
     INTITULE_POSTE: intituleAffiche,
     SENIORITE: input.seniorite,
-    TYPE_CYCLE:
-      input.type_cycle === 'Autre' && input.type_cycle_autre
-        ? `${input.type_cycle} (${input.type_cycle_autre})`
-        : input.type_cycle,
+    TYPE_CYCLE: getDimensionFonctionLabel(input),
     MODALITE_TRAVAIL: input.modalite_travail,
     DESCRIPTION_MISSIONS: input.description_missions.slice(0, 500),
     PACKAGE_FIXE: `${input.package_fixe.toLocaleString('fr-FR')} €`,

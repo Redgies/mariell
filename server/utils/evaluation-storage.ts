@@ -1,5 +1,6 @@
 import { Redis } from '@upstash/redis'
 import type { FormulaireOutil3 } from '../schemas/outil-3/formulaire'
+import { getDimensionFonctionLabel } from '../schemas/outil-3/formulaire'
 import type { LlmOutputJson } from '../schemas/outil-3/llm-output-json'
 
 let redis: Redis | null = null
@@ -70,7 +71,7 @@ export interface EvaluationRecord {
   inputs: {
     secteur: string
     seniorite: string
-    type_cycle: string
+    dimension_fonction: string
     modalite_travail: string
     package_fixe: number
     package_ote: number
@@ -133,10 +134,7 @@ export function anonymizeInputs(input: FormulaireOutil3): EvaluationRecord['inpu
         ? `${input.secteur} (${input.secteur_precision_autre})`
         : input.secteur,
     seniorite: input.seniorite,
-    type_cycle:
-      input.type_cycle === 'Autre' && input.type_cycle_autre
-        ? `${input.type_cycle} (${input.type_cycle_autre})`
-        : input.type_cycle,
+    dimension_fonction: getDimensionFonctionLabel(input),
     modalite_travail: input.modalite_travail,
     package_fixe: input.package_fixe,
     package_ote: input.package_ote,

@@ -1,12 +1,8 @@
 import type { FormulaireOutil3 } from '../../schemas/outil-3/formulaire'
+import { getDimensionFonctionLabel } from '../../schemas/outil-3/formulaire'
 import { calculatePackagePosition } from './calculate-package-position'
 
 export function buildEvaluationUserPrompt(data: FormulaireOutil3): string {
-  const cycleLabel =
-    data.type_cycle === 'Autre' && data.type_cycle_autre
-      ? `${data.type_cycle} (${data.type_cycle_autre})`
-      : data.type_cycle
-
   const intituleLabel =
     data.intitule_poste === 'Autre' && data.intitule_poste_precision_autre
       ? `${data.intitule_poste} (${data.intitule_poste_precision_autre})`
@@ -57,7 +53,7 @@ ${siteWebLine}
 # Contexte poste
 - Intitulé : ${intituleLabel}
 - Séniorité visée : ${data.seniorite}
-- Type de cycle : ${cycleLabel}
+- ${getDimensionFonctionLabel(data)}
 - Modalité de travail : ${data.modalite_travail}
 
 # Description des missions (champ libre, max 1000 caractères)

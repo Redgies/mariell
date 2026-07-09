@@ -1,5 +1,9 @@
 import { nanoid } from 'nanoid'
-import { formulaireOutil3SchemaRefined, type FormulaireOutil3 } from '../../../schemas/outil-3/formulaire'
+import {
+  formulaireOutil3SchemaRefined,
+  getDimensionFonctionLabel,
+  type FormulaireOutil3,
+} from '../../../schemas/outil-3/formulaire'
 import { llmOutputJsonSchemaRefined, type LlmOutputJson } from '../../../schemas/outil-3/llm-output-json'
 import { verifyTurnstile } from '../../../utils/turnstile'
 import { checkEvaluationAttractiviteRateLimit } from '../../../utils/ratelimit'
@@ -453,11 +457,6 @@ function buildProjectDescription(
     input.secteur === 'Autre' && input.secteur_precision_autre
       ? input.secteur_precision_autre
       : input.secteur
-  const cycleAffiche =
-    input.type_cycle === 'Autre' && input.type_cycle_autre
-      ? input.type_cycle_autre
-      : input.type_cycle
-
   const lines: string[] = [
     '## Contact',
     `${input.prenom} ${input.nom}`,
@@ -477,7 +476,7 @@ function buildProjectDescription(
     '## Le poste',
     `**Intitulé** : ${intituleAffiche}`,
     `**Séniorité** : ${input.seniorite}`,
-    `**Cycle** : ${cycleAffiche}`,
+    `**${getDimensionFonctionLabel(input)}**`,
     `**Modalité** : ${input.modalite_travail}`,
     '',
     '## Package',

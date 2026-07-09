@@ -38,14 +38,49 @@ const SECTORS = [
   'Autre',
 ] as const
 
-const CYCLES = [
-  'Outbound',
-  'Inbound',
-  'Mixte',
-  'Account Management',
-  'Sales Ops',
-  'Autre',
+// V12 — champ conditionnel piloté par la famille de l'intitulé de poste.
+const TYPES_ACQUISITION = ['Outbound', 'Inbound', 'Mixte', 'Poste sans acquisition directe'] as const
+const NATURES_FONCTION = [
+  'Gestion de comptes (rétention, upsell, expansion)',
+  'Customer Success (satisfaction, renouvellement)',
+  'Avant-vente / Sales Engineering (support technique)',
+  'Sales Ops / RevOps (outillage & process)',
+  'Channel / Partenariats (animation réseau)',
 ] as const
+const DIMENSIONS_MANAGERIALES = [
+  "Construction & recrutement d'équipe",
+  'Coaching & montée en compétence',
+  'Structuration (process, outils, méthode)',
+  'Pilotage de la performance (KPIs, forecast)',
+] as const
+
+type FamilleFonction = 'acquisition' | 'gestion' | 'direction' | 'charniere' | 'autre'
+function getFamilleFonction(intitule: (typeof ROLES)[number]): FamilleFonction {
+  switch (intitule) {
+    case 'SDR / BDR':
+    case 'Inside Sales':
+    case 'Field Sales / Outside Sales':
+    case 'Business Developer Full Cycle':
+    case 'Account Executive — PME / SMB':
+    case 'Account Executive — Mid-Market':
+    case 'Account Executive — Enterprise':
+      return 'acquisition'
+    case 'Sales Engineer / Pre-Sales':
+    case 'Account Manager':
+    case 'Strategic Account Manager / Key Account Manager':
+    case 'Customer Success Manager':
+    case 'Sales Ops / RevOps':
+    case 'Channel / Partner Manager':
+      return 'gestion'
+    case 'VP Sales / CRO':
+      return 'direction'
+    case 'Sales Manager / Team Lead':
+    case 'Head of Sales':
+      return 'charniere'
+    default:
+      return 'autre'
+  }
+}
 
 const MODALITES = [
   'Full remote',
@@ -70,14 +105,26 @@ const form = reactive({
   intitulePoste: '' as (typeof ROLES)[number] | '',
   intitulePosteAutre: '',
   seniorite: '' as 'Junior 0-2 ans' | 'Confirmé 2-5 ans' | 'Senior 5-8 ans' | 'Lead 8+ ans' | '',
-  typeCycle: '' as (typeof CYCLES)[number] | '',
-  typeCycleAutre: '',
+  typeAcquisition: '' as (typeof TYPES_ACQUISITION)[number] | '',
+  natureFonction: '' as (typeof NATURES_FONCTION)[number] | '',
+  dimensionManageriale: [] as (typeof DIMENSIONS_MANAGERIALES)[number][],
+  naturePosteAutre: '',
   modaliteTravail: '' as (typeof MODALITES)[number] | '',
   descriptionMissions: '',
   packageFixe: '',
   packageOte: '',
   rgpd: false,
 })
+
+// Famille de poste déduite de l'intitulé → pilote quel champ conditionnel s'affiche.
+const famille = computed<FamilleFonction | null>(() =>
+  form.intitulePoste ? getFamilleFonction(form.intitulePoste) : null,
+)
+const acquisitionOptions = computed(() =>
+  famille.value === 'charniere'
+    ? TYPES_ACQUISITION
+    : TYPES_ACQUISITION.filter((a) => a !== 'Poste sans acquisition directe'),
+)
 
 const turnstileToken = ref(hasTurnstile.value ? '' : 'dev-stub')
 const turnstile = ref<{ reset?: () => void } | null>(null)
@@ -90,7 +137,8 @@ type FieldKey =
   | 'prenom' | 'nom' | 'email' | 'phone'
   | 'entreprise' | 'siteWeb' | 'secteur' | 'secteurAutre' | 'localisation'
   | 'effectifs' | 'equipeSales'
-  | 'intitulePoste' | 'intitulePosteAutre' | 'seniorite' | 'typeCycle' | 'typeCycleAutre' | 'modaliteTravail'
+  | 'intitulePoste' | 'intitulePosteAutre' | 'seniorite'
+  | 'typeAcquisition' | 'natureFonction' | 'dimensionManageriale' | 'naturePosteAutre' | 'modaliteTravail'
   | 'descriptionMissions'
   | 'packageFixe' | 'packageOte'
   | 'rgpd'
@@ -99,7 +147,8 @@ const errors = reactive<Record<FieldKey, string | null>>({
   prenom: null, nom: null, email: null, phone: null,
   entreprise: null, siteWeb: null, secteur: null, secteurAutre: null, localisation: null,
   effectifs: null, equipeSales: null,
-  intitulePoste: null, intitulePosteAutre: null, seniorite: null, typeCycle: null, typeCycleAutre: null, modaliteTravail: null,
+  intitulePoste: null, intitulePosteAutre: null, seniorite: null,
+  typeAcquisition: null, natureFonction: null, dimensionManageriale: null, naturePosteAutre: null, modaliteTravail: null,
   descriptionMissions: null,
   packageFixe: null, packageOte: null,
   rgpd: null,
@@ -162,10 +211,25 @@ function validateField(key: FieldKey): string | null {
       if (form.intitulePoste !== 'Autre') return null
       return t(form.intitulePosteAutre).length >= 3 ? null : "Précisez l’intitulé (3 caractères min)."
     case 'seniorite': return form.seniorite ? null : 'Sélectionnez un niveau de séniorité.'
-    case 'typeCycle': return form.typeCycle ? null : 'Sélectionnez un type de cycle.'
-    case 'typeCycleAutre':
-      if (form.typeCycle !== 'Autre') return null
-      return t(form.typeCycleAutre).length >= 3 ? null : 'Précisez le type de cycle (3 caractères min).'
+    case 'typeAcquisition': {
+      const f = famille.value
+      if (f !== 'acquisition' && f !== 'charniere') return null
+      if (!form.typeAcquisition) return "Sélectionnez le type d'acquisition."
+      if (f === 'acquisition' && form.typeAcquisition === 'Poste sans acquisition directe')
+        return 'Choisissez Outbound, Inbound ou Mixte.'
+      return null
+    }
+    case 'natureFonction':
+      if (famille.value !== 'gestion') return null
+      return form.natureFonction ? null : 'Sélectionnez la nature de la fonction.'
+    case 'dimensionManageriale': {
+      const f = famille.value
+      if (f !== 'direction' && f !== 'charniere') return null
+      return form.dimensionManageriale.length >= 1 ? null : 'Sélectionnez 1 à 2 dimensions managériales.'
+    }
+    case 'naturePosteAutre':
+      if (famille.value !== 'autre') return null
+      return t(form.naturePosteAutre).length >= 2 ? null : 'Précisez la nature du poste (2 caractères min).'
     case 'modaliteTravail': return form.modaliteTravail ? null : 'Sélectionnez une modalité de travail.'
     case 'descriptionMissions': {
       const v = t(form.descriptionMissions)
@@ -196,12 +260,18 @@ function clearError(key: FieldKey) { if (errors[key]) errors[key] = null }
 
 watch(() => form.intitulePoste, (v) => {
   if (v !== 'Autre') { form.intitulePosteAutre = ''; errors.intitulePosteAutre = null }
+  // La famille change → on réinitialise le champ conditionnel du poste.
+  form.typeAcquisition = ''
+  form.natureFonction = ''
+  form.dimensionManageriale = []
+  form.naturePosteAutre = ''
+  errors.typeAcquisition = null
+  errors.natureFonction = null
+  errors.dimensionManageriale = null
+  errors.naturePosteAutre = null
 })
 watch(() => form.secteur, (v) => {
   if (v !== 'Autre') { form.secteurAutre = ''; errors.secteurAutre = null }
-})
-watch(() => form.typeCycle, (v) => {
-  if (v !== 'Autre') { form.typeCycleAutre = ''; errors.typeCycleAutre = null }
 })
 
 const missionsLen = computed(() => form.descriptionMissions.length)
@@ -241,7 +311,14 @@ const isFormReady = computed(() => {
   if (!form.localisation.trim() || !form.effectifs.trim() || !form.equipeSales.trim()) return false
   if (!form.intitulePoste || (form.intitulePoste === 'Autre' && !form.intitulePosteAutre.trim())) return false
   if (!form.seniorite) return false
-  if (!form.typeCycle || (form.typeCycle === 'Autre' && !form.typeCycleAutre.trim())) return false
+  const fam = famille.value
+  if (
+    (fam === 'acquisition' || fam === 'charniere') &&
+    (!form.typeAcquisition || (fam === 'acquisition' && form.typeAcquisition === 'Poste sans acquisition directe'))
+  ) return false
+  if (fam === 'gestion' && !form.natureFonction) return false
+  if ((fam === 'direction' || fam === 'charniere') && form.dimensionManageriale.length < 1) return false
+  if (fam === 'autre' && form.naturePosteAutre.trim().length < 2) return false
   if (!form.modaliteTravail) return false
   const ml = form.descriptionMissions.trim().length
   if (ml < 50 || ml > 1000) return false
@@ -295,8 +372,10 @@ async function onSubmit() {
     intitule_poste_precision_autre:
       form.intitulePoste === 'Autre' ? form.intitulePosteAutre.trim() : undefined,
     seniorite: form.seniorite as 'Junior 0-2 ans' | 'Confirmé 2-5 ans' | 'Senior 5-8 ans' | 'Lead 8+ ans',
-    type_cycle: form.typeCycle as (typeof CYCLES)[number],
-    type_cycle_autre: form.typeCycle === 'Autre' ? form.typeCycleAutre.trim() : undefined,
+    type_acquisition: (form.typeAcquisition || null) as (typeof TYPES_ACQUISITION)[number] | null,
+    nature_fonction: (form.natureFonction || null) as (typeof NATURES_FONCTION)[number] | null,
+    dimension_manageriale: form.dimensionManageriale.length ? [...form.dimensionManageriale] : null,
+    nature_poste_autre: form.naturePosteAutre.trim() || null,
     modalite_travail: form.modaliteTravail as (typeof MODALITES)[number],
     description_missions: form.descriptionMissions.trim(),
     package_fixe: stripNumber(form.packageFixe)!,
@@ -551,25 +630,65 @@ async function onSubmit() {
                 <p class="terror">{{ errors.seniorite || 'Sélectionnez une séniorité.' }}</p>
               </div>
 
-              <!-- Type de cycle commercial -->
-              <div class="tfield" :class="{ 'is-error': errors.typeCycle }">
-                <label class="tlabel" for="ea-cycle">Type de cycle commercial <span class="treq">*</span></label>
+              <!-- Champ conditionnel selon la famille de poste (V12) -->
+              <div v-if="famille === 'acquisition' || famille === 'charniere'"
+                   class="tfield" :class="{ 'is-error': errors.typeAcquisition }">
+                <label class="tlabel" for="ea-acq">
+                  {{ famille === 'charniere' ? 'Acquisition directe attendue' : 'Type d’acquisition' }}
+                  <span class="treq">*</span>
+                </label>
                 <div class="tselect-wrap">
-                  <select id="ea-cycle" v-model="form.typeCycle" class="tselect"
-                          :class="{ 'is-empty': !form.typeCycle }"
-                          @change="clearError('typeCycle')">
-                    <option value="" disabled hidden>Sélectionnez un type de cycle</option>
-                    <option v-for="c in CYCLES" :key="c" :value="c">{{ c }}</option>
+                  <select id="ea-acq" v-model="form.typeAcquisition" class="tselect"
+                          :class="{ 'is-empty': !form.typeAcquisition }"
+                          @change="clearError('typeAcquisition')">
+                    <option value="" disabled hidden>Sélectionnez…</option>
+                    <option v-for="a in acquisitionOptions" :key="a" :value="a">{{ a }}</option>
                   </select>
                 </div>
-                <div v-if="form.typeCycle === 'Autre'" class="tprecision">
-                  <input v-model="form.typeCycleAutre" class="tinput" type="text" maxlength="60"
-                         placeholder="Précisez le type de cycle (60 caractères max)"
-                         :class="{ 'is-error': errors.typeCycleAutre }"
-                         @blur="onBlur('typeCycleAutre')" @input="clearError('typeCycleAutre')" />
-                  <p v-if="errors.typeCycleAutre" class="terror">{{ errors.typeCycleAutre }}</p>
+                <p class="terror">{{ errors.typeAcquisition || 'Champ obligatoire.' }}</p>
+              </div>
+
+              <div v-else-if="famille === 'gestion'"
+                   class="tfield" :class="{ 'is-error': errors.natureFonction }">
+                <label class="tlabel" for="ea-nature">Nature de la fonction <span class="treq">*</span></label>
+                <div class="tselect-wrap">
+                  <select id="ea-nature" v-model="form.natureFonction" class="tselect"
+                          :class="{ 'is-empty': !form.natureFonction }"
+                          @change="clearError('natureFonction')">
+                    <option value="" disabled hidden>Sélectionnez…</option>
+                    <option v-for="n in NATURES_FONCTION" :key="n" :value="n">{{ n }}</option>
+                  </select>
                 </div>
-                <p class="terror">{{ errors.typeCycle || 'Sélectionnez un type de cycle.' }}</p>
+                <p class="terror">{{ errors.natureFonction || 'Champ obligatoire.' }}</p>
+              </div>
+
+              <div v-else-if="famille === 'autre'"
+                   class="tfield" :class="{ 'is-error': errors.naturePosteAutre }">
+                <label class="tlabel" for="ea-natp">Nature du poste <span class="treq">*</span></label>
+                <input id="ea-natp" v-model="form.naturePosteAutre" class="tinput" type="text" maxlength="80"
+                       placeholder="Décrivez la nature du poste (80 caractères max)"
+                       :class="{ 'is-error': errors.naturePosteAutre }"
+                       @blur="onBlur('naturePosteAutre')" @input="clearError('naturePosteAutre')" />
+                <p class="terror">{{ errors.naturePosteAutre || 'Champ obligatoire.' }}</p>
+              </div>
+
+              <!-- Dimensions managériales (direction + charnière) -->
+              <div v-if="famille === 'direction' || famille === 'charniere'"
+                   class="tfield" :class="{ 'is-error': errors.dimensionManageriale }">
+                <span class="tlabel">
+                  Dimension(s) managériale(s) <span class="treq">*</span>
+                  <span class="tlabel-hint">— 1 à 2</span>
+                </span>
+                <div class="ttiles ttiles--2" role="group">
+                  <label v-for="d in DIMENSIONS_MANAGERIALES" :key="d" class="ttile ttile--check"
+                         :class="{ 'is-disabled': form.dimensionManageriale.length >= 2 && !form.dimensionManageriale.includes(d) }">
+                    <input v-model="form.dimensionManageriale" type="checkbox" :value="d"
+                           :disabled="form.dimensionManageriale.length >= 2 && !form.dimensionManageriale.includes(d)"
+                           @change="clearError('dimensionManageriale')" />
+                    <span class="ttile-title">{{ d }}</span>
+                  </label>
+                </div>
+                <p class="terror">{{ errors.dimensionManageriale || 'Sélectionnez 1 à 2 dimensions.' }}</p>
               </div>
 
               <!-- Modalité de travail -->
