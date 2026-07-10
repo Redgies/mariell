@@ -536,7 +536,8 @@ async function onRetry() {
   position: relative; min-height: 100vh;
   background: var(--ink-900);
   color: var(--fg-on-ink-1);
-  font-family: var(--font-display, var(--font-grotesk));
+  /* Corps en sans (comme l'outil 2) ; les titres passent en serif explicitement. */
+  font-family: var(--font-text);
 }
 /* Le contenu passe au-dessus du .tool-bg atmosphérique (position:fixed, z-index:0). */
 .r-root > main { position: relative; z-index: 1; }
@@ -576,6 +577,8 @@ a { color: inherit; }
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--fg-on-ink-3);
 }
+/* Boutons header en serif explicite (identiques à l'outil 2, car la racine est en sans). */
+.tresult-bar .btn-pill { font-family: var(--font-display); }
 .r-copy-btn.is-copied { color: var(--cyan); border-color: var(--cyan); }
 
 /* Loading — réutilise les classes tools.css */
@@ -628,7 +631,7 @@ a { color: inherit; }
 @keyframes r-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Reading column (design ref) */
-.read { max-width: 780px; margin: 0 auto; padding: 48px 40px 80px; }
+.read { max-width: 760px; margin: 0 auto; padding: 48px 40px 80px; }
 
 /* doc-h1 */
 .doc-h1 {
@@ -728,7 +731,7 @@ a { color: inherit; }
 .prose { font-size: 16px; line-height: 1.62; color: var(--fg-on-ink-2); }
 .prose :deep(h2) {
   font-family: var(--font-display); font-weight: 500;
-  font-size: clamp(24px, 3.2vw, 34px);
+  font-size: clamp(26px, 3.4vw, 38px);
   letter-spacing: -0.02em; margin: 44px 0 16px;
   color: var(--fg-on-ink-1);
 }
