@@ -663,7 +663,14 @@ function applyWalkerStyle(w) {
   // Fade-out must reach 0 BY the recycle point (1.08), otherwise the walker is
   // still ~8% visible when it teleports behind the horizon → a visible "pop".
   const fadeOut = smooth(Math.max(0, Math.min(1, (1.08 - w.progress) / 0.42)));
-  const alpha = depthDim * Math.min(fadeIn, fadeOut);
+  // Gate anti-pop par walker : tant que la vidéo n'a pas peint sa PREMIÈRE image,
+  // la silhouette reste invisible (paintFade = 0). Dès la 1re frame, court fondu
+  // de 300ms depuis 0 (indépendant du progress) → aucune silhouette ne surgit
+  // jamais d'un coup, ni au chargement, ni en franchissant l'horizon, ni au recyclage.
+  const paintFade = w._painted
+    ? smooth(Math.max(0, Math.min(1, (performance.now() - w._paintAt) / 300)))
+    : 0;
+  const alpha = depthDim * Math.min(fadeIn, fadeOut) * paintFade;
   w.el.style.setProperty('--alpha', alpha.toFixed(3));
 }
 
@@ -812,7 +819,24 @@ function spawnWalker(progressInit) {
     // until they cross the horizon.
     _videoStarted: progressInit >= 0,
     scanned: false,
+    // Anti-pop : passe à true dès que la vidéo a peint sa 1re image (cf. _armPaint).
+    _painted: false,
+    _paintAt: 0,
   };
+  // Arme la détection de première frame peinte (ré-armable après recyclage).
+  w._armPaint = () => {
+    w._painted = false;
+    w._paintAt = 0;
+    const mark = () => { if (!w._painted) { w._painted = true; w._paintAt = performance.now(); } };
+    if (typeof w.el.requestVideoFrameCallback === 'function') {
+      w.el.requestVideoFrameCallback(() => mark());   // vraie frame rendue
+    } else if (w.el.readyState >= 2) {
+      mark();                                          // fallback: HAVE_CURRENT_DATA
+    } else {
+      w.el.addEventListener('loadeddata', mark, { once: true });
+    }
+  };
+  w._armPaint();
   if (progressInit >= 0) {
     // Align the clip's playhead to the walker's starting depth so even the
     // first (staggered) cycle is in sync — video position = progress fraction.
@@ -875,6 +899,8 @@ function recycleWalker(w) {
   w.gender = variant.gender;
   w.el.src = variant.src;
   w.el.dataset.gender = variant.gender;
+  // Nouvelle vidéo → on regate la silhouette jusqu'à sa 1re frame peinte.
+  if (w._armPaint) w._armPaint();
   // Re-enter behind the horizon. Choose the depth (and lane) that maximises
   // separation from every other walker so the crowd never bunches in one plane
   // and never leaves a gap. Wider band + more candidates = finer optimisation.
