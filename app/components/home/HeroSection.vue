@@ -31,7 +31,7 @@ onBeforeUnmount(() => mq?.removeEventListener('change', syncViz))
          pointer-events:none so it never intercepts page scroll; the scan
          auto-runs on a timer. -->
     <div v-if="showPeopleHunt" class="home-hero__viz" aria-hidden="true">
-      <PeopleHunt v-if="peopleHuntMode === 'native'" />
+      <HomePeopleHunt v-if="peopleHuntMode === 'native'" />
       <iframe
         v-else
         class="home-hero__iframe"
