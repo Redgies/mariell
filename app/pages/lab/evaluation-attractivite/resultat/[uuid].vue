@@ -289,7 +289,14 @@ async function onRetry() {
           </span>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <button class="btn-pill btn-ghost" type="button" @click="onPrint">Imprimer</button>
+          <button class="btn-pill btn-ghost" type="button" @click="onPrint">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6,9 6,2 18,2 18,9" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Imprimer
+          </button>
           <button class="btn-pill btn-ghost r-copy-btn" type="button"
                   :class="{ 'is-copied': copyState === 'copied' }"
                   @click="onCopyLink">
@@ -579,6 +586,9 @@ a { color: inherit; }
 }
 /* Boutons header en serif explicite (identiques à l'outil 2, car la racine est en sans). */
 .tresult-bar .btn-pill { font-family: var(--font-display); }
+/* Le `a { color: inherit }` scoped bat le .btn-cyan global (spécificité) → on
+   réaffirme le texte noir du CTA cyan, comme sur l'outil 2. */
+.tresult-bar .btn-cyan { color: var(--ink-900); }
 .r-copy-btn.is-copied { color: var(--cyan); border-color: var(--cyan); }
 
 /* Loading — réutilise les classes tools.css */
