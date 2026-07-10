@@ -542,6 +542,15 @@ async function onRetry() {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* Boutons header : layout + police alignés sur l'outil 3 (référence). */
+.res-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.res-bar-actions .btn-pill {
+  font-family: var(--font-display);
+}
 @media (max-width: 640px) {
   .res-bar-meta { display: none; }
 }
@@ -838,6 +847,32 @@ async function onRetry() {
   font-size: 15px;
   color: var(--fg-on-ink-2);
   margin: 0 0 22px;
+}
+/* CTA final — la classe globale .cta-gradient-lg n'existe pas ; on définit ici
+   un bouton pill mesuré (sinon le <svg> sans dimensions s'affiche énorme). */
+.final-cta .cta-gradient-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 30px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  color: #0b0d10;
+  font-family: var(--font-text);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.final-cta .cta-gradient-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(127, 231, 225, 0.28);
+}
+.final-cta .cta-gradient-lg svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 /* ---- Error / Deferred states ---- */

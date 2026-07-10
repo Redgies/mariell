@@ -274,6 +274,8 @@ async function onRetry() {
 
 <template>
   <div class="r-root" :data-state="state">
+    <!-- Fond atmosphérique (comme l'outil 2) -->
+    <div class="tool-bg" aria-hidden="true" />
 
     <!-- Barre résultat (sticky, visible uniquement en state result) -->
     <div v-if="state === 'result'" class="tresult-bar">
@@ -532,9 +534,12 @@ async function onRetry() {
 /* Racine */
 .r-root {
   position: relative; min-height: 100vh;
+  background: var(--ink-900);
   color: var(--fg-on-ink-1);
   font-family: var(--font-display, var(--font-grotesk));
 }
+/* Le contenu passe au-dessus du .tool-bg atmosphérique (position:fixed, z-index:0). */
+.r-root > main { position: relative; z-index: 1; }
 a { color: inherit; }
 
 /* Barres */
@@ -754,6 +759,32 @@ a { color: inherit; }
 }
 .final-cta h2 em { font-style: normal; color: inherit; }
 .final-cta p { font-size: 15px; color: var(--fg-on-ink-2); margin: 0 0 22px; }
+/* CTA final — .cta-gradient-lg n'existe pas globalement ; bouton pill mesuré
+   (sinon le <svg> sans dimensions s'affiche énorme). Identique à l'outil 2. */
+.final-cta .cta-gradient-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 30px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  color: #0b0d10;
+  font-family: var(--font-text);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.final-cta .cta-gradient-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(127, 231, 225, 0.28);
+}
+.final-cta .cta-gradient-lg svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
 @media (max-width: 600px) { .final-cta { padding: 28px 22px; } }
 
 /* Doc foot */
