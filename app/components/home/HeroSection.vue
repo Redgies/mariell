@@ -7,6 +7,13 @@ const calendlyUrl = useRuntimeConfig().public.calendlyUrl as string
 // never references the iframe; desktop mounts it after hydration and the query
 // reacts to resize (mount/unmount → stops loading/decoding when not shown).
 const showPeopleHunt = ref(false)
+
+// People Hunt rendering mode. 'native' = the in-DOM Vue port (PeopleHunt.vue),
+// which escapes the iframe's off-screen media throttling. 'iframe' = the legacy
+// self-contained /public/people-hunt/people-hunt.html — kept as a one-flag
+// fallback in case we need to switch back.
+const peopleHuntMode: 'native' | 'iframe' = 'native'
+
 let mq: MediaQueryList | null = null
 const syncViz = (e: MediaQueryListEvent | MediaQueryList) => { showPeopleHunt.value = e.matches }
 
@@ -24,7 +31,9 @@ onBeforeUnmount(() => mq?.removeEventListener('change', syncViz))
          pointer-events:none so it never intercepts page scroll; the scan
          auto-runs on a timer. -->
     <div v-if="showPeopleHunt" class="home-hero__viz" aria-hidden="true">
+      <PeopleHunt v-if="peopleHuntMode === 'native'" />
       <iframe
+        v-else
         class="home-hero__iframe"
         src="/people-hunt/people-hunt.html"
         title="Live Talent Map"
