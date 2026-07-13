@@ -70,8 +70,6 @@ function startPeopleHunt(root) {
   let rT = null
   let destroyed = false
 
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
   const rand = (a, b) => a + Math.random() * (b - a)
   const pick = a => a[Math.floor(Math.random() * a.length)]
   const fmtFr = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
@@ -446,7 +444,7 @@ function startPeopleHunt(root) {
     byId('clock').textContent = `${hh}:${mm} CET`
   }
   updateClock()
-  const clockInterval = reduce ? null : setInterval(updateClock, 30000)
+  const clockInterval = setInterval(updateClock, 30000)
 
   const NAMES = {
     fr: {
@@ -697,12 +695,6 @@ function startPeopleHunt(root) {
     phEntering = true
     setTimeout(function () { phEntering = false }, 4000)
     buildCrowd()
-    if (reduce) {
-      // Reduced motion: present a still, motionless scene — no walking, no scans.
-      crowdEl.style.opacity = '1'
-      for (const w of walkers) { try { applyWalkerStyle(w); w.el.pause() } catch (e) {} }
-      return
-    }
     revealCrowdWhenReady()
     last = performance.now()
     rafId = requestAnimationFrame(tick)
@@ -736,7 +728,7 @@ function startPeopleHunt(root) {
     setTimeout(reveal, 4000)
   }
 
-  // ── Lifecycle listeners (skipped under reduced motion) ──────────────────────
+  // ── Lifecycle listeners ─────────────────────────────────────────────────────
   let hiddenAt = 0
   const onVisibility = () => {
     if (document.hidden) { hiddenAt = performance.now(); return }
@@ -768,7 +760,7 @@ function startPeopleHunt(root) {
     hiddenAt = 0
   }
 
-  const safetyInterval = reduce ? null : setInterval(() => {
+  const safetyInterval = setInterval(() => {
     for (const w of walkers) {
       if (w.progress >= 0 && w._videoStarted && w.el.paused && !w.el.ended &&
         w !== hero && !w.el.classList.contains('hidden-during-scan')) {
@@ -779,10 +771,8 @@ function startPeopleHunt(root) {
 
   const onResize = () => { clearTimeout(rT); rT = setTimeout(buildCrowd, 180) }
 
-  if (!reduce) {
-    document.addEventListener('visibilitychange', onVisibility)
-    window.addEventListener('resize', onResize)
-  }
+  document.addEventListener('visibilitychange', onVisibility)
+  window.addEventListener('resize', onResize)
 
   init()
 
@@ -1290,10 +1280,5 @@ function startPeopleHunt(root) {
   font-style: normal;
   font-size: var(--step--1);
   color: var(--fg-3);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ph-crowd { transition: none; opacity: 1; }
-  .ph-dot { animation: none; }
 }
 </style>
