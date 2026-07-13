@@ -407,6 +407,12 @@ function startPeopleHunt(root) {
         if (wasQueued && w.progress >= 0 && !w._videoStarted) {
           w._videoStarted = true
           w.el.play().catch(() => {})
+          // Restart the paint-gate clock at the crossing moment. The queued clip
+          // already painted its frame 0 during preload, so paintFade would be
+          // saturated → the walker would POP into view. Re-stamping _paintAt to
+          // now gives it its full ~300ms fade-in as it rises past the horizon.
+          w._painted = true
+          w._paintAt = performance.now()
         }
         if (w.progress > 1.08) recycleWalker(w)
         if (w.progress >= 0 && w.el.paused && !w.el.ended && w !== hero &&
@@ -428,6 +434,10 @@ function startPeopleHunt(root) {
           cand.progress = 0.005
           syncVideoTimeToProgress(cand)
           if (!cand._videoStarted) { cand._videoStarted = true; cand.el.play().catch(() => {}) }
+          // Same anti-pop reset: this walker is yanked into view instantly, so
+          // restart its fade clock or it appears without a fondu.
+          cand._painted = true
+          cand._paintAt = performance.now()
         }
       }
       scannedCount += Math.floor(rand(18, 52) * dt * 60)
