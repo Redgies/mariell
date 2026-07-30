@@ -4,6 +4,7 @@ import { verifyTurnstile } from '../../../utils/turnstile'
 import { checkPlanSourcingRateLimit } from '../../../utils/ratelimit'
 import { getClientIp } from '../../../utils/request'
 import {
+  isJarviEnabled,
   findCompanyByNameOrDomain,
   resolveCompanyStatusLabel,
   upsertCompany,
@@ -219,76 +220,80 @@ export default defineEventHandler(async (event) => {
 
     // Jarvi block : company → project → profile. Bloque sur l'attente pour
     // que la notif interne ait l'URL Jarvi à inclure.
+    // Sauté intégralement si l'intégration est coupée — le lead reste capté
+    // par les 2 emails Brevo + la persistance Redis (90 j).
     let jarviUrl = ''
-    let companyId: string | null = null
-    let projectId: string | null = null
-    try {
-      const existingCompany = await findCompanyByNameOrDomain({
-        name: validated.entreprise,
-        emailDomain,
-        websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
-      })
-
-      const company = await upsertCompany(
-        {
-          existingCompany,
-          name: validated.entreprise,
-          websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
-        },
-        { retry: true },
-      )
-      companyId = company.id
-      jarviUrl = jarviCompanyUrl(company.id)
-
-      const isRecentDuplicate = await findRecentPlanSourcingProject({
-        companyId: company.id,
-        daysAgo: 30,
-      })
-
-      const statusId = process.env.JARVI_PROJECT_STATUS_ID_PLAN_SOURCING
-      if (statusId) {
-        const projectName = isRecentDuplicate
-          ? `Lab — Plan de sourcing (DOUBLON 30j) — ${validated.entreprise} — ${dateSoumission}`
-          : `Lab — Plan de sourcing — ${validated.entreprise} — ${dateSoumission}`
-
-        const project = await createPlanSourcingProject(
-          {
-            companyId: company.id,
-            name: projectName,
-            statusId,
-            description: buildProjectDescription(validated, uuid, isRecentDuplicate),
-          },
-          { retry: true },
-        )
-        projectId = project.id
-        jarviUrl = jarviProjectUrl(project.id)
-      }
-    } catch (err) {
-      console.error('[plan-de-sourcing] Jarvi company/project failed', err)
-      sendCriticalAlert('Jarvi company/project failed (Plan de sourcing)', err).catch(() => {})
-    }
-
-    // Profile (contact) — créé même si project a échoué tant qu'on a la company.
-    // Jarvi auto-merge sur email existant.
-    if (companyId) {
+    if (isJarviEnabled()) {
+      let companyId: string | null = null
+      let projectId: string | null = null
       try {
-        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_PLAN_SOURCING
-        await upsertProfile(
+        const existingCompany = await findCompanyByNameOrDomain({
+          name: validated.entreprise,
+          emailDomain,
+          websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
+        })
+
+        const company = await upsertCompany(
           {
-            firstName: validated.prenom,
-            lastName: validated.nom,
-            email: validated.email,
-            phone: validated.telephone,
-            companyName: validated.entreprise,
-            companyId,
-            ...(projectId ? { projectId } : {}),
-            ...(profileStatusId ? { statusId: profileStatusId } : {}),
+            existingCompany,
+            name: validated.entreprise,
+            websiteUrl: validated.siteEntreprise || `https://${emailDomain}`,
           },
           { retry: true },
         )
+        companyId = company.id
+        jarviUrl = jarviCompanyUrl(company.id)
+
+        const isRecentDuplicate = await findRecentPlanSourcingProject({
+          companyId: company.id,
+          daysAgo: 30,
+        })
+
+        const statusId = process.env.JARVI_PROJECT_STATUS_ID_PLAN_SOURCING
+        if (statusId) {
+          const projectName = isRecentDuplicate
+            ? `Lab — Plan de sourcing (DOUBLON 30j) — ${validated.entreprise} — ${dateSoumission}`
+            : `Lab — Plan de sourcing — ${validated.entreprise} — ${dateSoumission}`
+
+          const project = await createPlanSourcingProject(
+            {
+              companyId: company.id,
+              name: projectName,
+              statusId,
+              description: buildProjectDescription(validated, uuid, isRecentDuplicate),
+            },
+            { retry: true },
+          )
+          projectId = project.id
+          jarviUrl = jarviProjectUrl(project.id)
+        }
       } catch (err) {
-        console.error('[plan-de-sourcing] Profile upsert failed', err)
-        sendCriticalAlert('Jarvi Profile upsert failed (Plan de sourcing)', err).catch(() => {})
+        console.error('[plan-de-sourcing] Jarvi company/project failed', err)
+        sendCriticalAlert('Jarvi company/project failed (Plan de sourcing)', err).catch(() => {})
+      }
+
+      // Profile (contact) — créé même si project a échoué tant qu'on a la company.
+      // Jarvi auto-merge sur email existant.
+      if (companyId) {
+        try {
+          const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_PLAN_SOURCING
+          await upsertProfile(
+            {
+              firstName: validated.prenom,
+              lastName: validated.nom,
+              email: validated.email,
+              phone: validated.telephone,
+              companyName: validated.entreprise,
+              companyId,
+              ...(projectId ? { projectId } : {}),
+              ...(profileStatusId ? { statusId: profileStatusId } : {}),
+            },
+            { retry: true },
+          )
+        } catch (err) {
+          console.error('[plan-de-sourcing] Profile upsert failed', err)
+          sendCriticalAlert('Jarvi Profile upsert failed (Plan de sourcing)', err).catch(() => {})
+        }
       }
     }
 
@@ -297,7 +302,7 @@ export default defineEventHandler(async (event) => {
         input: validated,
         planUuid: uuid,
         planUrl,
-        jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+        jarviUrl: jarviUrl || (isJarviEnabled() ? 'Jarvi non créé (vérifier alerte)' : '—'),
         dateSoumission,
       }),
       sendBrevoPlanSourcingLivraisonProspect({
@@ -381,7 +386,7 @@ async function handleDeferredProcessing(
       input,
       deferredId,
       raisonDiffere: raisonLibelle,
-      jarviUrl: 'Aucun project Jarvi créé — à traiter manuellement',
+      jarviUrl: isJarviEnabled() ? 'Aucun project Jarvi créé — à traiter manuellement' : '—',
       dateSoumission,
     }).catch((err) => {
       console.error('[plan-de-sourcing] deferred-interne email failed', err)

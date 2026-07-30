@@ -38,8 +38,21 @@ interface JarviProject {
   [key: string]: unknown
 }
 
-function hasJarvi(): boolean {
+/**
+ * Kill switch de l'intégration CRM.
+ *
+ * `false` dès que `JARVI_API_KEY` **ou** `JARVI_API_BASE_URL` est absent : les
+ * routes Lab sautent alors intégralement le bloc company → project → profile
+ * et ne conservent que Brevo. Les autres variables `JARVI_*` deviennent inertes.
+ *
+ * Pour réactiver : remettre les 2 variables (local + Vercel), rien d'autre.
+ */
+export function isJarviEnabled(): boolean {
   return Boolean(process.env.JARVI_API_KEY && process.env.JARVI_API_BASE_URL)
+}
+
+function hasJarvi(): boolean {
+  return isJarviEnabled()
 }
 
 function jarviHeaders(): Record<string, string> {

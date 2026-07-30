@@ -4,6 +4,7 @@ import { isPersonalEmail } from '../../utils/email-blacklist'
 import { checkStageAlternanceRateLimit } from '../../utils/ratelimit'
 import { getClientIp } from '../../utils/request'
 import {
+  isJarviEnabled,
   findCompanyByNameOrDomain,
   resolveCompanyStatusLabel,
   hasActiveLabProject,
@@ -12,6 +13,7 @@ import {
   upsertProfile,
   jarviProjectUrl,
   jarviCompanyUrl,
+  type JarviCompany,
 } from '../../utils/jarvi'
 import {
   sendBrevoStageNotifInterne,
@@ -79,26 +81,34 @@ export default defineEventHandler(async (event) => {
 
     // ============================================================
     // PHASE 2 — Lookup + anti-doublon Jarvi
+    // Intégralement sautée si l'intégration Jarvi est coupée : sans CRM il n'y
+    // a plus de référentiel pour détecter le doublon (seul le rate limit IP
+    // reste actif) et le label de statut retombe sur "Nouveau prospect".
     // ============================================================
 
-    const emailDomain = validated.email.split('@')[1] || ''
-    const existingCompany = await findCompanyByNameOrDomain({
-      name: validated.entreprise,
-      emailDomain,
-      websiteUrl: validated.urlEntreprise,
-    })
+    let existingCompany: JarviCompany | null = null
+    let companyStatusLabel = 'Nouveau prospect'
 
-    const companyStatusLabel = resolveCompanyStatusLabel(existingCompany)
+    if (isJarviEnabled()) {
+      const emailDomain = validated.email.split('@')[1] || ''
+      existingCompany = await findCompanyByNameOrDomain({
+        name: validated.entreprise,
+        emailDomain,
+        websiteUrl: validated.urlEntreprise,
+      })
 
-    if (existingCompany) {
-      const isDuplicate = await hasActiveLabProject({ companyId: existingCompany.id })
-      if (isDuplicate) {
-        throw createError({
-          statusCode: 409,
-          statusMessage: 'DUPLICATE_REQUEST',
-          message:
-            'Une demande est déjà en cours pour votre entreprise. Pour toute mise à jour ou information complémentaire, contactez-nous directement à bonjour@mariell.fr.',
-        })
+      companyStatusLabel = resolveCompanyStatusLabel(existingCompany)
+
+      if (existingCompany) {
+        const isDuplicate = await hasActiveLabProject({ companyId: existingCompany.id })
+        if (isDuplicate) {
+          throw createError({
+            statusCode: 409,
+            statusMessage: 'DUPLICATE_REQUEST',
+            message:
+              'Une demande est déjà en cours pour votre entreprise. Pour toute mise à jour ou information complémentaire, contactez-nous directement à bonjour@mariell.fr.',
+          })
+        }
       }
     }
 
@@ -106,76 +116,82 @@ export default defineEventHandler(async (event) => {
     // PHASE 3 — Side effects (fail-soft)
     // ============================================================
 
-    let companyId: string | null = null
-    let companyUrl = 'Company Jarvi non créée (vérifier alerte)'
-    let projectUrl = 'Project Jarvi non créé (vérifier alerte)'
+    // Jarvi coupé → les 2 URLs restent neutres dans la notif interne (surtout
+    // pas les libellés "vérifier alerte", qui signaleraient un incident).
+    let companyUrl = '—'
+    let projectUrl = '—'
 
-    try {
-      const company = await upsertCompany(
-        {
-          existingCompany,
-          name: validated.entreprise,
-          websiteUrl: validated.urlEntreprise,
-        },
-        { retry: true },
-      )
-      companyId = company.id
-      companyUrl = jarviCompanyUrl(company.id)
-    } catch (err) {
-      console.error('[stage-alternance] Company upsert failed after retry', err)
-      sendCriticalAlert('Jarvi Company upsert failed (Stage/Alternance)', err).catch(() => {})
-    }
+    if (isJarviEnabled()) {
+      companyUrl = 'Company Jarvi non créée (vérifier alerte)'
+      projectUrl = 'Project Jarvi non créé (vérifier alerte)'
 
-    let projectId: string | null = null
-    if (companyId) {
+      let companyId: string | null = null
+
       try {
-        const statusId = process.env.JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE
-        if (!statusId) throw new Error('Missing JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE')
-
-        const project = await createProject(
+        const company = await upsertCompany(
           {
-            companyId,
-            name: `Lab — Stage/Alternance — ${getDisplayProfil(validated)} — ${formatDateFr(new Date())}`,
-            statusId,
-            typeDemandeLabValue: 'Stage/Alternance',
-            description: buildProjectDescription(validated),
-            isRecruitment: true,
+            existingCompany,
+            name: validated.entreprise,
+            websiteUrl: validated.urlEntreprise,
           },
           { retry: true },
         )
-        projectId = project.id
-        projectUrl = jarviProjectUrl(project.id)
+        companyId = company.id
+        companyUrl = jarviCompanyUrl(company.id)
       } catch (err) {
-        console.error('[stage-alternance] Project creation failed after retry', err)
-        sendCriticalAlert('Jarvi Project creation failed (Stage/Alternance)', err).catch(() => {})
+        console.error('[stage-alternance] Company upsert failed after retry', err)
+        sendCriticalAlert('Jarvi Company upsert failed (Stage/Alternance)', err).catch(() => {})
       }
-    }
 
-    // Profile (contact) — rattaché uniquement à la company (cf. note ci-dessous
-    // sur la non-association au project pour éviter le talent shadow).
-    // Jarvi auto-merge sur email existant → 1 seul profile mais N companies/projects associés.
-    if (companyId) {
-      try {
-        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_STAGE_ALTERNANCE
-        // Outil 1 = project recrutement (ATS). On NE PASSE PAS projectId ici :
-        // Jarvi spawne sinon une fiche talent shadow malgré isTalent=false.
-        // Le contact reste rattaché à la company via currentCompanyId, et le
-        // project est accessible via Company → Projects côté UI Jarvi.
-        await upsertProfile(
-          {
-            firstName: validated.prenom,
-            lastName: validated.nom,
-            email: validated.email,
-            phone: validated.telephone,
-            companyName: validated.entreprise,
-            companyId,
-            ...(profileStatusId ? { statusId: profileStatusId } : {}),
-          },
-          { retry: true },
-        )
-      } catch (err) {
-        console.error('[stage-alternance] Profile upsert failed after retry', err)
-        sendCriticalAlert('Jarvi Profile upsert failed (Stage/Alternance)', err).catch(() => {})
+      if (companyId) {
+        try {
+          const statusId = process.env.JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE
+          if (!statusId) throw new Error('Missing JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE')
+
+          const project = await createProject(
+            {
+              companyId,
+              name: `Lab — Stage/Alternance — ${getDisplayProfil(validated)} — ${formatDateFr(new Date())}`,
+              statusId,
+              typeDemandeLabValue: 'Stage/Alternance',
+              description: buildProjectDescription(validated),
+              isRecruitment: true,
+            },
+            { retry: true },
+          )
+          projectUrl = jarviProjectUrl(project.id)
+        } catch (err) {
+          console.error('[stage-alternance] Project creation failed after retry', err)
+          sendCriticalAlert('Jarvi Project creation failed (Stage/Alternance)', err).catch(() => {})
+        }
+      }
+
+      // Profile (contact) — rattaché uniquement à la company (cf. note ci-dessous
+      // sur la non-association au project pour éviter le talent shadow).
+      // Jarvi auto-merge sur email existant → 1 seul profile mais N companies/projects associés.
+      if (companyId) {
+        try {
+          const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_STAGE_ALTERNANCE
+          // Outil 1 = project recrutement (ATS). On NE PASSE PAS projectId ici :
+          // Jarvi spawne sinon une fiche talent shadow malgré isTalent=false.
+          // Le contact reste rattaché à la company via currentCompanyId, et le
+          // project est accessible via Company → Projects côté UI Jarvi.
+          await upsertProfile(
+            {
+              firstName: validated.prenom,
+              lastName: validated.nom,
+              email: validated.email,
+              phone: validated.telephone,
+              companyName: validated.entreprise,
+              companyId,
+              ...(profileStatusId ? { statusId: profileStatusId } : {}),
+            },
+            { retry: true },
+          )
+        } catch (err) {
+          console.error('[stage-alternance] Profile upsert failed after retry', err)
+          sendCriticalAlert('Jarvi Profile upsert failed (Stage/Alternance)', err).catch(() => {})
+        }
       }
     }
 

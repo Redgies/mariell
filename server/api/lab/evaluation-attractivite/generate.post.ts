@@ -9,6 +9,7 @@ import { verifyTurnstile } from '../../../utils/turnstile'
 import { checkEvaluationAttractiviteRateLimit } from '../../../utils/ratelimit'
 import { getClientIp } from '../../../utils/request'
 import {
+  isJarviEnabled,
   findCompanyByNameOrDomain,
   upsertCompany,
   createEvaluationAttractiviteProject,
@@ -274,66 +275,70 @@ export default defineEventHandler(async (event) => {
     const dateSoumission = formatDateFr(new Date())
 
     // Jarvi block : company → project → profile.
+    // Sauté intégralement si l'intégration est coupée — le lead reste capté
+    // par les 2 emails Brevo + la persistance Redis (90 j).
     let jarviUrl = ''
-    let companyId: string | null = null
-    let projectId: string | null = null
-    try {
-      const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
-      const existing = await findCompanyByNameOrDomain({
-        name: validated.entreprise,
-        emailDomain,
-        websiteUrl: validated.site_web || `https://${emailDomain}`,
-      })
-      const company = await upsertCompany(
-        {
-          existingCompany: existing,
-          name: validated.entreprise,
-          websiteUrl: validated.site_web || `https://${emailDomain}`,
-        },
-        { retry: true },
-      )
-      companyId = company.id
-      jarviUrl = jarviCompanyUrl(company.id)
-
-      const statusId = process.env.JARVI_PROJECT_STATUS_ID_EVALUATION_ATTRACTIVITE
-      if (statusId) {
-        const project = await createEvaluationAttractiviteProject(
-          {
-            companyId: company.id,
-            name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
-            statusId,
-            description: buildProjectDescription(validated, uuid, llmJson),
-          },
-          { retry: true },
-        )
-        projectId = project.id
-        jarviUrl = jarviProjectUrl(project.id)
-      }
-    } catch (err) {
-      console.error('[evaluation-attractivite] Jarvi company/project failed', err)
-      sendCriticalAlert('Jarvi company/project failed (Évaluation attractivité)', err).catch(() => {})
-    }
-
-    // Profile (contact) — auto-merge sur email existant côté Jarvi.
-    if (companyId) {
+    if (isJarviEnabled()) {
+      let companyId: string | null = null
+      let projectId: string | null = null
       try {
-        const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_EVALUATION_ATTRACTIVITE
-        await upsertProfile(
+        const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
+        const existing = await findCompanyByNameOrDomain({
+          name: validated.entreprise,
+          emailDomain,
+          websiteUrl: validated.site_web || `https://${emailDomain}`,
+        })
+        const company = await upsertCompany(
           {
-            firstName: validated.prenom,
-            lastName: validated.nom,
-            email: validated.email,
-            phone: validated.telephone,
-            companyName: validated.entreprise,
-            companyId,
-            ...(projectId ? { projectId } : {}),
-            ...(profileStatusId ? { statusId: profileStatusId } : {}),
+            existingCompany: existing,
+            name: validated.entreprise,
+            websiteUrl: validated.site_web || `https://${emailDomain}`,
           },
           { retry: true },
         )
+        companyId = company.id
+        jarviUrl = jarviCompanyUrl(company.id)
+
+        const statusId = process.env.JARVI_PROJECT_STATUS_ID_EVALUATION_ATTRACTIVITE
+        if (statusId) {
+          const project = await createEvaluationAttractiviteProject(
+            {
+              companyId: company.id,
+              name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
+              statusId,
+              description: buildProjectDescription(validated, uuid, llmJson),
+            },
+            { retry: true },
+          )
+          projectId = project.id
+          jarviUrl = jarviProjectUrl(project.id)
+        }
       } catch (err) {
-        console.error('[evaluation-attractivite] Profile upsert failed', err)
-        sendCriticalAlert('Jarvi Profile upsert failed (Évaluation attractivité)', err).catch(() => {})
+        console.error('[evaluation-attractivite] Jarvi company/project failed', err)
+        sendCriticalAlert('Jarvi company/project failed (Évaluation attractivité)', err).catch(() => {})
+      }
+
+      // Profile (contact) — auto-merge sur email existant côté Jarvi.
+      if (companyId) {
+        try {
+          const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_EVALUATION_ATTRACTIVITE
+          await upsertProfile(
+            {
+              firstName: validated.prenom,
+              lastName: validated.nom,
+              email: validated.email,
+              phone: validated.telephone,
+              companyName: validated.entreprise,
+              companyId,
+              ...(projectId ? { projectId } : {}),
+              ...(profileStatusId ? { statusId: profileStatusId } : {}),
+            },
+            { retry: true },
+          )
+        } catch (err) {
+          console.error('[evaluation-attractivite] Profile upsert failed', err)
+          sendCriticalAlert('Jarvi Profile upsert failed (Évaluation attractivité)', err).catch(() => {})
+        }
       }
     }
 
@@ -342,7 +347,7 @@ export default defineEventHandler(async (event) => {
         input: validated,
         uuid,
         resultatUrl,
-        jarviUrl: jarviUrl || 'Jarvi non créé (vérifier alerte)',
+        jarviUrl: jarviUrl || (isJarviEnabled() ? 'Jarvi non créé (vérifier alerte)' : '—'),
         json: llmJson,
         dateSoumission,
       }),
@@ -424,7 +429,7 @@ async function handleDeferredProcessing(
       input,
       deferredId,
       raisonDiffere: raisonLibelle,
-      jarviUrl: 'Aucun project Jarvi créé — à traiter manuellement',
+      jarviUrl: isJarviEnabled() ? 'Aucun project Jarvi créé — à traiter manuellement' : '—',
       dateSoumission,
     }).catch((err) => {
       console.error('[evaluation-attractivite] notif-interne-différée failed', err)

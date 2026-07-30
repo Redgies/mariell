@@ -40,7 +40,7 @@
           <h2>Destinataires</h2>
           <p>
             Vos données sont destinées aux membres habilités de Mariell. Elles peuvent être transmises à des prestataires
-            techniques (hébergeur Vercel, CRM Jarvi, outil d’envoi d’e-mails Brevo) dans le cadre strict de l’exécution
+            techniques (hébergeur Vercel, outil d’envoi d’e-mails Brevo) dans le cadre strict de l’exécution
             de leurs missions. Aucune donnée n’est vendue ou cédée à des tiers à des fins commerciales.
           </p>
           <h2>Vos droits</h2>
