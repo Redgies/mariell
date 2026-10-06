@@ -37,7 +37,7 @@ export async function checkIpRateLimit(
 
 // ---------- Outil 1 — Stage / Alternance ----------
 
-const STAGE_ALT_LIMITS = { perDay: 3, perWeek: 7 }
+const STAGE_ALT_LIMITS = { perDay: 9, perWeek: 21 }
 
 export async function checkStageAlternanceRateLimit(ip: string) {
   return checkIpRateLimit('stage-alt', ip, STAGE_ALT_LIMITS)
@@ -49,9 +49,9 @@ export async function checkStageAlternanceRateLimit(ip: string) {
 // en mode différé — pas de blocage hard, on capte le lead différemment.
 
 const PLAN_SOURCING_LIMITS = {
-  perDay: 3,
-  perWeek: 7,
-  perMonthEmailDomain: 5,
+  perDay: 9,
+  perWeek: 21,
+  perMonthEmailDomain: 15,
 }
 
 interface PlanSourcingRateResult {
@@ -95,7 +95,7 @@ export async function checkPlanSourcingRateLimit(
 
 // ---------- Outil 3 — Évaluation d'attractivité ----------
 
-const EVAL_ATTR_LIMITS = { perDay: 3, perWeek: 7 }
+const EVAL_ATTR_LIMITS = { perDay: 9, perWeek: 21 }
 
 export async function checkEvaluationAttractiviteRateLimit(ip: string) {
   return checkIpRateLimit('eval-attr', ip, EVAL_ATTR_LIMITS)
