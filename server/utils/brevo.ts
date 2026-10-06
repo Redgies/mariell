@@ -143,9 +143,6 @@ function escapeHtml(s: string): string {
 
 export async function sendBrevoStageNotifInterne(args: {
   input: StageAlternanceInput
-  companyStatusLabel: string
-  projectUrl: string
-  companyUrl: string
   dateSoumission: string
 }): Promise<BrevoSendResponse> {
   const { input } = args
@@ -171,7 +168,6 @@ export async function sendBrevoStageNotifInterne(args: {
     replyTo: { email: input.email, name: `${input.prenom} ${input.nom}` },
     params: {
       DATE_SOUMISSION: args.dateSoumission,
-      COMPANY_STATUS_LABEL: args.companyStatusLabel,
       PRENOM_NOM: `${input.prenom} ${input.nom}`,
       EMAIL: input.email,
       TELEPHONE: input.telephone,
@@ -182,8 +178,6 @@ export async function sendBrevoStageNotifInterne(args: {
       DATE_DEMARRAGE: input.dateDemarrage,
       LOCALISATION: input.localisation,
       BRIEF_MISSION: input.briefMission,
-      URL_JARVI_PROJECT: args.projectUrl,
-      URL_JARVI_COMPANY: args.companyUrl,
     },
   })
 }
@@ -269,7 +263,6 @@ interface PlanSourcingNotifInterneArgs {
   input: PlanDeSourcingInput
   planUuid: string
   planUrl: string
-  jarviUrl: string
   dateSoumission: string
 }
 
@@ -294,7 +287,6 @@ export async function sendBrevoPlanSourcingNotifInterne(
       DATE_SOUMISSION: args.dateSoumission,
       ...buildPlanSourcingInternalParams(args.input),
       URL_PLAN: args.planUrl,
-      URL_JARVI: args.jarviUrl,
       PLAN_UUID: args.planUuid,
     },
   })
@@ -336,7 +328,6 @@ interface PlanSourcingDeferredInterneArgs {
   input: PlanDeSourcingInput
   deferredId: string
   raisonDiffere: string
-  jarviUrl: string
   dateSoumission: string
 }
 
@@ -362,7 +353,6 @@ export async function sendBrevoPlanSourcingDeferredInterne(
       RAISON_DIFFERE: args.raisonDiffere,
       DEFERRED_ID: args.deferredId,
       ...buildPlanSourcingInternalParams(args.input),
-      URL_JARVI: args.jarviUrl,
     },
   })
 }
@@ -447,7 +437,6 @@ interface EvaluationNotifInterneLivreeArgs {
   input: FormulaireOutil3
   uuid: string
   resultatUrl: string
-  jarviUrl: string
   json: LlmOutputJson | null
   dateSoumission: string
 }
@@ -476,7 +465,6 @@ export async function sendBrevoEvaluationNotifInterneLivree(
       DATE_SOUMISSION: args.dateSoumission,
       ...buildEvaluationInternalParams(args.input, args.json),
       URL_RESULTAT: args.resultatUrl,
-      URL_JARVI: args.jarviUrl,
       EVAL_UUID: args.uuid,
     },
   })
@@ -486,7 +474,6 @@ interface EvaluationNotifInterneDifféréeArgs {
   input: FormulaireOutil3
   deferredId: string
   raisonDiffere: string
-  jarviUrl: string
   dateSoumission: string
 }
 
@@ -515,7 +502,6 @@ export async function sendBrevoEvaluationNotifInterneDifferee(
       RAISON_DIFFERE: args.raisonDiffere,
       DEFERRED_ID: args.deferredId,
       ...buildEvaluationInternalParams(args.input, null),
-      URL_JARVI: args.jarviUrl,
     },
   })
 }

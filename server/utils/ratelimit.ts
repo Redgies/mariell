@@ -1,50 +1,4 @@
-import { Redis } from '@upstash/redis'
-
-let redis: Redis | null = null
-const memoryStore = new Map<string, { count: number; expires: number }>()
-
-/**
- * Resolve Upstash credentials from either naming convention:
- *   - KV_REST_API_URL / KV_REST_API_TOKEN              (Vercel KV legacy)
- *   - UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN (Marketplace Upstash)
- */
-function kvCreds(): { url: string; token: string } | null {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
-  if (!url || !token) return null
-  return { url, token }
-}
-
-function getRedis(): Redis | null {
-  const creds = kvCreds()
-  if (!creds) return null
-  if (!redis) {
-    redis = new Redis({ url: creds.url, token: creds.token })
-  }
-  return redis
-}
-
-/**
- * Increment a counter; set TTL on first hit only.
- * Falls back to in-memory store when Upstash isn't configured (dev convenience).
- */
-async function incrWithExpire(key: string, ttlSeconds: number): Promise<number> {
-  const r = getRedis()
-  if (r) {
-    const count = await r.incr(key)
-    if (count === 1) await r.expire(key, ttlSeconds)
-    return count
-  }
-
-  const now = Date.now()
-  const entry = memoryStore.get(key)
-  if (!entry || entry.expires < now) {
-    memoryStore.set(key, { count: 1, expires: now + ttlSeconds * 1000 })
-    return 1
-  }
-  entry.count += 1
-  return entry.count
-}
+import { kvIncrWithExpire } from './kv'
 
 function getDayKey(): string {
   return new Date().toISOString().slice(0, 10) // YYYY-MM-DD
@@ -73,8 +27,8 @@ export async function checkIpRateLimit(
   const weekKey = `ratelimit:${prefix}:ip:${ip}:week:${getWeekKey()}`
 
   const [dayCount, weekCount] = await Promise.all([
-    incrWithExpire(dayKey, 86_400),
-    incrWithExpire(weekKey, 604_800),
+    kvIncrWithExpire(dayKey, 86_400),
+    kvIncrWithExpire(weekKey, 604_800),
   ])
 
   const allowed = dayCount <= limits.perDay && weekCount <= limits.perWeek
@@ -122,9 +76,9 @@ export async function checkPlanSourcingRateLimit(
   const domainKey = `ratelimit:plan-sourcing:email:${emailDomain.toLowerCase()}:month:${getMonthKey()}`
 
   const [dayCount, weekCount, monthDomainCount] = await Promise.all([
-    incrWithExpire(dayKey, 86_400),
-    incrWithExpire(weekKey, 604_800),
-    incrWithExpire(domainKey, 30 * 86_400),
+    kvIncrWithExpire(dayKey, 86_400),
+    kvIncrWithExpire(weekKey, 604_800),
+    kvIncrWithExpire(domainKey, 30 * 86_400),
   ])
 
   if (dayCount > PLAN_SOURCING_LIMITS.perDay) {

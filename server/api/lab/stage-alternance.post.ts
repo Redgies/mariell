@@ -4,18 +4,6 @@ import { isPersonalEmail } from '../../utils/email-blacklist'
 import { checkStageAlternanceRateLimit } from '../../utils/ratelimit'
 import { getClientIp } from '../../utils/request'
 import {
-  isJarviEnabled,
-  findCompanyByNameOrDomain,
-  resolveCompanyStatusLabel,
-  hasActiveLabProject,
-  upsertCompany,
-  createProject,
-  upsertProfile,
-  jarviProjectUrl,
-  jarviCompanyUrl,
-  type JarviCompany,
-} from '../../utils/jarvi'
-import {
   sendBrevoStageNotifInterne,
   sendBrevoStageConfirmationProspect,
   sendCriticalAlert,
@@ -79,130 +67,11 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // ============================================================
-    // PHASE 2 — Lookup + anti-doublon Jarvi
-    // Intégralement sautée si l'intégration Jarvi est coupée : sans CRM il n'y
-    // a plus de référentiel pour détecter le doublon (seul le rate limit IP
-    // reste actif) et le label de statut retombe sur "Nouveau prospect".
-    // ============================================================
-
-    let existingCompany: JarviCompany | null = null
-    let companyStatusLabel = 'Nouveau prospect'
-
-    if (isJarviEnabled()) {
-      const emailDomain = validated.email.split('@')[1] || ''
-      existingCompany = await findCompanyByNameOrDomain({
-        name: validated.entreprise,
-        emailDomain,
-        websiteUrl: validated.urlEntreprise,
-      })
-
-      companyStatusLabel = resolveCompanyStatusLabel(existingCompany)
-
-      if (existingCompany) {
-        const isDuplicate = await hasActiveLabProject({ companyId: existingCompany.id })
-        if (isDuplicate) {
-          throw createError({
-            statusCode: 409,
-            statusMessage: 'DUPLICATE_REQUEST',
-            message:
-              'Une demande est déjà en cours pour votre entreprise. Pour toute mise à jour ou information complémentaire, contactez-nous directement à bonjour@mariell.fr.',
-          })
-        }
-      }
-    }
-
-    // ============================================================
-    // PHASE 3 — Side effects (fail-soft)
-    // ============================================================
-
-    // Jarvi coupé → les 2 URLs restent neutres dans la notif interne (surtout
-    // pas les libellés "vérifier alerte", qui signaleraient un incident).
-    let companyUrl = '—'
-    let projectUrl = '—'
-
-    if (isJarviEnabled()) {
-      companyUrl = 'Company Jarvi non créée (vérifier alerte)'
-      projectUrl = 'Project Jarvi non créé (vérifier alerte)'
-
-      let companyId: string | null = null
-
-      try {
-        const company = await upsertCompany(
-          {
-            existingCompany,
-            name: validated.entreprise,
-            websiteUrl: validated.urlEntreprise,
-          },
-          { retry: true },
-        )
-        companyId = company.id
-        companyUrl = jarviCompanyUrl(company.id)
-      } catch (err) {
-        console.error('[stage-alternance] Company upsert failed after retry', err)
-        sendCriticalAlert('Jarvi Company upsert failed (Stage/Alternance)', err).catch(() => {})
-      }
-
-      if (companyId) {
-        try {
-          const statusId = process.env.JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE
-          if (!statusId) throw new Error('Missing JARVI_PROJECT_STATUS_ID_STAGE_ALTERNANCE')
-
-          const project = await createProject(
-            {
-              companyId,
-              name: `Lab — Stage/Alternance — ${getDisplayProfil(validated)} — ${formatDateFr(new Date())}`,
-              statusId,
-              typeDemandeLabValue: 'Stage/Alternance',
-              description: buildProjectDescription(validated),
-              isRecruitment: true,
-            },
-            { retry: true },
-          )
-          projectUrl = jarviProjectUrl(project.id)
-        } catch (err) {
-          console.error('[stage-alternance] Project creation failed after retry', err)
-          sendCriticalAlert('Jarvi Project creation failed (Stage/Alternance)', err).catch(() => {})
-        }
-      }
-
-      // Profile (contact) — rattaché uniquement à la company (cf. note ci-dessous
-      // sur la non-association au project pour éviter le talent shadow).
-      // Jarvi auto-merge sur email existant → 1 seul profile mais N companies/projects associés.
-      if (companyId) {
-        try {
-          const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_STAGE_ALTERNANCE
-          // Outil 1 = project recrutement (ATS). On NE PASSE PAS projectId ici :
-          // Jarvi spawne sinon une fiche talent shadow malgré isTalent=false.
-          // Le contact reste rattaché à la company via currentCompanyId, et le
-          // project est accessible via Company → Projects côté UI Jarvi.
-          await upsertProfile(
-            {
-              firstName: validated.prenom,
-              lastName: validated.nom,
-              email: validated.email,
-              phone: validated.telephone,
-              companyName: validated.entreprise,
-              companyId,
-              ...(profileStatusId ? { statusId: profileStatusId } : {}),
-            },
-            { retry: true },
-          )
-        } catch (err) {
-          console.error('[stage-alternance] Profile upsert failed after retry', err)
-          sendCriticalAlert('Jarvi Profile upsert failed (Stage/Alternance)', err).catch(() => {})
-        }
-      }
-    }
-
     // 2 emails Brevo en parallèle
     const dateSoumission = formatDateFr(new Date())
     const emailResults = await Promise.allSettled([
       sendBrevoStageNotifInterne({
         input: validated,
-        companyStatusLabel,
-        projectUrl,
-        companyUrl,
         dateSoumission,
       }),
       sendBrevoStageConfirmationProspect({ input: validated }),
@@ -234,38 +103,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
-
-function getDisplayProfil(input: StageAlternanceInput): string {
-  return input.profilRecherche === 'Autre'
-    ? input.profilRecherchePrecisionAutre || 'Profil personnalisé'
-    : input.profilRecherche
-}
-
-function buildProjectDescription(input: StageAlternanceInput): string {
-  return [
-    '## Contact',
-    `${input.prenom} ${input.nom}`,
-    input.email,
-    input.telephone,
-    '',
-    '## Entreprise',
-    input.entreprise,
-    input.urlEntreprise,
-    '',
-    '## Besoin',
-    `**Type de contrat** : ${input.typeContrat}`,
-    `**Profil recherché** : ${getDisplayProfil(input)}`,
-    `**Date de démarrage** : ${input.dateDemarrage}`,
-    `**Localisation** : ${input.localisation}`,
-    '',
-    '## Brief de la mission',
-    input.briefMission,
-    '',
-    '---',
-    `Source : Le Lab Mariell — Outil 1 (Demande Stage/Alternance)`,
-    `Soumis le ${formatDateFr(new Date())}`,
-  ].join('\n')
-}
 
 function formatDateFr(d: Date): string {
   const fmt = new Intl.DateTimeFormat('fr-FR', {

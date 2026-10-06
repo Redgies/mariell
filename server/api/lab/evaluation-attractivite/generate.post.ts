@@ -1,22 +1,12 @@
 import { nanoid } from 'nanoid'
 import {
   formulaireOutil3SchemaRefined,
-  getDimensionFonctionLabel,
   type FormulaireOutil3,
 } from '../../../schemas/outil-3/formulaire'
 import { llmOutputJsonSchemaRefined, type LlmOutputJson } from '../../../schemas/outil-3/llm-output-json'
 import { verifyTurnstile } from '../../../utils/turnstile'
 import { checkEvaluationAttractiviteRateLimit } from '../../../utils/ratelimit'
 import { getClientIp } from '../../../utils/request'
-import {
-  isJarviEnabled,
-  findCompanyByNameOrDomain,
-  upsertCompany,
-  createEvaluationAttractiviteProject,
-  upsertProfile,
-  jarviProjectUrl,
-  jarviCompanyUrl,
-} from '../../../utils/jarvi'
 import {
   sendBrevoEvaluationNotifInterneLivree,
   sendBrevoEvaluationNotifInterneDifferee,
@@ -274,80 +264,11 @@ export default defineEventHandler(async (event) => {
     const resultatUrl = `${getSiteUrl()}/lab/evaluation-attractivite/resultat/${uuid}`
     const dateSoumission = formatDateFr(new Date())
 
-    // Jarvi block : company → project → profile.
-    // Sauté intégralement si l'intégration est coupée — le lead reste capté
-    // par les 2 emails Brevo + la persistance Redis (90 j).
-    let jarviUrl = ''
-    if (isJarviEnabled()) {
-      let companyId: string | null = null
-      let projectId: string | null = null
-      try {
-        const emailDomain = (validated.email.split('@')[1] || '').toLowerCase()
-        const existing = await findCompanyByNameOrDomain({
-          name: validated.entreprise,
-          emailDomain,
-          websiteUrl: validated.site_web || `https://${emailDomain}`,
-        })
-        const company = await upsertCompany(
-          {
-            existingCompany: existing,
-            name: validated.entreprise,
-            websiteUrl: validated.site_web || `https://${emailDomain}`,
-          },
-          { retry: true },
-        )
-        companyId = company.id
-        jarviUrl = jarviCompanyUrl(company.id)
-
-        const statusId = process.env.JARVI_PROJECT_STATUS_ID_EVALUATION_ATTRACTIVITE
-        if (statusId) {
-          const project = await createEvaluationAttractiviteProject(
-            {
-              companyId: company.id,
-              name: `Lab — Évaluation attractivité — ${validated.entreprise} — ${dateSoumission}`,
-              statusId,
-              description: buildProjectDescription(validated, uuid, llmJson),
-            },
-            { retry: true },
-          )
-          projectId = project.id
-          jarviUrl = jarviProjectUrl(project.id)
-        }
-      } catch (err) {
-        console.error('[evaluation-attractivite] Jarvi company/project failed', err)
-        sendCriticalAlert('Jarvi company/project failed (Évaluation attractivité)', err).catch(() => {})
-      }
-
-      // Profile (contact) — auto-merge sur email existant côté Jarvi.
-      if (companyId) {
-        try {
-          const profileStatusId = process.env.JARVI_PROFILE_STATUS_ID_EVALUATION_ATTRACTIVITE
-          await upsertProfile(
-            {
-              firstName: validated.prenom,
-              lastName: validated.nom,
-              email: validated.email,
-              phone: validated.telephone,
-              companyName: validated.entreprise,
-              companyId,
-              ...(projectId ? { projectId } : {}),
-              ...(profileStatusId ? { statusId: profileStatusId } : {}),
-            },
-            { retry: true },
-          )
-        } catch (err) {
-          console.error('[evaluation-attractivite] Profile upsert failed', err)
-          sendCriticalAlert('Jarvi Profile upsert failed (Évaluation attractivité)', err).catch(() => {})
-        }
-      }
-    }
-
     const emailResults = await Promise.allSettled([
       sendBrevoEvaluationNotifInterneLivree({
         input: validated,
         uuid,
         resultatUrl,
-        jarviUrl: jarviUrl || (isJarviEnabled() ? 'Jarvi non créé (vérifier alerte)' : '—'),
         json: llmJson,
         dateSoumission,
       }),
@@ -399,9 +320,7 @@ export default defineEventHandler(async (event) => {
 /**
  * Mode différé : rate_limit ou api_failure.
  *
- * **AUCUN appel Jarvi** ici par design — le lead est récupéré uniquement via
- * email interne. Le gérant traite la demande à la main et crée la fiche Jarvi
- * lui-même s'il décide de poursuivre.
+ * Le lead est récupéré via l'email interne ; le gérant traite la demande à la main.
  */
 async function handleDeferredProcessing(
   input: FormulaireOutil3,
@@ -429,7 +348,6 @@ async function handleDeferredProcessing(
       input,
       deferredId,
       raisonDiffere: raisonLibelle,
-      jarviUrl: isJarviEnabled() ? 'Aucun project Jarvi créé — à traiter manuellement' : '—',
       dateSoumission,
     }).catch((err) => {
       console.error('[evaluation-attractivite] notif-interne-différée failed', err)
@@ -447,68 +365,6 @@ async function handleDeferredProcessing(
     deferredId,
     message: 'Votre évaluation sera traitée manuellement sous 24 à 48 heures ouvrées.',
   }
-}
-
-function buildProjectDescription(
-  input: FormulaireOutil3,
-  refId: string,
-  json: LlmOutputJson | null,
-): string {
-  const intituleAffiche =
-    input.intitule_poste === 'Autre' && input.intitule_poste_precision_autre
-      ? `${input.intitule_poste} (${input.intitule_poste_precision_autre})`
-      : input.intitule_poste
-  const secteurAffiche =
-    input.secteur === 'Autre' && input.secteur_precision_autre
-      ? input.secteur_precision_autre
-      : input.secteur
-  const lines: string[] = [
-    '## Contact',
-    `${input.prenom} ${input.nom}`,
-    input.email,
-    input.telephone,
-    '',
-    '## Entreprise',
-    input.entreprise,
-  ]
-  if (input.site_web) lines.push(input.site_web)
-  lines.push(
-    `**Secteur** : ${secteurAffiche}`,
-    `**Localisation** : ${input.localisation}`,
-    `**Effectifs** : ${input.effectifs_entreprise}`,
-    `**Équipe Sales** : ${input.equipe_sales}`,
-    '',
-    '## Le poste',
-    `**Intitulé** : ${intituleAffiche}`,
-    `**Séniorité** : ${input.seniorite}`,
-    `**${getDimensionFonctionLabel(input)}**`,
-    `**Modalité** : ${input.modalite_travail}`,
-    '',
-    '## Package',
-    `**Fixe** : ${input.package_fixe.toLocaleString('fr-FR')} €`,
-    `**OTE** : ${input.package_ote.toLocaleString('fr-FR')} €`,
-    '',
-    '## Description missions',
-    input.description_missions.slice(0, 1500) +
-      (input.description_missions.length > 1500 ? '\n…(tronqué)' : ''),
-  )
-
-  if (json) {
-    lines.push(
-      '',
-      '## Verdict LLM',
-      `**Niveau** : ${json.niveau_attractivite} (${json.jauge_position}/10)`,
-      `**Dimensions** : marque=${json.dimensions.marque} · secteur=${json.dimensions.secteur} · mission=${json.dimensions.mission} · package=${json.dimensions.package}`,
-    )
-  }
-
-  lines.push(
-    '',
-    '---',
-    "Source : Le Lab Mariell — Outil 3 (Évaluation d'attractivité)",
-    `Réf évaluation : ${refId}`,
-  )
-  return lines.join('\n')
 }
 
 function formatDateFr(d: Date): string {

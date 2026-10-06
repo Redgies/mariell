@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**Mariell** — one-page French premium landing site for a Sales-recruitment cabinet, plus three "Lab" lead-generation tools (forms that funnel into Brevo + Jarvi CRM, with two LLM-generated deliverables). Nuxt 4 + Tailwind v4, deployed on Vercel (nitro preset `vercel`). All user-facing copy is in French — preserve `&nbsp;` before `?` `!` `:` and French quotes/accents.
+**Mariell** — one-page French premium landing site for a Sales-recruitment cabinet, plus three "Lab" lead-generation tools (forms that funnel into Brevo emails, with two LLM-generated deliverables). Nuxt 4 + Tailwind v4, self-hosted on Coolify (Nixpacks, `NITRO_PRESET` env overrides the `vercel` preset in `nuxt.config.ts`). All user-facing copy is in French — preserve `&nbsp;` before `?` `!` `:` and French quotes/accents.
 
 ## Commands
 
@@ -53,7 +53,7 @@ Three lead-gen tools live under `app/pages/lab/` (UI) + `server/api/lab/` (handl
 1. `savePlanStatus(uuid, 'pending')` immediately so the front can start polling on `navigateTo`.
 2. Zod validation → Cloudflare Turnstile (`server/utils/turnstile.ts`) → 3-tier rate limit (IP/day, IP/week, email-domain/month for outil 2; IP day+week for outil 3) via `server/utils/ratelimit.ts`.
 3. If rate-limited *or* Anthropic missing/failing → **deferred mode**: persist a `DeferredRecord` in Redis, fire the "deferred" Brevo templates, return a different redirect. Never hard-block — capture the lead.
-4. On success: stream from Anthropic (server-side buffer, no SSE to client — the front renders a 30s+ scripted loader), persist result, push to Jarvi CRM (`upsertCompany` → `upsertProfile` → `createPlanSourcingProject`), send `livraison` + `notif interne` Brevo templates, set status to `done`.
+4. On success: stream from Anthropic (server-side buffer, no SSE to client — the front renders a 30s+ scripted loader), persist result, set status to `done`, send `livraison` + `notif interne` Brevo templates.
 5. Result pages poll `[uuid].get.ts` until status is `done | deferred | error`, then render the stored markdown (via `markdown-it`).
 
 **Anthropic specifics** (`server/utils/anthropic.ts`):
@@ -64,17 +64,15 @@ Three lead-gen tools live under `app/pages/lab/` (UI) + `server/api/lab/` (handl
 
 **Prompts are inlined at build time** (`nuxt.config.ts` reads `server/prompts/**/*.md` with `readFileSync` and injects them into `runtimeConfig.prompts`). This is deliberate — Vercel's function bundler doesn't otherwise ship the `.md` files. Each tool's `utils/load-prompts.ts` reads them back via `useRuntimeConfig().prompts`.
 
-**Storage** (`server/utils/plan-storage.ts`, `evaluation-storage.ts`): Upstash Redis with an in-memory `Map` fallback for local dev. Credentials are read from either `KV_REST_API_URL/TOKEN` (Vercel KV) or `UPSTASH_REDIS_REST_URL/TOKEN` (Marketplace) — the resolver tries both.
-
-**Jarvi CRM** (`server/utils/jarvi.ts`): all functions stub-no-op when `JARVI_API_KEY`/`JARVI_API_BASE_URL` are missing, so local dev works without credentials. Real errors escalate to callers for **fail-soft** handling (lead still captured via Brevo even if CRM push fails). Status UUIDs are per-tool — three separate `JARVI_PROJECT_STATUS_ID_*` and `JARVI_PROFILE_STATUS_ID_*` env vars, plus the multiplechoice `JARVI_FIELD_ID_TYPE_DEMANDE_LAB` for tagging.
+**Storage** (`server/utils/kv.ts`, used by `plan-storage.ts`, `evaluation-storage.ts`, `ratelimit.ts`): plain Redis via `ioredis` when `REDIS_URL` is set (Coolify Redis), in-memory `Map` fallback otherwise.
 
 **Brevo** (`server/utils/brevo.ts`): transactional templates only. Template IDs are env-configured per tool/event (notif interne, livraison/confirmation prospect, deferred variants, critical alert). Never hard-code template IDs.
 
-**Outil 1 anti-spam stack**: `isPersonalEmail` (blacklist in `server/utils/email-blacklist.ts`), Turnstile, `hasActiveLabProject` dedup against Jarvi, plus a honeypot field `company_website` — if filled, the handler returns a faux 200 and logs a warning rather than alerting the bot.
+**Outil 1 anti-spam stack**: `isPersonalEmail` (blacklist in `server/utils/email-blacklist.ts`), Turnstile, IP rate limit, plus a honeypot field `company_website` — if filled, the handler returns a faux 200 and logs a warning rather than alerting the bot.
 
 ### Environment
 
-All env vars are documented in `.env.example`. The mandatory set for full functionality: `NUXT_PUBLIC_SITE_URL`, `NUXT_PUBLIC_TURNSTILE_SITE_KEY` + `NUXT_TURNSTILE_SECRET_KEY`, `BREVO_API_KEY` + sender + template IDs, `JARVI_API_KEY` + base URL + status/field UUIDs, `KV_REST_API_URL` + `KV_REST_API_TOKEN`, `ANTHROPIC_API_KEY`, `NUXT_PUBLIC_CALENDLY_URL`. Without `ANTHROPIC_API_KEY` the Lab LLM tools auto-fall back to deferred mode (still works for testing the lead-capture path).
+All env vars are documented in `.env.example`. The mandatory set for full functionality: `NUXT_PUBLIC_SITE_URL`, `NUXT_PUBLIC_TURNSTILE_SITE_KEY` + `NUXT_TURNSTILE_SECRET_KEY`, `BREVO_API_KEY` + sender + recipients + template IDs, `REDIS_URL`, `ANTHROPIC_API_KEY`, `NUXT_PUBLIC_CALENDLY_URL`. Without `ANTHROPIC_API_KEY` the Lab LLM tools auto-fall back to deferred mode (still works for testing the lead-capture path).
 
 ### Vercel deployment
 

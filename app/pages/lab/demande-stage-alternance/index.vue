@@ -217,11 +217,6 @@ interface AlertConfig {
 }
 const globalAlert = ref<AlertConfig | null>(null)
 const ALERT_BY_CODE: Record<string, AlertConfig> = {
-  DUPLICATE_REQUEST: {
-    title: 'Une demande est déjà en cours pour votre entreprise.',
-    text:
-      'Pour toute mise à jour ou information complémentaire, contactez-nous directement à <a href="mailto:bonjour@mariell.fr">bonjour@mariell.fr</a>.',
-  },
   RATE_LIMIT: {
     title: 'Limite de soumissions atteinte.',
     text:
