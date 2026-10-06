@@ -304,7 +304,7 @@ export async function sendBrevoPlanSourcingLivraisonProspect(
     'BREVO_TEMPLATE_ID_PLAN_SOURCING_LIVRAISON_PROSPECT',
     'Plan de sourcing — livraison prospect',
   )
-  const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
+  const calendlyUrl = useRuntimeConfig().public.calendlyUrl
 
   const posteAffiche =
     args.input.posteRecherche === 'Autre'
@@ -368,7 +368,7 @@ export async function sendBrevoPlanSourcingDeferredProspect(
     'BREVO_TEMPLATE_ID_PLAN_SOURCING_DEFERRED_PROSPECT',
     'Plan de sourcing — différé prospect',
   )
-  const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
+  const calendlyUrl = useRuntimeConfig().public.calendlyUrl
 
   const posteAffiche =
     args.input.posteRecherche === 'Autre'
@@ -519,7 +519,7 @@ export async function sendBrevoEvaluationConfirmationProspect(
     'BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_CONFIRMATION_PROSPECT',
     'Évaluation — confirmation prospect',
   )
-  const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
+  const calendlyUrl = useRuntimeConfig().public.calendlyUrl
 
   const intituleAffiche =
     args.input.intitule_poste === 'Autre' && args.input.intitule_poste_precision_autre
@@ -552,7 +552,7 @@ export async function sendBrevoEvaluationSuiviProspect(
     'BREVO_TEMPLATE_ID_EVALUATION_ATTRACTIVITE_SUIVI_PROSPECT',
     'Évaluation — suivi prospect (différé)',
   )
-  const calendlyUrl = process.env.NUXT_PUBLIC_CALENDLY_URL || '#'
+  const calendlyUrl = useRuntimeConfig().public.calendlyUrl
 
   return sendBrevoEmail({
     templateId,

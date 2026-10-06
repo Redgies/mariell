@@ -30,6 +30,8 @@ const md = new MarkdownIt({ html: false, linkify: true, typographer: true })
 // fait doublon avec le bloc <aside class="final-cta"> statique et doit être retirée.
 function stripFinalCta(markdown: string): string {
   return markdown
+    // Placeholder « [CTA Calendly] » imposé par le prompt — le bouton réel est le bloc statique.
+    .replace(/\n+[*_\s]*\[CTA Calendly\][*_\s]*$/i, '')
     .replace(/\n#{1,6}[ \t]*8[.)]?[ \t][\s\S]*$/i, '')
     .replace(/\n+[*_>\s]*On peut en parler\.?\s*C['’]est ici\.?[*_>\s]*$/i, '')
     .trimEnd()
